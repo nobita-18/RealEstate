@@ -1,0 +1,642 @@
+/* Unified Registration Page Redesign */
+
+.estify-register-page-wrapper {
+  min-height: 100vh;
+  background: linear-gradient(rgba(15, 23, 42, 0.55), rgba(15, 23, 42, 0.55)), 
+              url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1920&q=80') no-repeat center center / cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Poppins', sans-serif;
+  padding: 40px 0;
+}
+
+.estify-register-split-container {
+  display: grid;
+  grid-template-columns: 42% 58%;
+  background: #ffffff;
+  border-radius: 35px;
+  overflow: hidden;
+  border: 8px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 30px 60px -15px rgba(15, 23, 42, 0.15);
+  max-width: 1100px;
+  width: 95%;
+  position: relative;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.estify-register-split-container:hover {
+  transform: translateY(-4px) scale(1.005);
+  box-shadow: 0 40px 80px -15px rgba(15, 23, 42, 0.45);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Left Image Backdrop Pane */
+.estify-register-image-pane {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 5rem 4rem;
+  background: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80') no-repeat center center / cover;
+  color: white;
+  animation: slideFromLeft 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.estify-register-image-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.65) 0%, rgba(15, 23, 42, 0.4) 100%);
+  z-index: 1;
+}
+
+.estify-register-compass-watermark {
+  position: absolute;
+  bottom: -12%;
+  left: -12%;
+  width: 70%;
+  max-width: 500px;
+  opacity: 0.12;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.estify-register-stats-container {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 2.25rem;
+}
+
+.estify-register-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  font-size: 1.3rem;
+  font-weight: 500;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  color: #ffffff;
+}
+
+.estify-register-stat-item svg {
+  stroke-width: 1.5px;
+  color: #eff6ff;
+  width: 26px;
+  height: 26px;
+}
+
+/* Right Form Pane */
+.estify-register-form-pane {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 3rem;
+  background: radial-gradient(circle at top right, rgba(239, 246, 255, 0.6), rgba(248, 250, 252, 1));
+  z-index: 3;
+  animation: slideFromRight 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.estify-register-card {
+  width: 100%;
+  max-width: 680px;
+  padding: 3rem;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 20px 45px -12px rgba(15, 23, 42, 0.06);
+}
+
+/* Header Brand Styling */
+.estify-register-logo-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 2rem;
+  justify-content: center;
+}
+
+.estify-register-house-icon {
+  background: #2563eb;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.estify-register-logo-text {
+  font-weight: 800;
+  font-size: 1.35rem;
+  color: #0f172a;
+  letter-spacing: -0.5px;
+}
+
+.estify-register-header h1 {
+  font-size: 1.9rem;
+  font-weight: 850;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.5px;
+  text-align: center;
+}
+
+.estify-register-header p {
+  color: #64748b;
+  font-size: 0.95rem;
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+/* Step 1: Role Selection CSS */
+.role-selection-inner h3 {
+  font-size: 1.1rem;
+  color: #334155;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.role-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.role-select-card {
+  border: 2px dashed #cbd5e1;
+  border-radius: 18px;
+  padding: 2.25rem 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgba(255, 255, 255, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.role-select-card:hover {
+  border-color: #2563eb;
+  background: rgba(37, 99, 235, 0.02);
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px -10px rgba(37, 99, 235, 0.12);
+}
+
+.role-card-icon {
+  color: #64748b;
+  margin-bottom: 1rem;
+  transition: color 0.3s;
+}
+
+.role-select-card:hover .role-card-icon {
+  color: #2563eb;
+}
+
+.role-select-card h4 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 0.4rem 0;
+}
+
+.role-select-card p {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.auth-footer-link-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+.estify-register-login-pill-btn {
+  display: inline-block;
+  padding: 6px 20px;
+  border-radius: 20px;
+  border: 1.5px solid #2563eb;
+  background: transparent;
+  color: #2563eb;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.estify-register-login-pill-btn:hover {
+  background: #2563eb;
+  color: white;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+/* Step 2: Form CSS */
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 2.25rem 0 1.25rem 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.personal-title { color: #2563eb; }
+.security-title { color: #10b981; }
+.business-title { color: #d97706; }
+.address-title { color: #0284c7; }
+.verification-title { color: #ef4444; }
+
+/* Grid form helpers */
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.full-width-field {
+  grid-column: span 2;
+}
+
+/* Form input elements */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.input-group label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #475569;
+}
+
+.req-stars {
+  color: #ef4444;
+  font-weight: bold;
+}
+
+.input-group input,
+.input-group select {
+  width: 100%;
+  padding: 12px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 0.95rem;
+  color: #0f172a;
+  transition: all 0.3s;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+  border-color: #2563eb;
+  outline: none;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+}
+
+/* Password security toggle wrapper */
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  overflow: hidden;
+}
+
+.password-input-wrapper input {
+  border: none !important;
+  background: transparent !important;
+  flex: 1;
+  padding: 12px;
+  outline: none;
+}
+
+.pwd-toggle-btn {
+  background: none;
+  border: none;
+  padding: 12px;
+  cursor: pointer;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+}
+
+/* Password Strength Bar Meter */
+.password-strength-meter {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.strength-bar {
+  height: 4px;
+  border-radius: 2px;
+  background: #e2e8f0;
+  transition: background 0.3s ease;
+}
+
+.strength-bar.active-red { background: #ef4444; }
+.strength-bar.active-orange { background: #f97316; }
+.strength-bar.active-green { background: #22c55e; }
+.strength-bar.active-blue { background: #3b82f6; }
+
+/* Grid Layout for Personal Info block (Inputs + Upload on right) */
+.form-layout-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.inputs-block {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.upload-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100%;
+}
+
+.upload-block label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #475569;
+  align-self: flex-start;
+}
+
+/* Buyer Drag and Drop Circular Box */
+.buyer-upload-circle {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 2px dashed #2563eb;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-align: center;
+  background: rgba(37, 99, 235, 0.02);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  padding: 10px;
+  margin-top: 8px;
+}
+
+.buyer-upload-circle:hover {
+  background: rgba(37, 99, 235, 0.06);
+  border-color: #1d4ed8;
+  transform: scale(1.03);
+}
+
+.upload-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-top: 4px;
+}
+
+.upload-subtitle {
+  font-size: 0.65rem;
+  color: #64748b;
+  line-height: 1.3;
+  font-weight: 500;
+}
+
+.uploaded-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.uploaded-preview .file-name {
+  font-size: 0.75rem;
+  color: #2563eb;
+  font-weight: 600;
+  width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Seller Profile Standard Input Box */
+.seller-file-upload-box {
+  margin-top: 8px;
+  width: 100%;
+}
+
+.seller-file-input {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+/* Brushed Metal Registration Button */
+.estify-register-metal-btn {
+  background: linear-gradient(90deg, #9ca3af 0%, #d1d5db 20%, #f3f4f6 50%, #d1d5db 80%, #9ca3af 100%);
+  background-size: 200% auto;
+  border: 1px solid #94a3b8;
+  color: #0f172a;
+  padding: 14px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  margin-top: 2rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  width: 100%;
+}
+
+.estify-register-metal-btn:hover {
+  background-position: right center;
+  transform: translateY(-1.5px);
+  box-shadow: 0 6px 15px rgba(15, 23, 42, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+/* Form Action Footer Row */
+.form-footer-action-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+}
+
+.estify-register-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.estify-register-back-btn:hover {
+  color: #2563eb;
+}
+
+.login-prompt-wrapper {
+  font-size: 0.85rem;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.login-link {
+  color: #2563eb;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.login-link:hover {
+  text-decoration: underline;
+}
+
+/* Responsiveness adjustments */
+@media (max-width: 1024px) {
+  .estify-register-split-container {
+    grid-template-columns: 1fr;
+  }
+  .estify-register-image-pane {
+    display: none; /* Hide left backdrop on tablet/mobile to focus on form */
+  }
+  .estify-register-form-pane {
+    padding: 2rem 1.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .form-grid-2 {
+    grid-template-columns: 1fr;
+  }
+  .full-width-field {
+    grid-column: span 1;
+  }
+  .form-layout-grid {
+    grid-template-columns: 1fr;
+  }
+  .upload-block {
+    align-items: flex-start;
+  }
+  .estify-register-card {
+    padding: 2rem 1.5rem;
+  }
+  .role-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Page slide in keyframes */
+@keyframes slideFromLeft {
+  from {
+    transform: translateX(-80px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideFromRight {
+  from {
+    transform: translateX(80px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Social options */
+.social-login-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 0.8rem;
+  margin: 1.75rem 0;
+}
+
+.social-login-divider::before,
+.social-login-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1.5px solid #e2e8f0;
+}
+
+.social-login-divider span {
+  padding: 0 10px;
+}
+
+.social-buttons-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0f172a;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.social-btn:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  transform: translateY(-1.5px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+

@@ -1,0 +1,126 @@
+.listing-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.listing-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.primary-search {
+  flex: 1;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--surface-solid);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+}
+
+.search-bar input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 0.5rem;
+  outline: none;
+  font-size: 1rem;
+}
+
+.filter-toggle-btn {
+  white-space: nowrap;
+}
+
+/* Advanced Filters Panel */
+.advanced-filters {
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 3rem;
+  background: var(--surface-color);
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.advanced-filters .input-group {
+  margin-bottom: 0;
+}
+
+.advanced-filters label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--primary-color);
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.filter-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.loading {
+  text-align: center;
+  padding: 4rem;
+  color: var(--text-muted);
+}
+
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem;
+  border-radius: var(--radius-lg);
+}
+
+.no-results h3 {
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+}
+
+.no-results p {
+  color: var(--text-muted);
+}
+
+@media (max-width: 768px) {
+  .listing-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.properties-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+@media (max-width: 1024px) {
+  .properties-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .properties-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}

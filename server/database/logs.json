@@ -1,0 +1,225 @@
+[
+  {
+    "id": 1782411065626.3857,
+    "type": "REGISTRATION",
+    "message": "New seller user SEL0012 (Event Log Test Seller) registered.",
+    "details": {
+      "userId": "SEL0012",
+      "name": "Event Log Test Seller",
+      "role": "seller"
+    },
+    "timestamp": "2026-06-25T18:11:05.626Z"
+  },
+  {
+    "id": 1782411065722.7563,
+    "type": "LOGIN",
+    "message": "User SEL0012 (Event Log Test Seller) logged in.",
+    "details": {
+      "userId": "SEL0012",
+      "name": "Event Log Test Seller",
+      "role": "seller"
+    },
+    "timestamp": "2026-06-25T18:11:05.722Z"
+  },
+  {
+    "id": 1782411065748.4883,
+    "type": "DELETION",
+    "message": "Property HF1 (\"Luxury Villa in Anna Nagar\") deletion approved. Reason: Approved for testing deletion log",
+    "details": {
+      "propertyId": 1,
+      "title": "Luxury Villa in Anna Nagar",
+      "ownerId": 8
+    },
+    "timestamp": "2026-06-25T18:11:05.748Z"
+  },
+  {
+    "id": 1782411065758.4673,
+    "type": "USER_STATUS_CHANGE",
+    "message": "User SEL0012 (Event Log Test Seller) status changed to deactivated.",
+    "details": {
+      "userId": "SEL0012",
+      "status": "deactivated"
+    },
+    "timestamp": "2026-06-25T18:11:05.758Z"
+  },
+  {
+    "id": 1782411065764.7224,
+    "type": "USER_DELETION",
+    "message": "User SEL0012 (Event Log Test Seller) was permanently deleted.",
+    "details": {
+      "userId": "SEL0012",
+      "name": "Event Log Test Seller",
+      "role": "seller"
+    },
+    "timestamp": "2026-06-25T18:11:05.764Z"
+  },
+  {
+    "id": 1782411090697.3875,
+    "type": "LOGIN",
+    "message": "User 1 (Admin) logged in.",
+    "details": {
+      "userId": 1,
+      "name": "Admin",
+      "role": "admin"
+    },
+    "timestamp": "2026-06-25T18:11:30.697Z"
+  },
+  {
+    "id": 1782411366328.7444,
+    "type": "LOGIN",
+    "message": "User SEL0011 (TestSE) logged in.",
+    "details": {
+      "userId": "SEL0011",
+      "name": "TestSE",
+      "role": "seller"
+    },
+    "timestamp": "2026-06-25T18:16:06.328Z"
+  },
+  {
+    "id": 1782558996440.3823,
+    "type": "LOGIN",
+    "message": "User SEL0011 (TestSE) logged in.",
+    "details": {
+      "userId": "SEL0011",
+      "name": "TestSE",
+      "role": "seller"
+    },
+    "timestamp": "2026-06-27T11:16:36.440Z"
+  },
+  {
+    "id": 1782559115644.3635,
+    "type": "LOGIN",
+    "message": "User SEL0011 (TestSE) logged in.",
+    "details": {
+      "userId": "SEL0011",
+      "name": "TestSE",
+      "role": "seller"
+    },
+    "timestamp": "2026-06-27T11:18:35.644Z"
+  },
+  {
+    "id": 1782559132587.488,
+    "type": "LOGIN",
+    "message": "User 1 (Admin) logged in.",
+    "details": {
+      "userId": 1,
+      "name": "Admin",
+      "role": "admin"
+    },
+    "timestamp": "2026-06-27T11:18:52.587Z"
+  },
+  {
+    "id": 1782559170251.415,
+    "type": "USER_STATUS_CHANGE",
+    "message": "User SEL0011 (TestSE) status changed to deactivated.",
+    "details": {
+      "userId": "SEL0011",
+      "status": "deactivated"
+    },
+    "timestamp": "2026-06-27T11:19:30.251Z"
+  },
+  {
+    "id": 1782559188280.2285,
+    "type": "LOGIN",
+    "message": "User 1 (Admin) logged in.",
+    "details": {
+      "userId": 1,
+      "name": "Admin",
+      "role": "admin"
+    },
+    "timestamp": "2026-06-27T11:19:48.280Z"
+  },
+  {
+    "id": 1782559191273.9167,
+    "type": "LOGIN",
+    "message": "User 11 (Buyer) logged in.",
+    "details": {
+      "userId": 11,
+      "name": "Buyer",
+      "role": "buyer"
+    },
+    "timestamp": "2026-06-27T11:19:51.273Z"
+  },
+  {
+    "id": 1782559209549.0671,
+    "type": "LOGIN",
+    "message": "User 11 (Buyer) logged in.",
+    "details": {
+      "userId": 11,
+      "name": "Buyer",
+      "role": "buyer"
+    },
+    "timestamp": "2026-06-27T11:20:09.549Z"
+  },
+  {
+    "id": 1782559215569.3804,
+    "type": "LOGIN",
+    "message": "User 1 (Admin) logged in.",
+    "details": {
+      "userId": 1,
+      "name": "Admin",
+      "role": "admin"
+    },
+    "timestamp": "2026-06-27T11:20:15.569Z"
+  },
+  {
+    "id": 1782560091360.2441,
+    "type": "APPROVAL",
+    "message": "Property \"Cozy House in Thoothukudi\" (ID: HF59) has been APPROVED by admin ADM0002.",
+    "details": {
+      "propertyId": 59,
+      "propertyTitle": "Cozy House in Thoothukudi",
+      "adminId": "ADM0002",
+      "adminName": "Tamil Admin"
+    },
+    "timestamp": "2026-06-27T11:34:51.360Z"
+  },
+  {
+    "id": 1782560091360.594,
+    "type": "APPROVAL",
+    "message": "Property \"Luxury Villa in Tirunelveli\" (ID: HF60) has been APPROVED by admin ADM0002.",
+    "details": {
+      "propertyId": 60,
+      "propertyTitle": "Luxury Villa in Tirunelveli",
+      "adminId": "ADM0002",
+      "adminName": "Tamil Admin"
+    },
+    "timestamp": "2026-06-27T11:34:51.360Z"
+  },
+  {
+    "id": 1782560091360.3394,
+    "type": "APPROVAL",
+    "message": "Property \"Beachside PG in Tiruchendur\" (ID: HF61) has been APPROVED by admin ADM0002.",
+    "details": {
+      "propertyId": 61,
+      "propertyTitle": "Beachside PG in Tiruchendur",
+      "adminId": "ADM0002",
+      "adminName": "Tamil Admin"
+    },
+    "timestamp": "2026-06-27T11:34:51.360Z"
+  },
+  {
+    "id": 1782560091360.113,
+    "type": "APPROVAL",
+    "message": "Property \"Commercial Land in Madurai\" (ID: HF62) has been APPROVED by admin ADM0002.",
+    "details": {
+      "propertyId": 62,
+      "propertyTitle": "Commercial Land in Madurai",
+      "adminId": "ADM0002",
+      "adminName": "Tamil Admin"
+    },
+    "timestamp": "2026-06-27T11:34:51.360Z"
+  },
+  {
+    "id": 1782560091360.244,
+    "type": "APPROVAL",
+    "message": "Property \"Modern Penthouse in Coimbatore\" (ID: HF63) has been APPROVED by admin ADM0002.",
+    "details": {
+      "propertyId": 63,
+      "propertyTitle": "Modern Penthouse in Coimbatore",
+      "adminId": "ADM0002",
+      "adminName": "Tamil Admin"
+    },
+    "timestamp": "2026-06-27T11:34:51.360Z"
+  }
+]

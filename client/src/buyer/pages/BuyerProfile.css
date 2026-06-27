@@ -1,0 +1,567 @@
+.profile-page {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.profile-header {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.profile-cover {
+  height: 150px;
+  background: linear-gradient(135deg, var(--primary-light), var(--primary-color));
+}
+
+.profile-header-content {
+  padding: 0 2rem 2rem;
+  display: flex;
+  align-items: flex-end;
+  gap: 1.5rem;
+  margin-top: -50px;
+}
+
+.profile-avatar-wrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 4px solid var(--surface-bg);
+  background: var(--surface-bg);
+  flex-shrink: 0;
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.profile-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-solid);
+  color: var(--primary-color);
+}
+
+.avatar-edit-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.profile-titles {
+  flex: 1;
+  padding-bottom: 0.5rem;
+}
+
+.profile-titles h1 {
+  font-size: 2rem;
+  margin-bottom: 0.25rem;
+  color: var(--text-main);
+}
+
+.role-badge {
+  display: inline-block;
+  padding: 0.2rem 0.8rem;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.role-badge.admin {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.role-badge.seller {
+  background: #d1fae5;
+  color: #047857;
+}
+
+.role-badge.buyer {
+  background: var(--secondary-color);
+  color: var(--primary-color);
+}
+
+.profile-actions {
+  padding-bottom: 0.5rem;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+.profile-section {
+  padding: 2.5rem;
+  border-radius: var(--radius-lg);
+  background: var(--surface-color);
+  border: 2px solid var(--primary-color);
+  box-shadow: var(--shadow-lg);
+  margin-bottom: 2rem;
+  transition: all 0.3s ease;
+}
+
+.profile-section:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(2, 132, 199, 0.2);
+}
+
+.profile-section h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+  color: var(--primary-color);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.input-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.input-group p {
+  padding: 1rem 1.25rem;
+  background: var(--secondary-color);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--primary-color);
+  color: var(--text-main);
+  min-height: 50px;
+  box-shadow: 0 4px 10px rgba(2, 132, 199, 0.1);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.bio-text {
+  min-height: 80px !important;
+  align-items: flex-start !important;
+}
+
+.warning-text {
+  color: #dc2626;
+  font-weight: 500;
+  font-style: italic;
+}
+
+/* Admin Dashboard Specifics */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.stat-card {
+  padding: 1.5rem;
+  background: var(--surface-solid);
+  border-radius: var(--radius-md);
+  text-align: center;
+  border: 1px solid var(--border-color);
+}
+
+.stat-card h3 {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  margin-bottom: 0.5rem;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.profile-message {
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+.profile-message.success {
+  background: #d1fae5;
+  color: #047857;
+}
+
+.profile-message.error {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+@media (max-width: 768px) {
+  .profile-header-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .profile-actions {
+    width: 100%;
+  }
+
+  .profile-actions .btn {
+    width: 100%;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Edit Table Formatting */
+.profile-edit-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.profile-edit-table td {
+  padding: 1rem;
+  vertical-align: top;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.profile-edit-table td:first-child {
+  width: 30%;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.profile-edit-table td:last-child {
+  width: 70%;
+}
+
+.profile-edit-table input, 
+.profile-edit-table select, 
+.profile-edit-table textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--primary-color);
+  background: var(--surface-bg);
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.profile-edit-table input:focus, 
+.profile-edit-table select:focus, 
+.profile-edit-table textarea:focus {
+  box-shadow: 0 0 10px rgba(2, 132, 199, 0.3);
+}
+
+/* ==========================================
+   Tabbed Profile Layout Styles
+   ========================================== */
+.profile-tabs-header {
+  display: flex;
+  gap: 10px;
+  border-bottom: 2px solid var(--border-color, #e2e8f0);
+  margin-bottom: 30px;
+}
+
+.profile-tab-button {
+  padding: 12px 24px;
+  border: none;
+  background: transparent;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-muted, #64748b);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.profile-tab-button.active {
+  color: var(--primary-color, #2563eb);
+}
+
+.profile-tab-button.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: var(--primary-color, #2563eb);
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+}
+
+/* Activity Tab Styles */
+.favorites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.fav-card {
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.fav-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+}
+
+.fav-card-img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+}
+
+.fav-card-content {
+  padding: 15px;
+}
+
+.fav-card-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-main, #0f172a);
+  margin-bottom: 5px;
+}
+
+.fav-card-location {
+  font-size: 0.85rem;
+  color: var(--text-muted, #64748b);
+  margin-bottom: 10px;
+}
+
+.fav-card-price {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--primary-color, #2563eb);
+}
+
+.fav-heart-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255,255,255,0.9);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #ef4444;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  transition: all 0.2s ease;
+}
+
+.fav-heart-btn:hover {
+  transform: scale(1.1);
+  background: #ffffff;
+}
+
+/* Enquiries table */
+.enquiries-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.enquiries-table th, .enquiries-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+  text-align: left;
+}
+
+.enquiries-table th {
+  background: var(--secondary-color, #eff6ff);
+  color: var(--primary-color, #2563eb);
+  font-weight: 700;
+}
+
+/* Settings Form */
+.settings-section-card {
+  padding: 25px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid var(--border-color, #e2e8f0);
+  margin-bottom: 20px;
+}
+
+.settings-section-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  color: var(--text-main, #0f172a);
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+  padding-bottom: 8px;
+}
+
+.toggle-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+}
+
+/* Custom Profile Tabs Wrapper Styling */
+.profile-tabs-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  gap: 15px;
+  margin-bottom: 2.5rem;
+  padding: 8px 12px;
+  border-radius: 16px;
+  border: 1px solid var(--primary-color, #2563eb);
+  background: var(--surface-color);
+  overflow-x: auto;
+}
+
+.profile-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  background: transparent;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-light);
+  cursor: pointer;
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.profile-tab-btn:hover {
+  background: var(--secondary-color);
+  color: var(--primary-color);
+}
+
+.profile-tab-btn.active {
+  background: var(--primary-color);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.2);
+}
+
+.profile-tab-content-area {
+  width: 100%;
+}
+
+.full-tab-width {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+/* Smooth Tab Entry transition animation */
+@keyframes fadeInTab {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-tab {
+  animation: fadeInTab 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ==========================================
+   Staggered Entrance for Profile Page Fields
+   ========================================== */
+.profile-page .profile-header {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInProfileElement 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.profile-page .profile-tabs-wrapper {
+  opacity: 0;
+  transform: translateY(15px);
+  animation: fadeInProfileElement 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+}
+
+.profile-page .profile-section {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.profile-page .profile-section:nth-child(1) {
+  animation: fadeInProfileElement 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.18s forwards;
+}
+
+.profile-page .profile-section:nth-child(2) {
+  animation: fadeInProfileElement 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.28s forwards;
+}
+
+/* Staggered input groups inside sections */
+.profile-page .profile-section .input-group,
+.profile-page .profile-section .edit-field {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.profile-page .profile-section:nth-child(1) .input-group:nth-child(1),
+.profile-page .profile-section:nth-child(1) .edit-field:nth-child(1) { animation: fadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.22s forwards; }
+
+.profile-page .profile-section:nth-child(1) .input-group:nth-child(2),
+.profile-page .profile-section:nth-child(1) .edit-field:nth-child(2) { animation: fadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.26s forwards; }
+
+.profile-page .profile-section:nth-child(1) .input-group:nth-child(3),
+.profile-page .profile-section:nth-child(1) .edit-field:nth-child(3) { animation: fadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.30s forwards; }
+
+.profile-page .profile-section:nth-child(1) .input-group:nth-child(4),
+.profile-page .profile-section:nth-child(1) .edit-field:nth-child(4) { animation: fadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.34s forwards; }
+
+.profile-page .profile-section:nth-child(2) .input-group:nth-child(1),
+.profile-page .profile-section:nth-child(2) .edit-field:nth-child(1) { animation: fadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.32s forwards; }
+
+.profile-page .profile-section:nth-child(2) .input-group:nth-child(2),
+.profile-page .profile-section:nth-child(2) .edit-field:nth-child(2) { animation: fadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.36s forwards; }
+
+.profile-page .profile-section:nth-child(2) .input-group:nth-child(3),
+.profile-page .profile-section:nth-child(2) .edit-field:nth-child(3) { animation: fadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.40s forwards; }
+
+.profile-page .profile-section:nth-child(2) .input-group:nth-child(4),
+.profile-page .profile-section:nth-child(2) .edit-field:nth-child(4) { animation: fadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.44s forwards; }
+
+@keyframes fadeInProfileElement {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

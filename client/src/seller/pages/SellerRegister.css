@@ -1,0 +1,321 @@
+.seller-register-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  background-color: #fceabb;
+  background: linear-gradient(135deg, #fceabb 0%, #f8b500 100%);
+  padding: 120px 20px 60px 20px;
+  box-sizing: border-box;
+}
+
+.pattern-bg {
+  background-image: 
+    radial-gradient(#ffffff 15%, transparent 16%), 
+    radial-gradient(#ffffff 15%, transparent 16%);
+  background-size: 60px 60px;
+  background-position: 0 0, 30px 30px;
+  background-attachment: fixed;
+}
+
+.grand-form-card {
+  background: rgba(10, 15, 30, 0.85);
+  border-radius: 40px;
+  padding: 60px;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(196, 167, 97, 0.4);
+  backdrop-filter: blur(15px);
+  color: #fff;
+  margin: auto;
+}
+
+.grand-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.grand-icon {
+  color: #f8b500;
+  margin-bottom: 20px;
+  background: #fff8e1;
+  padding: 15px;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  box-shadow: 0 10px 20px rgba(248, 181, 0, 0.3);
+}
+
+.grand-header h1 {
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: #333;
+  letter-spacing: -1px;
+}
+
+.grand-header p {
+  color: #777;
+  font-size: 1.1rem;
+}
+
+/* Unique Hover Effect Inputs */
+.grand-input-container {
+  display: flex;
+  align-items: center;
+  background: rgba(5, 10, 20, 0.6);
+  border-radius: 20px;
+  padding: 5px 20px;
+  margin-bottom: 25px;
+  border: 1px solid rgba(196, 167, 97, 0.3);
+  transition: all 0.4s ease;
+  transform: translateX(0);
+}
+
+.grand-input-container.hover-effect:hover {
+  transform: translateX(10px) scale(1.02);
+  background: rgba(15, 20, 40, 0.8) !important;
+  border-color: #ffdf80 !important;
+  box-shadow: -10px 10px 20px rgba(196, 167, 97, 0.2);
+}
+
+.input-icon {
+  color: #aaa;
+  margin-right: 15px;
+  transition: color 0.3s;
+}
+
+.grand-input-container.hover-effect:hover .input-icon {
+  color: #f8b500;
+}
+
+.grand-input-container input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 15px 0;
+  font-size: 1.1rem;
+  color: #333;
+  outline: none;
+}
+
+/* Location Group */
+.location-group {
+  padding-right: 5px;
+}
+
+.btn-locate {
+  background: #fff8e1;
+  color: #f8b500;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-locate:hover {
+  background: #f8b500;
+  color: #fff;
+}
+
+/* File Upload */
+.file-upload {
+  flex-direction: column;
+  padding: 30px;
+  border: 2px dashed #ddd;
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+}
+
+.file-upload:hover {
+  border-color: #f8b500;
+  background: #fff8e1;
+}
+
+.file-upload input {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.upload-icon {
+  color: #ccc;
+  margin-bottom: 10px;
+}
+.file-upload:hover .upload-icon { color: #f8b500; }
+
+.file-upload span {
+  color: #888;
+  font-weight: 500;
+}
+
+/* Grand Golden Button */
+.btn-grand-gold {
+  position: relative;
+  background: linear-gradient(45deg, #c4a761, #ffdf80, #c4a761);
+  background-size: 200% auto;
+  color: #050a14;
+  border: none;
+  padding: 15px 30px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 5px 15px rgba(196, 167, 97, 0.3);
+  overflow: hidden;
+}
+
+.btn-grand-gold:hover {
+  background-position: right center;
+  box-shadow: 0 10px 30px rgba(196, 167, 97, 0.6);
+  transform: translateY(-3px) scale(1.05);
+}
+
+@keyframes shimmer {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Alerts */
+.grand-alert {
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+.error { background: #ffebee; color: #c62828; }
+.success { background: #e8f5e9; color: #2e7d32; }
+
+/* In-View Animation */
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+
+/* Seller Dashboard Layout Enhancements */
+/* Seller Dashboard Layout Enhancements */
+.seller-property-card {
+  background: rgba(10, 15, 30, 0.85);
+  border: 1px solid rgba(196, 167, 97, 0.2);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+  position: relative;
+  backdrop-filter: blur(15px);
+}
+
+.seller-property-card:hover {
+  transform: translateY(-15px) scale(1.03);
+  box-shadow: 0 30px 60px rgba(196, 167, 97, 0.15);
+  border-color: rgba(196, 167, 97, 0.8);
+}
+
+.property-img-slow {
+  transition: all 1.5s ease;
+}
+
+.seller-property-card:hover .property-img-slow {
+  transform: scale(1.15);
+}
+
+.seller-action-btn {
+  flex: 1;
+  padding: 12px;
+  background: transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.seller-action-btn.edit {
+  border: 1px solid rgba(196, 167, 97, 0.5);
+  color: #c4a761;
+}
+
+.seller-action-btn.edit:hover {
+  background: rgba(196, 167, 97, 0.2);
+  transform: scale(1.05);
+  border-color: #ffdf80;
+  color: #ffdf80;
+}
+
+.seller-action-btn.delete {
+  border: 1px solid rgba(255, 51, 102, 0.5);
+  color: #ff3366;
+  flex: 0 0 auto;
+  width: 48px;
+}
+
+.seller-action-btn.delete:hover {
+  background: rgba(255, 51, 102, 0.2);
+  transform: scale(1.1);
+  border-color: #ff3366;
+}
+
+/* ==========================================
+   Seller Profile Staggered Entrance Animations
+   ========================================== */
+.seller-glass-card {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: sellerFadeInProfileElement 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.seller-profile-section {
+  opacity: 0;
+  transform: translateY(15px);
+}
+
+.seller-profile-section.info-personal { animation: sellerFadeInProfileElement 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards; }
+.seller-profile-section.info-business { animation: sellerFadeInProfileElement 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.18s forwards; }
+.seller-profile-section.info-address { animation: sellerFadeInProfileElement 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.26s forwards; }
+.seller-profile-section.info-verification { animation: sellerFadeInProfileElement 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.34s forwards; }
+.seller-profile-section.info-stats { animation: sellerFadeInProfileElement 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.42s forwards; }
+
+/* Stagger fields inside sections */
+.seller-profile-field, .seller-profile-stat-box {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.seller-profile-section.info-personal .seller-profile-field:nth-child(1) { animation: sellerFadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards; }
+.seller-profile-section.info-personal .seller-profile-field:nth-child(2) { animation: sellerFadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.20s forwards; }
+.seller-profile-section.info-personal .seller-profile-field:nth-child(3) { animation: sellerFadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.25s forwards; }
+
+.seller-profile-section.info-business .seller-profile-field:nth-child(1) { animation: sellerFadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.22s forwards; }
+.seller-profile-section.info-business .seller-profile-field:nth-child(2) { animation: sellerFadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.27s forwards; }
+
+.seller-profile-section.info-address .seller-profile-field:nth-child(1) { animation: sellerFadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.30s forwards; }
+.seller-profile-section.info-address .seller-profile-field:nth-child(2) { animation: sellerFadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.35s forwards; }
+.seller-profile-section.info-address .seller-profile-field:nth-child(3) { animation: sellerFadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.40s forwards; }
+
+.seller-profile-section.info-verification .seller-profile-field:nth-child(1) { animation: sellerFadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.38s forwards; }
+.seller-profile-section.info-verification .seller-profile-field:nth-child(2) { animation: sellerFadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.43s forwards; }
+.seller-profile-section.info-verification .seller-profile-field:nth-child(3) { animation: sellerFadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.48s forwards; }
+
+@keyframes sellerFadeInProfileElement {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

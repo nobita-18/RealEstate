@@ -1,0 +1,137 @@
+[
+  {
+    "id": 1,
+    "date": "2026-04-26T11:02:24.066Z",
+    "userId": 6,
+    "propertyId": 2,
+    "message": "I am interested in Skyline Penthouse"
+  },
+  {
+    "id": 2,
+    "date": "2026-04-26T11:03:59.516Z",
+    "userId": 6,
+    "propertyId": 7,
+    "message": "I am interested in Garden house pearl city"
+  },
+  {
+    "id": 3,
+    "date": "2026-04-26T11:28:14.910Z",
+    "userId": 6,
+    "userName": "lingam",
+    "userEmail": "lingam@gmail.com",
+    "userMobile": "0987654321",
+    "propertyId": 7,
+    "propertyTitle": "Garden house pearl city",
+    "message": "I am interested in Garden house pearl city"
+  },
+  {
+    "id": 4,
+    "date": "2026-05-24T16:13:07.450Z",
+    "userId": 6,
+    "userName": "lingam",
+    "userEmail": "lingam@gmail.com",
+    "userMobile": "0987654321",
+    "propertyId": 7,
+    "propertyTitle": "Garden house pearl city",
+    "message": "I am interested in Garden house pearl city"
+  },
+  {
+    "id": 5,
+    "date": "2026-06-05T07:27:50.172Z",
+    "userId": 6,
+    "userName": "lingam",
+    "userEmail": "lingam@gmail.com",
+    "userMobile": "0987654321",
+    "propertyId": 8,
+    "propertyTitle": "Kuttyy house",
+    "message": "I am interested in Kuttyy house"
+  },
+  {
+    "id": 6,
+    "date": "2026-06-24T15:14:12.067Z",
+    "userId": 11,
+    "userName": "Buyer",
+    "userEmail": "buyer@gmail.com",
+    "userMobile": "1234567890",
+    "propertyId": 56,
+    "propertyTitle": "TESTING HOUSE",
+    "message": "I am interested in TESTING HOUSE"
+  },
+  {
+    "id": 7,
+    "date": "2026-06-24T16:24:10.351Z",
+    "userId": 11,
+    "userName": "Buyer",
+    "userEmail": "buyer@gmail.com",
+    "userMobile": "1234567890",
+    "propertyId": 55,
+    "propertyTitle": "LINGAM PG",
+    "message": "I am interested in LINGAM PG"
+  },
+  {
+    "id": 8,
+    "date": "2026-06-24T16:38:02.344Z",
+    "userId": 11,
+    "userName": "Buyer",
+    "userEmail": "buyer@gmail.com",
+    "userMobile": "1234567890",
+    "propertyId": 57,
+    "propertyTitle": "LINGAM'S PG",
+    "message": "I am interested in LINGAM'S PG"
+  },
+  {
+    "id": 9,
+    "date": "2026-06-27T11:34:51.360Z",
+    "userId": "BUY0016",
+    "userName": "Tamil Buyer",
+    "userEmail": "buyer@test.com",
+    "userMobile": "9876543213",
+    "propertyId": 59,
+    "propertyTitle": "Cozy House in Thoothukudi",
+    "message": "I am interested in Cozy House in Thoothukudi. Please share more details."
+  },
+  {
+    "id": 10,
+    "date": "2026-06-27T11:34:51.360Z",
+    "userId": "BUY0016",
+    "userName": "Tamil Buyer",
+    "userEmail": "buyer@test.com",
+    "userMobile": "9876543213",
+    "propertyId": 60,
+    "propertyTitle": "Luxury Villa in Tirunelveli",
+    "message": "I am interested in Luxury Villa in Tirunelveli. Please share more details."
+  },
+  {
+    "id": 11,
+    "date": "2026-06-27T11:34:51.360Z",
+    "userId": "BUY0016",
+    "userName": "Tamil Buyer",
+    "userEmail": "buyer@test.com",
+    "userMobile": "9876543213",
+    "propertyId": 61,
+    "propertyTitle": "Beachside PG in Tiruchendur",
+    "message": "I am interested in Beachside PG in Tiruchendur. Please share more details."
+  },
+  {
+    "id": 12,
+    "date": "2026-06-27T11:34:51.360Z",
+    "userId": "BUY0016",
+    "userName": "Tamil Buyer",
+    "userEmail": "buyer@test.com",
+    "userMobile": "9876543213",
+    "propertyId": 62,
+    "propertyTitle": "Commercial Land in Madurai",
+    "message": "I am interested in Commercial Land in Madurai. Please share more details."
+  },
+  {
+    "id": 13,
+    "date": "2026-06-27T11:34:51.360Z",
+    "userId": "BUY0016",
+    "userName": "Tamil Buyer",
+    "userEmail": "buyer@test.com",
+    "userMobile": "9876543213",
+    "propertyId": 63,
+    "propertyTitle": "Modern Penthouse in Coimbatore",
+    "message": "I am interested in Modern Penthouse in Coimbatore. Please share more details."
+  }
+]
