@@ -1,12 +1,14 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ShieldCheck, Activity, CheckCircle, XCircle, Trash2, Users, Eye, EyeOff, Info, UserCheck, UserX, X, BarChart } from 'lucide-react';
 import './AdminLogin.css'; 
 
+import { getSafeLocalStorage } from '../../api';
+
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const adminUser = JSON.parse(localStorage.getItem('adminUser'));
+  const adminUser = getSafeLocalStorage('adminUser');
   const [pendingProps, setPendingProps] = useState([]);
   const [propertiesList, setPropertiesList] = useState([]);
   const [userStats, setUserStats] = useState({ buyers: 0, sellers: 0 }); 
