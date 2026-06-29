@@ -1,8 +1,10 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { Upload, ChevronLeft, Home, Building, MapPin, Users, Map } from 'lucide-react';
 import './SellerDashboard.css';
+
+import { getSafeLocalStorage } from '../../api';
 
 const FormContext = React.createContext(null);
 
@@ -129,7 +131,7 @@ const AddProperty = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
-  const sellerUser = JSON.parse(localStorage.getItem('sellerUser'));
+  const sellerUser = getSafeLocalStorage('sellerUser');
 
   useEffect(() => {
     if (formData.pincode && formData.pincode.length === 6) {

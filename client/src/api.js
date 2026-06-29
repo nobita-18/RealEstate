@@ -1,4 +1,4 @@
-﻿import axios from 'axios';
+import axios from 'axios';
 
 // Resolve the API base URL dynamically based on environment configuration or hostname detection
 let resolvedBase = import.meta.env.VITE_API_URL;
@@ -37,4 +37,16 @@ export const getAssetUrl = (path) => {
   if (!path) return '';
   if (path.startsWith('http')) return path;
   return `${API_BASE_URL}${path.startsWith('/') ? '' : '/'}${path}`;
+};
+
+// Helper function to parse localStorage items safely without crashing the React application
+export const getSafeLocalStorage = (key) => {
+  try {
+    const val = localStorage.getItem(key);
+    if (!val || val === 'undefined' || val === 'null') return null;
+    return JSON.parse(val);
+  } catch (e) {
+    console.error(`Error parsing localStorage key "${key}":`, e);
+    return null;
+  }
 };

@@ -6,11 +6,11 @@ import {
   MapPin, Key, Bell, BarChart2, Shield, Settings, CheckCircle, CreditCard 
 } from 'lucide-react';
 import '../pages/SellerRegister.css';
-import { getAssetUrl } from '../../api';
+import { getAssetUrl, getSafeLocalStorage } from '../../api';
 
 const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfileUpdate = null }) => {
   const navigate = useNavigate();
-  const sellerUser = JSON.parse(localStorage.getItem('sellerUser')) || JSON.parse(localStorage.getItem('user'));
+  const sellerUser = getSafeLocalStorage('sellerUser') || getSafeLocalStorage('user');
   const [properties, setProperties] = useState([]);
   const [message, setMessage] = useState('');
   

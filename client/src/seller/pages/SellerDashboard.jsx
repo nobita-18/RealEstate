@@ -12,7 +12,7 @@ import {
   PieChart, Pie, Cell, Legend
 } from 'recharts';
 import './SellerDashboard.css';
-import { getAssetUrl } from '../../api';
+import { getAssetUrl, getSafeLocalStorage } from '../../api';
 
 const fallbacks = [
   '/images/default/no-image.png',
@@ -30,7 +30,7 @@ const makeString = (val) => {
 const SellerDashboard = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const sellerUser = JSON.parse(localStorage.getItem('sellerUser'));
+  const sellerUser = getSafeLocalStorage('sellerUser');
   
   const getFilteredNotifications = (notifs) => {
     return (notifs || []).filter(notif => 

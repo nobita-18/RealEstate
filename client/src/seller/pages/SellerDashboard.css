@@ -1096,3 +1096,122 @@
     transform: translateY(0) rotateX(0deg);
   }
 }
+
+/* ==========================================
+   Mobile Responsive Layout Overrides
+   ========================================== */
+@media (max-width: 768px) {
+  .sd-layout {
+    flex-direction: column;
+  }
+
+  .sd-sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    padding: 16px 0;
+    border-right: none;
+    border-bottom: 1px solid var(--sd-border);
+  }
+
+  .sd-brand {
+    padding: 0 16px 16px;
+    justify-content: center;
+  }
+
+  .sd-menu-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0 16px;
+    justify-content: center;
+  }
+
+  .sd-menu-item {
+    width: auto;
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+
+  .sd-menu-section {
+    padding: 0 16px;
+    margin-bottom: 8px;
+  }
+
+  .sd-menu-section-title {
+    justify-content: center;
+    font-size: 0.75rem;
+    margin: 8px 0;
+  }
+
+  .sd-submenu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-left: 0;
+    justify-content: center;
+  }
+
+  .sd-submenu-item {
+    width: auto;
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+
+  .sd-logout-container {
+    padding: 8px 16px;
+    margin-top: 12px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .sd-main {
+    margin-left: 0;
+    width: 100%;
+    padding: 16px;
+  }
+
+  .sd-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--sd-border);
+    margin-bottom: 20px;
+  }
+
+  .sd-header-actions {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .sd-welcome h1 {
+    font-size: 1.5rem;
+  }
+
+  .sd-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .sd-row-2 {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .sd-row-3 {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  /* Responsive Tables */
+  .sd-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+}
