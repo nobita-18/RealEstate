@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { 
@@ -6,6 +6,7 @@ import {
   MapPin, Key, Bell, BarChart2, Shield, Settings, CheckCircle, CreditCard 
 } from 'lucide-react';
 import '../pages/SellerRegister.css';
+import { getAssetUrl } from '../../api';
 
 const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfileUpdate = null }) => {
   const navigate = useNavigate();
@@ -1209,7 +1210,7 @@ const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfi
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid var(--sd-border)', paddingBottom: '20px', marginBottom: '30px' }}>
           <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
             <div style={{ width: '70px', height: '70px', borderRadius: '50%', overflow: 'hidden', border: '2px solid var(--sd-primary)' }}>
-               <img src={formData.photo || '/images/default/default-avatar.jpg'} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+               <img src={getAssetUrl(formData.photo) || '/images/default/default-avatar.jpg'} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
             <div>
               <h1 style={{ color: 'var(--sd-text-main)', margin: '0 0 5px 0', fontSize: '1.8rem', fontWeight: 700 }}>{formData.name}</h1>
@@ -1376,7 +1377,7 @@ const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfi
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid rgba(196,167,97,0.3)', paddingBottom: '20px', marginBottom: '30px' }}>
           <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
             <div style={{ width: '70px', height: '70px', borderRadius: '50%', overflow: 'hidden', border: '2px solid #ffdf80' }}>
-               <img src={formData.photo || '/images/default/default-avatar.jpg'} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+               <img src={getAssetUrl(formData.photo) || '/images/default/default-avatar.jpg'} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
             <div>
               <h1 style={{ color: '#ffdf80', margin: '0 0 5px 0', fontSize: '1.8rem' }}>{formData.name}</h1>

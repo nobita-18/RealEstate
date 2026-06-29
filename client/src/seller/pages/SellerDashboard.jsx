@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import SellerProfile from './SellerProfile';
@@ -982,7 +982,7 @@ const SellerDashboard = () => {
             </button>
             <div className="sd-user-profile" style={{ cursor: 'pointer' }} onClick={() => setActiveTab('profile')}>
               <img 
-                src={sellerProfile?.photo || '/images/default/default-avatar.jpg'} 
+                src={getAssetUrl(sellerProfile?.photo) || '/images/default/default-avatar.jpg'} 
                 alt="Seller" 
                 className="sd-user-avatar" 
                 onError={(e) => { e.target.onerror = null; e.target.src = '/images/default/default-avatar.jpg'; }}

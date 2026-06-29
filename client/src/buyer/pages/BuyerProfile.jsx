@@ -1,8 +1,9 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { User, Settings, Shield, Edit2, Check, LogOut, Heart, MapPin, Key, Bell, MessageSquare } from 'lucide-react';
 import PropertyCard from '../../components/PropertyCard';
+import { getAssetUrl } from '../../api';
 import './BuyerProfile.css';
 
 const BuyerProfile = () => {
@@ -170,7 +171,7 @@ const BuyerProfile = () => {
         <div className="profile-header-content">
           <div className="profile-avatar-wrapper">
             {user.photo ? (
-              <img src={user.photo} alt="Profile" className="profile-avatar" />
+              <img src={getAssetUrl(user.photo)} alt="Profile" className="profile-avatar" />
             ) : (
               <div className="profile-avatar-placeholder">
                 <User size={64} />

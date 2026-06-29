@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Home, User, LogOut, Menu, X, Bell, Heart } from 'lucide-react';
+import { getAssetUrl } from '../api';
 import './Navbar.css';
 
 const Navbar = ({ role = 'buyer' }) => {
@@ -112,7 +113,7 @@ const Navbar = ({ role = 'buyer' }) => {
                 {/* Profile click navigates directly to profile details page */}
                 <div className="estify-nav-user-wrapper" onClick={() => navigate('/profile')}>
                   {user.photo ? (
-                    <img src={user.photo} alt="Avatar" className="estify-nav-avatar" />
+                    <img src={getAssetUrl(user.photo)} alt="Avatar" className="estify-nav-avatar" />
                   ) : (
                     <div className="estify-nav-avatar" style={{ background: '#cbd5e1', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
                       <User size={16} />
