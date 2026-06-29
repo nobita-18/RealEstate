@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { MapPin, Bed, Square, ArrowLeft, Mail, Info } from 'lucide-react';
 import './BuyerPropertyDetails.css';
+import { getAssetUrl } from '../../api';
 
 const BuyerPropertyDetails = () => {
   const { id } = useParams();
@@ -107,7 +108,7 @@ const BuyerPropertyDetails = () => {
       <div className="details-grid">
         <div className="details-main">
           <div className="main-image-container">
-            <img src={property.images && property.images[0] ? (property.images[0].startsWith('http') ? property.images[0] : `http://localhost:5000${property.images[0]}`) : ''} alt={property.title} className="main-image" />
+            <img src={property.images && property.images[0] ? getAssetUrl(property.images[0]) : ''} alt={property.title} className="main-image" />
           </div>
 
           <div className="info-section glass">

@@ -12,6 +12,7 @@ import {
   PieChart, Pie, Cell, Legend
 } from 'recharts';
 import './SellerDashboard.css';
+import { getAssetUrl } from '../../api';
 
 const fallbacks = [
   '/images/default/no-image.png',
@@ -330,7 +331,7 @@ const SellerDashboard = () => {
                   <td>
                     <div className="sd-prop-cell">
                       <img 
-                        src={prop.images && prop.images[0] ? (prop.images[0].startsWith('http') ? prop.images[0] : `http://localhost:5000${prop.images[0]}`) : fallbacks[0]} 
+                        src={prop.images && prop.images[0] ? getAssetUrl(prop.images[0]) : fallbacks[0]} 
                         alt="" 
                         className="sd-prop-img" 
                         onError={(e) => { e.target.onerror = null; e.target.src = fallbacks[0]; }}
@@ -610,7 +611,7 @@ const SellerDashboard = () => {
                 <td>
                   <div className="sd-prop-cell">
                     <img 
-                      src={p.images && p.images[0] ? (p.images[0].startsWith('http') ? p.images[0] : `http://localhost:5000${p.images[0]}`) : fallbacks[0]} 
+                      src={p.images && p.images[0] ? getAssetUrl(p.images[0]) : fallbacks[0]} 
                       alt="" 
                       className="sd-prop-img"
                       onError={(e) => { e.target.onerror = null; e.target.src = fallbacks[0]; }}
@@ -814,7 +815,7 @@ const SellerDashboard = () => {
             <div>
               <div style={{ width: '100%', height: '300px', borderRadius: '12px', overflow: 'hidden', border: '1px solid #e2e8f0', marginBottom: '15px' }}>
                 <img 
-                  src={prop.images && prop.images[0] ? (prop.images[0].startsWith('http') ? prop.images[0] : `http://localhost:5000${prop.images[0]}`) : fallbacks[0]} 
+                  src={prop.images && prop.images[0] ? getAssetUrl(prop.images[0]) : fallbacks[0]} 
                   alt="" 
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   onError={(e) => { e.target.onerror = null; e.target.src = fallbacks[0]; }}
@@ -825,7 +826,7 @@ const SellerDashboard = () => {
                   {prop.images.map((img, idx) => (
                     <img 
                       key={idx} 
-                      src={img.startsWith('http') ? img : `http://localhost:5000${img}`} 
+                      src={getAssetUrl(img)} 
                       alt="" 
                       style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '8px', border: '1px solid #cbd5e1', cursor: 'pointer' }}
                       onError={(e) => { e.target.onerror = null; e.target.src = fallbacks[0]; }}

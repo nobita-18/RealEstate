@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Heart } from 'lucide-react';
 import './PropertyCard.css';
+import { getAssetUrl } from '../api';
 
 const fallbacks = [
   '/images/default/fallback-1.jpg',
@@ -92,7 +93,7 @@ const PropertyCard = ({ property, index = 0, onFavoriteToggle }) => {
   if (property.isFeatured) badgeType = 'featured';
   else if (property.isNew) badgeType = 'new';
   const imgUrl = property.images && property.images[0] 
-    ? (property.images[0].startsWith('http') ? property.images[0] : `http://localhost:5000${property.images[0]}`) 
+    ? getAssetUrl(property.images[0]) 
     : fallbacks[index % fallbacks.length];
 
   return (
