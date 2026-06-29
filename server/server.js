@@ -37,6 +37,11 @@ if (!fs.existsSync(uploadDir)) {
 // Static serve for uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Health Check / Root route
+app.get('/', (req, res) => {
+  res.send('Real Estate API Server is running successfully!');
+});
+
 // DB Utility
 const dbFiles = {
   users: path.join(__dirname, 'database', 'users.json'),
