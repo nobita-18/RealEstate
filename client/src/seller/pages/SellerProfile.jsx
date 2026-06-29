@@ -1207,9 +1207,10 @@ const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfi
     return (
       <div style={{ width: '100%', fontFamily: "'Inter', sans-serif" }}>
         {/* Header Section */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid var(--sd-border)', paddingBottom: '20px', marginBottom: '30px' }}>
-          <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-            <div style={{ width: '70px', height: '70px', borderRadius: '50%', overflow: 'hidden', border: '2px solid var(--sd-primary)' }}>
+        {/* Header Section */}
+        <div className="seller-profile-header">
+          <div className="seller-profile-header-user">
+            <div className="seller-profile-header-avatar">
                <img src={getAssetUrl(formData.photo) || '/images/default/default-avatar.jpg'} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
             <div>
@@ -1217,7 +1218,9 @@ const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfi
               <p style={{ color: 'var(--sd-text-muted)', margin: 0, fontSize: '0.95rem' }}>Role: Seller | ID: {sellerUser.id} | Since: {sellerUser.memberSince || 'Not Provided'}</p>
             </div>
           </div>
-          {renderHeaderActions()}
+          <div className="seller-profile-header-actions">
+            {renderHeaderActions()}
+          </div>
         </div>
 
         {message && (
@@ -1235,7 +1238,7 @@ const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfi
           </div>
         )}
 
-        <div className="seller-profile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: '25px', textShadow: 'none' }}>
+        <div className="seller-profile-grid">
           
           {/* Card 1: PERSONAL INFORMATION */}
           <div className="sd-panel" style={{ padding: '25px' }}>
@@ -1374,9 +1377,9 @@ const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfi
       <div className="seller-glass-card" style={{ maxWidth: '900px', width: '100%', position: 'relative', zIndex: 3, padding: '40px', background: 'rgba(10, 15, 30, 0.9)', borderRadius: '30px', border: '1px solid rgba(196, 167, 97, 0.5)', backdropFilter: 'blur(20px)' }}>
         
         {/* Header Section */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid rgba(196,167,97,0.3)', paddingBottom: '20px', marginBottom: '30px' }}>
-          <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-            <div style={{ width: '70px', height: '70px', borderRadius: '50%', overflow: 'hidden', border: '2px solid #ffdf80' }}>
+        <div className="seller-profile-header gold">
+          <div className="seller-profile-header-user">
+            <div className="seller-profile-header-avatar gold-border">
                <img src={getAssetUrl(formData.photo) || '/images/default/default-avatar.jpg'} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
             <div>
@@ -1384,8 +1387,7 @@ const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfi
               <p style={{ color: '#aaa', margin: 0, fontSize: '0.95rem' }}>Role: Seller | ID: {sellerUser.id} | Since: {sellerUser.memberSince || 'Not Provided'}</p>
             </div>
           </div>
-          
-          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <div className="seller-profile-header-actions">
             {renderHeaderActions()}
             <button onClick={handleLogout} className="btn-grand-gold" style={{ background: 'transparent', border: '2px solid rgba(255, 51, 102, 0.6)', color: '#ff3366', padding: '8px 20px', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', borderRadius: '8px' }}>
               <LogOut size={16} /> Logout
@@ -1408,7 +1410,7 @@ const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfi
           </div>
         )}
 
-        <div className="seller-profile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: '25px', textShadow: 'none' }}>
+        <div className="seller-profile-grid">
           
           {/* Card 1: PERSONAL INFORMATION */}
           <div className="seller-profile-section info-personal" style={{ background: 'rgba(255,255,255,0.02)', padding: '25px', borderRadius: '15px', border: '1px solid rgba(196,167,97,0.2)' }}>

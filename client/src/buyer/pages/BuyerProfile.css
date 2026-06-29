@@ -565,3 +565,53 @@
     transform: translateY(0);
   }
 }
+
+/* Buyer Profile Table and Card Responsiveness */
+@media (max-width: 768px) {
+  .profile-edit-table,
+  .profile-edit-table tbody,
+  .profile-edit-table tr,
+  .profile-edit-table td {
+    display: block;
+    width: 100% !important;
+  }
+
+  .profile-edit-table td {
+    padding: 8px 0 !important;
+  }
+
+  .profile-edit-table td:first-child {
+    border-bottom: none;
+    padding-bottom: 4px !important;
+    font-weight: 700;
+  }
+
+  .profile-edit-table td:last-child {
+    padding-top: 4px !important;
+    border-bottom: 1px solid var(--border-color, #e2e8f0);
+  }
+
+  /* Form spacing in tabs */
+  .form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 15px !important;
+  }
+
+  /* Settings Grid responsive */
+  .profile-section form {
+    width: 100% !important;
+  }
+
+  .profile-section div[style*="gridTemplateColumns"] {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+
+  /* Enquiry Cards vertical stacking */
+  .profile-section div[style*="display: flex"][style*="justify-content: space-between"] {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+  }
+}
+
