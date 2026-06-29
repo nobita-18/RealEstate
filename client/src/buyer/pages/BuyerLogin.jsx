@@ -91,18 +91,73 @@ const BuyerLogin = () => {
     syncClerkUser();
   }, [isSignedIn, user]);
 
-  const handleSocialLogin = async (platform) => {
-    if (!isLoaded) return;
-    localStorage.setItem('socialRegisterRole', 'buyer');
+  const handleSocialAccountSelect = async (email, provider) => {
+    setShowSocialModal(null);
+    setIsSubmitting(true);
+    setError('');
     try {
-      await signIn.authenticateWithRedirect({
-        strategy: platform === 'google' ? 'oauth_google' : 'oauth_facebook',
-        redirectUrl: window.location.origin + window.location.pathname,
-        redirectUrlComplete: window.location.origin + window.location.pathname
+      const res = await axios.post((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/auth/social-login', { 
+        email: email, 
+        provider: provider 
       });
+      
+      const loggedUser = res.data.user;
+      
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('sellerToken');
+      localStorage.removeItem('sellerUser');
+      localStorage.removeItem('adminToken');
+      localStorage.removeItem('adminUser');
+
+      localStorage.setItem('token', res.data.token);
+      localStorage.setItem('user', JSON.stringify(loggedUser));
+      
+      if (loggedUser.role === 'seller') {
+        localStorage.setItem('sellerToken', res.data.token);
+        localStorage.setItem('sellerUser', JSON.stringify(loggedUser));
+      } else if (loggedUser.role === 'admin') {
+        localStorage.setItem('adminToken', res.data.token);
+        localStorage.setItem('adminUser', JSON.stringify(loggedUser));
+      }
+
+      setSuccessData(loggedUser);
+      setIsSubmitting(false);
+
+      setTimeout(() => {
+        if (loggedUser.role === 'seller') {
+          window.location.href = '/seller/dashboard';
+        } else if (loggedUser.role === 'admin') {
+          window.location.href = '/admin/dashboard';
+        } else {
+          window.location.href = '/buyer/';
+        }
+      }, 2000);
     } catch (err) {
-      console.error('Clerk redirect error:', err);
-      setError('Social login redirection failed.');
+      setError(err.response?.data?.message || 'This account is not registered. Please register first.');
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleSocialLogin = async (platform) => {
+    const isRenderDomain = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+    const clerkKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || '';
+    const hasRealClerkKey = clerkKey && !clerkKey.startsWith('YOUR_CLERK') && (!isRenderDomain || !clerkKey.startsWith('pk_test'));
+
+    if (hasRealClerkKey && isLoaded) {
+      localStorage.setItem('socialRegisterRole', 'buyer');
+      try {
+        await signIn.authenticateWithRedirect({
+          strategy: platform === 'google' ? 'oauth_google' : 'oauth_facebook',
+          redirectUrl: window.location.origin + window.location.pathname,
+          redirectUrlComplete: window.location.origin + window.location.pathname
+        });
+      } catch (err) {
+        console.error('Clerk redirect error:', err);
+        setShowSocialModal(platform);
+      }
+    } else {
+      setShowSocialModal(platform);
     }
   };
 
