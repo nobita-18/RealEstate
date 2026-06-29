@@ -43,6 +43,18 @@ const Navbar = ({ role = 'buyer' }) => {
           
           {/* Slide-out Sidebar Drawer for Mobile, Normal links for Desktop */}
           <div className={`nav-links ${isOpen ? 'active' : ''}`}>
+            
+            {/* Unique stylish header inside the drawer for mobile view */}
+            <div className="show-mobile drawer-header" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px', paddingBottom: '15px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+              <div className="estify-house-icon" style={{ width: '28px', height: '28px', background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)', borderRadius: '6px' }}>
+                <Home size={14} color="white" fill="white" />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontWeight: '800', color: '#ffffff', fontSize: '1.05rem', letterSpacing: '-0.3px', lineHeight: 1.1 }}>HomeFind Menu</span>
+                <span style={{ color: '#94a3b8', fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.5px', marginTop: '2px' }}>Premium Portal</span>
+              </div>
+            </div>
+
             <Link to="/properties?type=Villa" className="nav-link" onClick={() => setIsOpen(false)}>Villa</Link>
             <Link to="/properties?type=Penthouse" className="nav-link" onClick={() => setIsOpen(false)}>Penthouse</Link>
             <Link to="/properties?type=PG" className="nav-link" onClick={() => setIsOpen(false)}>PG</Link>
@@ -55,8 +67,8 @@ const Navbar = ({ role = 'buyer' }) => {
             {/* Mobile-only Auth buttons inside Drawer */}
             {!isLoggedIn ? (
               <div className="nav-mobile-auth-buttons show-mobile">
-                <Link to="/login" className="btn estify-btn-login" onClick={() => setIsOpen(false)} style={{ width: '100%', padding: '12px' }}>Log In</Link>
-                <Link to="/register" className="btn estify-btn-register" onClick={() => setIsOpen(false)} style={{ width: '100%', padding: '12px', textAlign: 'center' }}>Register</Link>
+                <Link to="/login" className="btn estify-btn-login" onClick={() => setIsOpen(false)} style={{ width: '100%', padding: '12px', color: '#3b82f6', border: '1px solid #3b82f6' }}>Log In</Link>
+                <Link to="/register" className="btn estify-btn-register" onClick={() => setIsOpen(false)} style={{ width: '100%', padding: '12px', background: '#3b82f6', color: '#fff', textAlign: 'center' }}>Register</Link>
               </div>
             ) : (
               <div className="nav-mobile-profile show-mobile">
@@ -69,9 +81,9 @@ const Navbar = ({ role = 'buyer' }) => {
                     justifyContent: 'center',
                     gap: '8px',
                     padding: '12px',
-                    background: '#fef2f2',
-                    color: '#ef4444',
-                    border: '1px solid #fee2e2',
+                    background: 'rgba(239, 68, 68, 0.1)',
+                    color: '#f87171',
+                    border: '1px solid rgba(239, 68, 68, 0.2)',
                     borderRadius: '8px',
                     fontWeight: '700',
                     cursor: 'pointer',
@@ -118,7 +130,7 @@ const Navbar = ({ role = 'buyer' }) => {
             )}
 
             {/* Hamburger button (floating above side drawer if open) */}
-            <button className="mobile-menu-btn" onClick={() => setIsOpen(!isOpen)} style={{ color: '#0f172a', zIndex: 1000 }}>
+            <button className="mobile-menu-btn" onClick={() => setIsOpen(!isOpen)} style={{ color: isOpen ? '#ffffff' : '#0f172a', zIndex: 1000, transition: 'color 0.2s ease' }}>
               {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
