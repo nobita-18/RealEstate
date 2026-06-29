@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { 
@@ -80,7 +80,7 @@ const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfi
 
   const fetchMyProperties = () => {
     if (!sellerUser) return;
-    axios.get('http://localhost:5000/api/properties?status=all')
+    axios.get((import.meta.env.VITE_API_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/properties?status=all')
       .then(res => {
         const myProps = res.data.filter(p => String(p.ownerId) === String(sellerUser.id));
         setProperties(myProps);
@@ -96,7 +96,7 @@ const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfi
 
   // Fetch all users for RERA uniqueness check on mount
   useEffect(() => {
-    axios.get('http://localhost:5000/api/users')
+    axios.get((import.meta.env.VITE_API_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/users')
       .then(res => {
         setAllUsers(res.data);
       })
@@ -112,7 +112,7 @@ const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfi
         setFormData(mapped);
       }
     } else if (sellerUser && sellerUser.id) {
-      axios.get(`http://localhost:5000/api/users/${sellerUser.id}`)
+      axios.get(`${import.meta.env.VITE_API_URL || "https://realestatelisting-u2kp.onrender.com"}/api/users/${sellerUser.id}`)
         .then(res => {
           const mapped = mapProfileToFormData(res.data);
           setProfileData(mapped);
@@ -150,7 +150,7 @@ const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfi
     }
 
     try {
-      await axios.put(`http://localhost:5000/api/users/${sellerUser.id}`, { password: passwordData.newPassword, plainPassword: passwordData.newPassword });
+      await axios.put(`${import.meta.env.VITE_API_URL || "https://realestatelisting-u2kp.onrender.com"}/api/users/${sellerUser.id}`, { password: passwordData.newPassword, plainPassword: passwordData.newPassword });
       setPasswordData({ newPassword: '', confirmPassword: '' });
       setMessage('Password changed successfully!');
       setTimeout(() => setMessage(''), 3000);
@@ -164,7 +164,7 @@ const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfi
     const updated = { ...notifications, [name]: value };
     setNotifications(updated);
     try {
-      const res = await axios.put(`http://localhost:5000/api/users/${sellerUser.id}`, updated);
+      const res = await axios.put(`${import.meta.env.VITE_API_URL || "https://realestatelisting-u2kp.onrender.com"}/api/users/${sellerUser.id}`, updated);
       if (localStorage.getItem('user')) {
         localStorage.setItem('user', JSON.stringify(res.data));
       } else {
@@ -450,7 +450,7 @@ const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfi
     }
     
     try {
-      const res = await axios.put(`http://localhost:5000/api/users/${sellerUser.id}`, formData);
+      const res = await axios.put(`${import.meta.env.VITE_API_URL || "https://realestatelisting-u2kp.onrender.com"}/api/users/${sellerUser.id}`, formData);
       if (localStorage.getItem('user')) {
         localStorage.setItem('user', JSON.stringify(res.data));
       }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { Search, MapPin, Building, ShieldCheck, Headphones, Home, Users, Check, Gift, Compass } from 'lucide-react';
@@ -48,7 +48,7 @@ const BuyerHome = () => {
   }, []);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/properties')
+    axios.get((import.meta.env.VITE_API_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/properties')
       .then(res => {
         // Only show approved properties and take top 4 for featured
         const approvedProps = res.data.filter(p => !p.status || p.status === 'approved');

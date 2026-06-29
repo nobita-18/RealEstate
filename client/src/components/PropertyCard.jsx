@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Heart } from 'lucide-react';
 import './PropertyCard.css';
@@ -79,7 +79,7 @@ const PropertyCard = ({ property, index = 0, onFavoriteToggle }) => {
     }
     
     try {
-      await fetch(`http://localhost:5000/api/users/${currentUser.id}`, {
+      await fetch(`${import.meta.env.VITE_API_URL || "https://realestatelisting-u2kp.onrender.com"}/api/users/${currentUser.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ favorites: favs })

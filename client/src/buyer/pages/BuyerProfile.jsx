@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { User, Settings, Shield, Edit2, Check, LogOut, Heart, MapPin, Key, Bell, MessageSquare } from 'lucide-react';
@@ -22,13 +22,13 @@ const BuyerProfile = () => {
   const fetchProfileAndData = async (storedUser) => {
     try {
       // Fetch properties
-      const propsRes = await axios.get('http://localhost:5000/api/properties');
+      const propsRes = await axios.get((import.meta.env.VITE_API_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/properties');
       if (Array.isArray(propsRes.data)) {
         setProperties(propsRes.data);
       }
       
       // Fetch enquiries
-      const enqRes = await axios.get(`http://localhost:5000/api/enquiries/user/${storedUser.id}`);
+      const enqRes = await axios.get(`${import.meta.env.VITE_API_URL || "https://realestatelisting-u2kp.onrender.com"}/api/enquiries/user/${storedUser.id}`);
       if (Array.isArray(enqRes.data)) {
         setMyEnquiries(enqRes.data);
       }
@@ -69,7 +69,7 @@ const BuyerProfile = () => {
     }
 
     try {
-      const res = await axios.put(`http://localhost:5000/api/users/${user.id}`, formData);
+      const res = await axios.put(`${import.meta.env.VITE_API_URL || "https://realestatelisting-u2kp.onrender.com"}/api/users/${user.id}`, formData);
       setUser(res.data);
       localStorage.setItem('user', JSON.stringify(res.data));
       setIsEditing(false);
@@ -111,7 +111,7 @@ const BuyerProfile = () => {
     }
 
     try {
-      await axios.put(`http://localhost:5000/api/users/${user.id}`, { password: passwordData.newPassword, plainPassword: passwordData.newPassword });
+      await axios.put(`${import.meta.env.VITE_API_URL || "https://realestatelisting-u2kp.onrender.com"}/api/users/${user.id}`, { password: passwordData.newPassword, plainPassword: passwordData.newPassword });
       setPasswordData({ oldPassword: '', newPassword: '', confirmPassword: '' });
       setMessage('Password changed successfully!');
       setTimeout(() => setMessage(''), 3000);
@@ -125,7 +125,7 @@ const BuyerProfile = () => {
     const updated = { ...notifications, [name]: value };
     setNotifications(updated);
     try {
-      const res = await axios.put(`http://localhost:5000/api/users/${user.id}`, updated);
+      const res = await axios.put(`${import.meta.env.VITE_API_URL || "https://realestatelisting-u2kp.onrender.com"}/api/users/${user.id}`, updated);
       localStorage.setItem('user', JSON.stringify(res.data));
     } catch (err) {
       console.error(err);
@@ -141,7 +141,7 @@ const BuyerProfile = () => {
       setUser(updated);
       localStorage.setItem('user', JSON.stringify(updated));
       try {
-        await axios.put(`http://localhost:5000/api/users/${storedUser.id}`, { favorites: updatedFavs });
+        await axios.put(`${import.meta.env.VITE_API_URL || "https://realestatelisting-u2kp.onrender.com"}/api/users/${storedUser.id}`, { favorites: updatedFavs });
       } catch (err) {
         console.error('Failed to sync favorite with server', err);
       }

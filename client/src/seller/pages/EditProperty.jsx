@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { Upload, ChevronLeft, Home, Building, MapPin, Users, Map } from 'lucide-react';
@@ -134,7 +134,7 @@ const EditProperty = () => {
   const sellerUserId = sellerUser?.id;
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/properties/${id}?preview=pending`)
+    axios.get(`${import.meta.env.VITE_API_URL || "https://realestatelisting-u2kp.onrender.com"}/api/properties/${id}?preview=pending`)
       .then(res => {
         const prop = res.data;
         if (prop.ownerId != sellerUserId) {
@@ -302,7 +302,7 @@ const EditProperty = () => {
          });
       }
 
-      await axios.put(`http://localhost:5000/api/properties/${id}`, data, {
+      await axios.put(`${import.meta.env.VITE_API_URL || "https://realestatelisting-u2kp.onrender.com"}/api/properties/${id}`, data, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       

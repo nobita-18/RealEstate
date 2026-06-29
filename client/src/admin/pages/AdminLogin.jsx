@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ShieldCheck, Lock } from 'lucide-react';
@@ -12,7 +12,7 @@ const AdminLogin = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', { identifier: email, password });
+      const res = await axios.post((import.meta.env.VITE_API_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/auth/login', { identifier: email, password });
       
       if (res.data.user.role !== 'admin') {
         setError('Unauthorized access. Admin role required.');

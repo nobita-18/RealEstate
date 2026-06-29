@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+﻿import React, { useEffect } from 'react';
 import './Splash.css';
 import '../components/CinematicPan.css';
 

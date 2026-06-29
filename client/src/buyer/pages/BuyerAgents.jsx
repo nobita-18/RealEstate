@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Mail, Phone, Award, ShieldCheck, Loader2 } from 'lucide-react';
 
@@ -12,8 +12,8 @@ const BuyerAgents = () => {
       try {
         // Fetch all users and all properties in parallel
         const [usersRes, propertiesRes] = await Promise.all([
-          axios.get('http://localhost:5000/api/users'),
-          axios.get('http://localhost:5000/api/properties?status=all')
+          axios.get((import.meta.env.VITE_API_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/users'),
+          axios.get((import.meta.env.VITE_API_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/properties?status=all')
         ]);
 
         const allUsers = usersRes.data || [];

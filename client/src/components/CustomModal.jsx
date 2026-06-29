@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Info, HelpCircle, FileText } from 'lucide-react';
 import './CustomModal.css';

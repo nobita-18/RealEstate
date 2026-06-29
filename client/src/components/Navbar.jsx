@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Home, User, LogOut, Menu, X, Bell, Heart, ChevronDown } from 'lucide-react';
 import './Navbar.css';

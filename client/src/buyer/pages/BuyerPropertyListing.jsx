@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { Search, Filter, SlidersHorizontal, MapPin, DollarSign, Bed, Square } from 'lucide-react';
@@ -40,7 +40,7 @@ const BuyerPropertyListing = () => {
   });
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/properties')
+    axios.get((import.meta.env.VITE_API_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/properties')
       .then(res => {
         setProperties(res.data);
         setLoading(false);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { Upload, ChevronLeft, Home, Building, MapPin, Users, Map } from 'lucide-react';
@@ -263,7 +263,7 @@ const AddProperty = () => {
         data.append('images', img);
       });
 
-      await axios.post('http://localhost:5000/api/properties', data, {
+      await axios.post((import.meta.env.VITE_API_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/properties', data, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       

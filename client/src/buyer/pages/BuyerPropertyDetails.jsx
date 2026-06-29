@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { MapPin, Bed, Square, ArrowLeft, Mail, Info } from 'lucide-react';
@@ -19,7 +19,7 @@ const BuyerPropertyDetails = () => {
   const currentUser = JSON.parse(localStorage.getItem('user')) || JSON.parse(localStorage.getItem('sellerUser'));
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/properties/${id}${window.location.search}`)
+    axios.get(`${import.meta.env.VITE_API_URL || "https://realestatelisting-u2kp.onrender.com"}/api/properties/${id}${window.location.search}`)
       .then(res => {
         setProperty(res.data);
         setReviews(res.data.reviews || []);
@@ -46,7 +46,7 @@ const BuyerPropertyDetails = () => {
       await window.customAlert("Please log in to send an enquiry!");
       return;
     }
-    axios.post('http://localhost:5000/api/enquiries', {
+    axios.post((import.meta.env.VITE_API_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/enquiries', {
       userId: user.id,
       userName: user.name,
       userEmail: user.email,
@@ -77,7 +77,7 @@ const BuyerPropertyDetails = () => {
       return;
     }
     
-    axios.post(`http://localhost:5000/api/properties/${id}/reviews`, {
+    axios.post(`${import.meta.env.VITE_API_URL || "https://realestatelisting-u2kp.onrender.com"}/api/properties/${id}/reviews`, {
       userId: user.id,
       userName: user.name,
       rating,
