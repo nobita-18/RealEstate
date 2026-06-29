@@ -1,7 +1,17 @@
 import axios from 'axios';
 
-// Resolve the API base URL dynamically based on environment configuration
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+// Resolve the API base URL dynamically based on environment configuration or hostname detection
+let resolvedBase = import.meta.env.VITE_API_URL;
+
+if (!resolvedBase) {
+  if (typeof window !== 'undefined' && window.location.hostname.includes('onrender.com')) {
+    resolvedBase = 'https://realestatelisting-u2kp.onrender.com';
+  } else {
+    resolvedBase = 'http://localhost:5000';
+  }
+}
+
+export const API_BASE_URL = resolvedBase;
 
 // Global Axios request interceptor to rewrite absolute local URLs to the configured API server URL on production
 axios.interceptors.request.use(
