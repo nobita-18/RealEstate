@@ -92,7 +92,10 @@ const BuyerLogin = () => {
   }, [isSignedIn, user]);
 
   const handleSocialLogin = async (platform) => {
-    if (!isLoaded) return;
+    if (!isLoaded) {
+      alert("Clerk authentication library is still loading or blocked by your browser network. Please verify that your Clerk Publishable Key is correct and try again.");
+      return;
+    }
     localStorage.setItem('socialRegisterRole', 'buyer');
     try {
       await signIn.authenticateWithRedirect({

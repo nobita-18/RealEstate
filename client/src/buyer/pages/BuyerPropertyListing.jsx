@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { Search, Filter, SlidersHorizontal, MapPin, DollarSign, Bed, Square } from 'lucide-react';
@@ -152,10 +152,6 @@ const BuyerPropertyListing = () => {
       // Dummy logic to simulate new project filtering
       if (!prop.title.toLowerCase().includes('project') && !prop.description.toLowerCase().includes('new')) matches = false;
     }
-    // Deals filter
-    if (filters.deals) {
-      if (prop.price > 10000000) matches = false; // Only show 'deals' under a certain price for simulation
-    }
     // Favorites filter
     if (filters.favorites) {
       if (!userFavorites.includes(String(prop.id))) {
@@ -187,10 +183,12 @@ const BuyerPropertyListing = () => {
         }
         return type === cat.toLowerCase();
       });
-      // Sort this category by views descending (best properties)
-      catProps.sort((a, b) => (b.views || 0) - (a.views || 0));
-      // Display only the top 5 best properties from this category
-      dealsGrouped.push(...catProps.slice(0, 5));
+      // Sort this category by price descending (highest value first)
+      catProps.sort((a, b) => (b.price || 0) - (a.price || 0));
+      // Display the single highest valued property from this category
+      if (catProps.length > 0) {
+        dealsGrouped.push(catProps[0]);
+      }
     });
     displayProperties = dealsGrouped;
   }

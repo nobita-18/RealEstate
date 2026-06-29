@@ -3,112 +3,104 @@
     "id": "ADM0001",
     "name": "Rajesh Admin",
     "email": "rajesh.admin@gmail.com",
-    "password": "$2b$10$/yXYER1p1g8btBtqrA.tQe5OkGz7j6V03otePOdGXiF/fxRpk.JBO",
+    "password": "$2b$10$0SjGRanY/tyJqQzE2c20UO4lJvPO4K7LCXSjwK4L6DdBCHV6gpcqa",
     "role": "admin",
     "mobile": "9876543216",
     "status": "active",
     "theme": "blue",
     "favorites": [],
     "notifications": [],
-    "rating": 0,
-    "lastLogin": "29-06-2026 08:50 PM"
+    "rating": 0
   },
   {
     "id": "ADM0002",
     "name": "Suresh Admin",
     "email": "suresh.admin@gmail.com",
-    "password": "$2b$10$MstoLlOCfwD3qwdtGie5iOgcIaKOy09P2N8Xvd/FSOjFHUa7Pe2wa",
+    "password": "$2b$10$bgsW2LPB00MtJDCGhEBEHedoXrZ8teY9tBmOaLTiCEwtamnGNf9XW",
     "role": "admin",
     "mobile": "9876543217",
     "status": "active",
     "theme": "blue",
     "favorites": [],
     "notifications": [],
-    "rating": 0,
-    "lastLogin": "29-06-2026 08:50 PM"
+    "rating": 0
   },
   {
     "id": "SEL0001",
     "name": "Karthik Seller",
     "email": "karthik.seller@gmail.com",
-    "password": "$2b$10$/1VL0XZ84.D.2gy8kX1g2ePhwLHkUD02tAPHSXI0RwxuB.KUtS/PW",
+    "password": "$2b$10$pPCMql1WjetVjLH/8CnkWeiCPh/gGnjkVZT/h0F5yudL0U1SN.fZe",
     "role": "seller",
     "mobile": "9876543210",
     "status": "active",
     "theme": "blue",
     "favorites": [],
     "notifications": [],
-    "rating": 5,
-    "lastLogin": "29-06-2026 08:50 PM"
+    "rating": 5
   },
   {
     "id": "SEL0002",
     "name": "Priya Seller",
     "email": "priya.seller@gmail.com",
-    "password": "$2b$10$wc99OI9paXfOyPYniX94zO5l/X9jHkX4pMid6yqtp3sqM0lEtEDSe",
+    "password": "$2b$10$VLjjnlR.4PzM0NzenFDF.uGxb1RgYT5d7qkCEQAS5PMY4FWpVmxy.",
     "role": "seller",
     "mobile": "9876543211",
     "status": "active",
     "theme": "blue",
     "favorites": [],
     "notifications": [],
-    "rating": 4.8,
-    "lastLogin": "29-06-2026 08:50 PM"
+    "rating": 4.8
   },
   {
     "id": "SEL0003",
     "name": "Vijay Seller",
     "email": "vijay.seller@gmail.com",
-    "password": "$2b$10$m8wTBUdLMfBRpnSWkBKKrOwAkFTJoSqu91sFQCAdOqp6ffJEKgvj.",
+    "password": "$2b$10$/umZ/xLPXmfGFeAAk5clVO8YK0BIboSfK.Lg1/.F.LWrYJurApxMK",
     "role": "seller",
     "mobile": "9876543212",
     "status": "active",
     "theme": "blue",
     "favorites": [],
     "notifications": [],
-    "rating": 4.9,
-    "lastLogin": "29-06-2026 08:50 PM"
+    "rating": 4.9
   },
   {
     "id": "BUY0001",
     "name": "Anand Buyer",
     "email": "anand.buyer@gmail.com",
-    "password": "$2b$10$zCIg8DX7h.P9Jm0ox1c46O/2oUSx08QGxc1BLKai8/mFod.80B9vO",
+    "password": "$2b$10$jUCrSuWrESBPaIpvKb7y/.8EV/Vz6bVV.VCeyjgk4lQ.WX9CCfyi6",
     "role": "buyer",
     "mobile": "9876543213",
     "status": "active",
     "theme": "blue",
     "favorites": [],
     "notifications": [],
-    "rating": 0,
-    "lastLogin": "29-06-2026 08:50 PM"
+    "rating": 0
   },
   {
     "id": "BUY0002",
     "name": "Divya Buyer",
     "email": "divya.buyer@gmail.com",
-    "password": "$2b$10$880cEJeGLpxPKaMYYhDU6OEptci6BYZUA2YuO4qDdGcljKiu9f4jO",
+    "password": "$2b$10$Yt34EX58pR2XXyRH7.rRpe6a2VgPm6kxM67204dQano4/LSxpLR/S",
     "role": "buyer",
     "mobile": "9876543214",
     "status": "active",
     "theme": "blue",
     "favorites": [],
     "notifications": [],
-    "rating": 0,
-    "lastLogin": "29-06-2026 08:50 PM"
+    "rating": 0
   },
   {
     "id": "BUY0003",
     "name": "Manoj Buyer",
     "email": "manoj.buyer@gmail.com",
-    "password": "$2b$10$sTiFxzrVn2H1G9ZfUwfJq.LOc957xhQTz2BCpXLGbbcutha3nsWvW",
+    "password": "$2b$10$l7s3FD8VdhEWD5d2oVwoMe98Mx/1tbUz4Zl8mKncfDonttXjWBVL6",
     "role": "buyer",
     "mobile": "9876543215",
     "status": "active",
     "theme": "blue",
     "favorites": [],
     "notifications": [],
-    "rating": 0,
-    "lastLogin": "29-06-2026 08:50 PM"
+    "rating": 0
   }
 ]
