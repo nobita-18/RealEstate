@@ -3,21 +3,27 @@
 // Resolve the API base URL dynamically based on environment configuration or hostname detection
 let resolvedBase = import.meta.env.VITE_API_URL;
 
-if (!resolvedBase) {
+// Safety check: If VITE_API_URL is missing, or is not a valid http/https URL (e.g. MongoDB string was set by mistake in Render)
+if (!resolvedBase || !resolvedBase.startsWith('http')) {
   if (typeof window !== 'undefined' && window.location.hostname.includes('onrender.com')) {
     resolvedBase = 'https://realestatelisting-u2kp.onrender.com';
   } else {
-    resolvedBase = (import.meta.env.VITE_API_URL || 'https://realestatelisting-u2kp.onrender.com') + '';
+    resolvedBase = 'http://localhost:5000';
   }
 }
 
 export const API_BASE_URL = resolvedBase;
 
+// Expose globally on the window object for components to reference
+if (typeof window !== 'undefined') {
+  window.API_BASE_URL = resolvedBase;
+}
+
 // Global Axios request interceptor to rewrite absolute local URLs to the configured API server URL on production
 axios.interceptors.request.use(
   (config) => {
-    if (config.url && config.url.startsWith((import.meta.env.VITE_API_URL || 'https://realestatelisting-u2kp.onrender.com') + '')) {
-      config.url = config.url.replace((import.meta.env.VITE_API_URL || 'https://realestatelisting-u2kp.onrender.com') + '', API_BASE_URL);
+    if (config.url && config.url.startsWith('http://localhost:5000')) {
+      config.url = config.url.replace('http://localhost:5000', API_BASE_URL);
     }
     return config;
   },

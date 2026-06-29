@@ -72,7 +72,7 @@ const SellerLogin = () => {
     setShowSocialModal(null);
     try {
       setError('');
-      const res = await axios.post((import.meta.env.VITE_API_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/auth/social-login', { 
+      const res = await axios.post((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/auth/social-login', { 
         email: email, 
         provider: platform,
         role: 'seller'
@@ -107,7 +107,7 @@ const SellerLogin = () => {
     setError('');
     setIsSubmitting(true);
     try {
-      const res = await axios.post((import.meta.env.VITE_API_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/auth/login', { identifier, password });
+      const res = await axios.post((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/auth/login', { identifier, password });
       
       const loggedUser = res.data.user;
       
@@ -381,7 +381,7 @@ const SellerLogin = () => {
                         return;
                       }
                       try {
-                        await axios.post((import.meta.env.VITE_API_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/auth/send-otp', { identifier: forgotEmail });
+                        await axios.post((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/auth/send-otp', { identifier: forgotEmail });
                         setForgotStep(2);
                         await window.customAlert(`🔑 OTP verification code has been sent in real-time! If local SMTP is not configured, check the backend server logs/terminal output.`);
                       } catch (err) {
@@ -435,7 +435,7 @@ const SellerLogin = () => {
                         return;
                       }
                       try {
-                        await axios.post((import.meta.env.VITE_API_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/auth/reset-password', { identifier: forgotEmail, newPassword, otp: enteredOtp });
+                        await axios.post((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/auth/reset-password', { identifier: forgotEmail, newPassword, otp: enteredOtp });
                         await window.customAlert('Password reset successfully! You can now log in.');
                         setShowForgotModal(false);
                         setForgotStep(1);

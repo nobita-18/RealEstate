@@ -263,7 +263,7 @@ const AddProperty = () => {
         data.append('images', img);
       });
 
-      await axios.post((import.meta.env.VITE_API_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/properties', data, {
+      await axios.post((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/properties', data, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       

@@ -79,7 +79,7 @@ const PropertyCard = ({ property, index = 0, onFavoriteToggle }) => {
     }
     
     try {
-      await fetch(`${import.meta.env.VITE_API_URL || "https://realestatelisting-u2kp.onrender.com"}/api/users/${currentUser.id}`, {
+      await fetch(`${window.API_BASE_URL || "https://realestatelisting-u2kp.onrender.com"}/api/users/${currentUser.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ favorites: favs })

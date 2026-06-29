@@ -86,29 +86,29 @@ const SellerDashboard = () => {
   const fetchData = async () => {
     try {
       // Fetch Properties
-      const propsRes = await axios.get((import.meta.env.VITE_API_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/properties?status=all');
+      const propsRes = await axios.get((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/properties?status=all');
       const myProps = propsRes.data.filter(p => String(p.ownerId) === String(sellerUser.id));
       setProperties(myProps);
 
       // Fetch Inquiries (Messages)
       // Since enquiries endpoint doesn't filter by owner on the backend easily yet,
       // we fetch all and filter where propertyId matches myProps
-      const inqRes = await axios.get((import.meta.env.VITE_API_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/enquiries');
+      const inqRes = await axios.get((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/enquiries');
       const myPropIds = myProps.map(p => String(p.id));
       const myInquiries = inqRes.data.filter(i => myPropIds.includes(String(i.propertyId)));
       setInquiries(myInquiries.sort((a, b) => new Date(b.date) - new Date(a.date)));
 
       // Fetch Users for Buyer Profiles
-      const userRes = await axios.get((import.meta.env.VITE_API_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/users');
+      const userRes = await axios.get((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/users');
       setUsers(userRes.data.filter(u => u.role === 'buyer'));
 
       // Fetch Bookings/Transactions
-      const transRes = await axios.get((import.meta.env.VITE_API_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/bookings');
+      const transRes = await axios.get((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/bookings');
       setTransactions(transRes.data.filter(t => myPropIds.includes(String(t.propertyId))));
 
       // Fetch Seller Profile to get real-time notifications
       if (sellerUser && sellerUser.id) {
-        const sellerProfileRes = await axios.get(`${import.meta.env.VITE_API_URL || "https://realestatelisting-u2kp.onrender.com"}/api/users/${sellerUser.id}`);
+        const sellerProfileRes = await axios.get(`${window.API_BASE_URL || "https://realestatelisting-u2kp.onrender.com"}/api/users/${sellerUser.id}`);
         setSellerProfile(sellerProfileRes.data);
       }
 
@@ -141,7 +141,7 @@ const SellerDashboard = () => {
       const updatedProfile = { ...sellerProfile, notifications: updatedNotifs };
       setSellerProfile(updatedProfile);
       try {
-        await axios.put(`${import.meta.env.VITE_API_URL || "https://realestatelisting-u2kp.onrender.com"}/api/users/${sellerUser.id}`, { notifications: updatedNotifs });
+        await axios.put(`${window.API_BASE_URL || "https://realestatelisting-u2kp.onrender.com"}/api/users/${sellerUser.id}`, { notifications: updatedNotifs });
       } catch (err) {
         console.error("Failed to mark notifications as read on server:", err);
       }
@@ -560,7 +560,7 @@ const SellerDashboard = () => {
         return;
       }
       try {
-        await axios.put(`${import.meta.env.VITE_API_URL || "https://realestatelisting-u2kp.onrender.com"}/api/properties/${prop.id}/delete-request`, { reason });
+        await axios.put(`${window.API_BASE_URL || "https://realestatelisting-u2kp.onrender.com"}/api/properties/${prop.id}/delete-request`, { reason });
         await window.customAlert('Deletion request sent to admin for approval!');
         fetchData();
       } catch (err) {

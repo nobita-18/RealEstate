@@ -26,7 +26,7 @@ const AdminDashboard = () => {
 
   const fetchLogs = async () => {
     try {
-      const res = await axios.get((import.meta.env.VITE_API_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/logs');
+      const res = await axios.get((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/logs');
       if (Array.isArray(res.data)) {
         setLogs(res.data);
       }
@@ -37,7 +37,7 @@ const AdminDashboard = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get((import.meta.env.VITE_API_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/users');
+      const res = await axios.get((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/users');
       if (Array.isArray(res.data)) {
          setUsersList(res.data);
          const buyers = res.data.filter(u => u.role === 'buyer' || u.role === undefined).length;
@@ -51,7 +51,7 @@ const AdminDashboard = () => {
 
   const fetchProperties = async () => {
     try {
-      const res = await axios.get((import.meta.env.VITE_API_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/properties?status=all');
+      const res = await axios.get((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/properties?status=all');
       const activeProperties = res.data.filter(p => p.status !== 'deleted');
       setPropertiesList(activeProperties);
       setPendingProps(activeProperties.filter(p => p.status === 'pending' || p.hasPendingChanges === true || p.status === 'pending_delete'));
@@ -70,7 +70,7 @@ const AdminDashboard = () => {
     }
 
     try {
-      await axios.put(`${import.meta.env.VITE_API_URL || "https://realestatelisting-u2kp.onrender.com"}/api/properties/${id}/status`, { status, reason });
+      await axios.put(`${window.API_BASE_URL || "https://realestatelisting-u2kp.onrender.com"}/api/properties/${id}/status`, { status, reason });
       fetchProperties(); // Refresh list
       fetchLogs();
     } catch (err) {
@@ -88,7 +88,7 @@ const AdminDashboard = () => {
       }
 
       try {
-        await axios.delete(`${import.meta.env.VITE_API_URL || "https://realestatelisting-u2kp.onrender.com"}/api/properties/${id}`, { data: { reason } });
+        await axios.delete(`${window.API_BASE_URL || "https://realestatelisting-u2kp.onrender.com"}/api/properties/${id}`, { data: { reason } });
         fetchProperties();
         fetchLogs();
         if (activeModalProps) {
@@ -107,7 +107,7 @@ const AdminDashboard = () => {
   const handleToggleStatus = async (id, currentStatus) => {
     const nextStatus = currentStatus === 'deactivated' ? 'active' : 'deactivated';
     try {
-      await axios.put(`${import.meta.env.VITE_API_URL || "https://realestatelisting-u2kp.onrender.com"}/api/users/${id}/status`, { status: nextStatus });
+      await axios.put(`${window.API_BASE_URL || "https://realestatelisting-u2kp.onrender.com"}/api/users/${id}/status`, { status: nextStatus });
       fetchUsers();
       fetchLogs();
     } catch (err) {
@@ -122,7 +122,7 @@ const AdminDashboard = () => {
     }
     if (await window.customConfirm('WARNING: Are you sure you want to permanently vaporize this user data node?')) {
       try {
-        await axios.delete(`${import.meta.env.VITE_API_URL || "https://realestatelisting-u2kp.onrender.com"}/api/users/${id}`);
+        await axios.delete(`${window.API_BASE_URL || "https://realestatelisting-u2kp.onrender.com"}/api/users/${id}`);
         fetchUsers();
         fetchLogs();
       } catch (err) {
@@ -600,7 +600,7 @@ const AdminDashboard = () => {
                   ).map((img, idx) => (
                     <img 
                       key={idx} 
-                      src={img.startsWith('http') ? img : `${import.meta.env.VITE_API_URL || "https://realestatelisting-u2kp.onrender.com"}${img}`} 
+                      src={img.startsWith('http') ? img : `${window.API_BASE_URL || "https://realestatelisting-u2kp.onrender.com"}${img}`} 
                       alt="" 
                       style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px', border: '1px solid #333' }}
                     />

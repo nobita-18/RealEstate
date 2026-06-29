@@ -12,8 +12,8 @@ const BuyerAgents = () => {
       try {
         // Fetch all users and all properties in parallel
         const [usersRes, propertiesRes] = await Promise.all([
-          axios.get((import.meta.env.VITE_API_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/users'),
-          axios.get((import.meta.env.VITE_API_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/properties?status=all')
+          axios.get((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/users'),
+          axios.get((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/properties?status=all')
         ]);
 
         const allUsers = usersRes.data || [];

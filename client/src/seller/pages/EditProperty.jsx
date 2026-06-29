@@ -134,7 +134,7 @@ const EditProperty = () => {
   const sellerUserId = sellerUser?.id;
 
   useEffect(() => {
-    axios.get(`${import.meta.env.VITE_API_URL || "https://realestatelisting-u2kp.onrender.com"}/api/properties/${id}?preview=pending`)
+    axios.get(`${window.API_BASE_URL || "https://realestatelisting-u2kp.onrender.com"}/api/properties/${id}?preview=pending`)
       .then(res => {
         const prop = res.data;
         if (prop.ownerId != sellerUserId) {
@@ -302,7 +302,7 @@ const EditProperty = () => {
          });
       }
 
-      await axios.put(`${import.meta.env.VITE_API_URL || "https://realestatelisting-u2kp.onrender.com"}/api/properties/${id}`, data, {
+      await axios.put(`${window.API_BASE_URL || "https://realestatelisting-u2kp.onrender.com"}/api/properties/${id}`, data, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       

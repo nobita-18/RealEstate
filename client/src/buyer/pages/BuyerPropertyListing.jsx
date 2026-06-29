@@ -40,7 +40,7 @@ const BuyerPropertyListing = () => {
   });
 
   useEffect(() => {
-    axios.get((import.meta.env.VITE_API_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/properties')
+    axios.get((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/properties')
       .then(res => {
         setProperties(res.data);
         setLoading(false);

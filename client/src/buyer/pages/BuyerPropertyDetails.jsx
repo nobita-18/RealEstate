@@ -19,7 +19,7 @@ const BuyerPropertyDetails = () => {
   const currentUser = JSON.parse(localStorage.getItem('user')) || JSON.parse(localStorage.getItem('sellerUser'));
 
   useEffect(() => {
-    axios.get(`${import.meta.env.VITE_API_URL || "https://realestatelisting-u2kp.onrender.com"}/api/properties/${id}${window.location.search}`)
+    axios.get(`${window.API_BASE_URL || "https://realestatelisting-u2kp.onrender.com"}/api/properties/${id}${window.location.search}`)
       .then(res => {
         setProperty(res.data);
         setReviews(res.data.reviews || []);
@@ -46,7 +46,7 @@ const BuyerPropertyDetails = () => {
       await window.customAlert("Please log in to send an enquiry!");
       return;
     }
-    axios.post((import.meta.env.VITE_API_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/enquiries', {
+    axios.post((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/enquiries', {
       userId: user.id,
       userName: user.name,
       userEmail: user.email,
@@ -77,7 +77,7 @@ const BuyerPropertyDetails = () => {
       return;
     }
     
-    axios.post(`${import.meta.env.VITE_API_URL || "https://realestatelisting-u2kp.onrender.com"}/api/properties/${id}/reviews`, {
+    axios.post(`${window.API_BASE_URL || "https://realestatelisting-u2kp.onrender.com"}/api/properties/${id}/reviews`, {
       userId: user.id,
       userName: user.name,
       rating,

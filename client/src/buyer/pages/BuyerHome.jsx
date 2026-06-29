@@ -48,7 +48,7 @@ const BuyerHome = () => {
   }, []);
 
   useEffect(() => {
-    axios.get((import.meta.env.VITE_API_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/properties')
+    axios.get((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/properties')
       .then(res => {
         // Only show approved properties and take top 4 for featured
         const approvedProps = res.data.filter(p => !p.status || p.status === 'approved');
