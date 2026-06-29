@@ -11,10 +11,14 @@ if (!CLERK_PUB_KEY || CLERK_PUB_KEY === 'undefined' || !CLERK_PUB_KEY.startsWith
   CLERK_PUB_KEY = 'pk_test_bGl2ZS1ncm91c2UtNTkuY2xlcmsuYWNjb3VudHMuZGV2JA';
 }
 
+import ErrorBoundary from '../components/ErrorBoundary';
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <ClerkProvider publishableKey={CLERK_PUB_KEY}>
-      <App />
-    </ClerkProvider>
+    <ErrorBoundary>
+      <ClerkProvider publishableKey={CLERK_PUB_KEY}>
+        <App />
+      </ClerkProvider>
+    </ErrorBoundary>
   </React.StrictMode>,
 )
