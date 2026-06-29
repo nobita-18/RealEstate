@@ -5,7 +5,10 @@ import App from './App.jsx';
 import '../index.css';
 import '../api.js';
 
-const CLERK_PUB_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || 'pk_test_bGl2ZS1ncm91c2UtNTkuY2xlcmsuYWNjb3VudHMuZGV2JA';
+let CLERK_PUB_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+if (!CLERK_PUB_KEY || CLERK_PUB_KEY === 'undefined' || !CLERK_PUB_KEY.startsWith('pk_')) {
+  CLERK_PUB_KEY = 'pk_test_bGl2ZS1ncm91c2UtNTkuY2xlcmsuYWNjb3VudHMuZGV2JA';
+}
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
