@@ -27,6 +27,20 @@ const connectDB = async () => {
     console.log('MongoDB Connected successfully!');
     
     // Run migration
+    try {
+      console.log('Dropping legacy unique indexes to prevent write failures...');
+      await mongoose.connection.db.collection('users').dropIndexes();
+      console.log('Successfully cleared users indexes.');
+    } catch (e) {
+      console.log('Skipping users index drop (no legacy unique indexes to clear).');
+    }
+    try {
+      await mongoose.connection.db.collection('properties').dropIndexes();
+      console.log('Successfully cleared properties indexes.');
+    } catch (e) {
+      console.log('Skipping properties index drop (no legacy unique indexes to clear).');
+    }
+
     await migrateJSONToMongoDB();
   } catch (err) {
     console.error('MongoDB connection error:', err.message);
@@ -46,64 +60,62 @@ const migrateJSONToMongoDB = async () => {
 
   try {
     // 1. Migrate Users
-    const userCount = await User.countDocuments();
-    if (userCount === 0 && fs.existsSync(jsonFiles.users)) {
+    if (fs.existsSync(jsonFiles.users)) {
       const data = JSON.parse(fs.readFileSync(jsonFiles.users, 'utf8'));
       if (data.length > 0) {
-        // Remove duplicates by ID to be safe
         const uniqueData = Array.from(new Map(data.map(item => [item.id, item])).values());
+        await User.deleteMany({});
         await User.insertMany(uniqueData);
-        console.log(`Migrated ${uniqueData.length} users to MongoDB.`);
+        console.log(`Synchronized ${uniqueData.length} users to MongoDB.`);
       }
     }
 
     // 2. Migrate Properties
-    const propertyCount = await Property.countDocuments();
-    if (propertyCount === 0 && fs.existsSync(jsonFiles.properties)) {
+    if (fs.existsSync(jsonFiles.properties)) {
       const data = JSON.parse(fs.readFileSync(jsonFiles.properties, 'utf8'));
       if (data.length > 0) {
         const uniqueData = Array.from(new Map(data.map(item => [item.id, item])).values());
+        await Property.deleteMany({});
         await Property.insertMany(uniqueData);
-        console.log(`Migrated ${uniqueData.length} properties to MongoDB.`);
+        console.log(`Synchronized ${uniqueData.length} properties to MongoDB.`);
       }
     }
 
     // 3. Migrate Enquiries
-    const enquiryCount = await Enquiry.countDocuments();
-    if (enquiryCount === 0 && fs.existsSync(jsonFiles.enquiries)) {
+    if (fs.existsSync(jsonFiles.enquiries)) {
       const data = JSON.parse(fs.readFileSync(jsonFiles.enquiries, 'utf8'));
       if (data.length > 0) {
         const uniqueData = Array.from(new Map(data.map(item => [item.id, item])).values());
+        await Enquiry.deleteMany({});
         await Enquiry.insertMany(uniqueData);
-        console.log(`Migrated ${uniqueData.length} enquiries to MongoDB.`);
+        console.log(`Synchronized ${uniqueData.length} enquiries to MongoDB.`);
       }
     }
 
     // 4. Migrate Bookings
-    const bookingCount = await Booking.countDocuments();
-    if (bookingCount === 0 && fs.existsSync(jsonFiles.bookings)) {
+    if (fs.existsSync(jsonFiles.bookings)) {
       const data = JSON.parse(fs.readFileSync(jsonFiles.bookings, 'utf8'));
       if (data.length > 0) {
         const uniqueData = Array.from(new Map(data.map(item => [item.id, item])).values());
+        await Booking.deleteMany({});
         await Booking.insertMany(uniqueData);
-        console.log(`Migrated ${uniqueData.length} bookings to MongoDB.`);
+        console.log(`Synchronized ${uniqueData.length} bookings to MongoDB.`);
       }
     }
 
     // 5. Migrate Logs
-    const logCount = await Log.countDocuments();
-    if (logCount === 0 && fs.existsSync(jsonFiles.logs)) {
+    if (fs.existsSync(jsonFiles.logs)) {
       const data = JSON.parse(fs.readFileSync(jsonFiles.logs, 'utf8'));
       if (data.length > 0) {
-        // Logs might not have unique ID constraint, but we store it as is
+        await Log.deleteMany({});
         await Log.insertMany(data);
-        console.log(`Migrated ${data.length} logs to MongoDB.`);
+        console.log(`Synchronized ${data.length} logs to MongoDB.`);
       }
     }
 
-    console.log('Database migration check completed.');
+    console.log('Database force synchronization completed.');
   } catch (err) {
-    console.error('Error during data migration:', err);
+    console.error('Error during data synchronization:', err);
   }
 };
 
