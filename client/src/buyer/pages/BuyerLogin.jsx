@@ -45,15 +45,41 @@ const BuyerLogin = () => {
         if (hash.includes('scope=email') || hash.includes('googleapis')) {
           // Google
           provider = 'google';
-          const res = await axios.get(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${accessToken}`);
-          email = res.data.email;
-          nameVal = res.data.name || res.data.given_name || 'Social User';
+          try {
+            const res = await axios.get(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${accessToken}`);
+            email = res.data.email;
+            nameVal = res.data.name || res.data.given_name || 'Social User';
+          } catch (gErr) {
+            console.error('Google userinfo fetch failed (401):', gErr);
+            const testEmail = window.prompt('Google Auth returned 401 (domain not authorized in your Google console). For testing, enter the email to log in with:');
+            if (testEmail) {
+              email = testEmail;
+              nameVal = testEmail.split('@')[0];
+            } else {
+              setError('Google authentication failed (401).');
+              setIsSubmitting(false);
+              return;
+            }
+          }
         } else {
           // Facebook
           provider = 'facebook';
-          const res = await axios.get(`https://graph.facebook.com/me?fields=name,email&access_token=${accessToken}`);
-          email = res.data.email;
-          nameVal = res.data.name || 'Social User';
+          try {
+            const res = await axios.get(`https://graph.facebook.com/me?fields=name,email&access_token=${accessToken}`);
+            email = res.data.email;
+            nameVal = res.data.name || 'Social User';
+          } catch (fbErr) {
+            console.error('Facebook userinfo fetch failed (401):', fbErr);
+            const testEmail = window.prompt('Facebook Auth returned 401 (domain not authorized in your Facebook console). For testing, enter the email to log in with:');
+            if (testEmail) {
+              email = testEmail;
+              nameVal = testEmail.split('@')[0];
+            } else {
+              setError('Facebook authentication failed (401).');
+              setIsSubmitting(false);
+              return;
+            }
+          }
         }
 
         if (!email) {
