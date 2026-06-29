@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { 
@@ -21,34 +21,84 @@ const SellerLogin = () => {
   const [generatedOtp, setGeneratedOtp] = useState('');
   const [enteredOtp, setEnteredOtp] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const [showSocialModal, setShowSocialModal] = useState(null); // 'google', 'facebook', or null
+
+  useEffect(() => {
+    // Initialize Google Identity Services SDK
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    const hasRealClientId = clientId && !clientId.startsWith('YOUR_GOOGLE_CLIENT_ID');
+    
+    if (window.google && hasRealClientId) {
+      window.google.accounts.id.initialize({
+        client_id: clientId,
+        callback: handleGoogleCredentialResponse
+      });
+    }
+  }, []);
+
+  const handleGoogleCredentialResponse = async (response) => {
+    try {
+      // Decode JWT payload to extract email
+      const base64Url = response.credential.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      
+      const payload = JSON.parse(jsonPayload);
+      const email = payload.email;
+      
+      await handleSocialAccountSelect(email, 'google');
+    } catch (err) {
+      console.error('Failed to decode Google login credential:', err);
+      await window.customAlert('Failed to log in with Google.');
+    }
+  };
 
   const handleSocialLogin = (platform) => {
-    let mockUser = {
-      id: "SEL0011",
-      name: "TestSE",
-      email: "TESTSELL@gmail.com",
-      role: "seller",
-      username: "TestSE",
-      mobile: "4567890321",
-      status: "active"
-    };
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    const hasRealClientId = clientId && !clientId.startsWith('YOUR_GOOGLE_CLIENT_ID');
 
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    localStorage.removeItem('sellerToken');
-    localStorage.removeItem('sellerUser');
-    localStorage.removeItem('adminToken');
-    localStorage.removeItem('adminUser');
+    if (platform === 'google' && window.google && hasRealClientId) {
+      // Trigger real Google popup chooser
+      window.google.accounts.id.prompt();
+    } else {
+      // Fallback to our custom modal dialog
+      setShowSocialModal(platform);
+    }
+  };
 
-    localStorage.setItem('token', 'mock-oauth-token-56789');
-    localStorage.setItem('user', JSON.stringify(mockUser));
-    localStorage.setItem('sellerToken', 'mock-oauth-token-56789');
-    localStorage.setItem('sellerUser', JSON.stringify(mockUser));
+  const handleSocialAccountSelect = async (email, platform) => {
+    setShowSocialModal(null);
+    try {
+      setError('');
+      const res = await axios.post('http://localhost:5000/api/auth/social-login', { 
+        email: email, 
+        provider: platform,
+        role: 'seller'
+      });
+      
+      const loggedUser = res.data.user;
+      
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('sellerToken');
+      localStorage.removeItem('sellerUser');
+      localStorage.removeItem('adminToken');
+      localStorage.removeItem('adminUser');
 
-    setSuccessData(mockUser);
-    setTimeout(() => {
-      window.location.href = '/seller/dashboard';
-    }, 2000);
+      localStorage.setItem('token', res.data.token);
+      localStorage.setItem('user', JSON.stringify(loggedUser));
+      localStorage.setItem('sellerToken', res.data.token);
+      localStorage.setItem('sellerUser', JSON.stringify(loggedUser));
+
+      setSuccessData(loggedUser);
+      setTimeout(() => {
+        window.location.href = '/seller/dashboard';
+      }, 2000);
+    } catch (err) {
+      await window.customAlert(err.response?.data?.message || `Failed to log in with ${platform}.`);
+    }
   };
 
 
@@ -330,10 +380,13 @@ const SellerLogin = () => {
                         await window.customAlert('Please enter email or mobile number.');
                         return;
                       }
-                      const otp = String(Math.floor(100000 + Math.random() * 900000));
-                      setGeneratedOtp(otp);
-                      setForgotStep(2);
-                      await window.customAlert(`🔑 [SIMULATED SMS/EMAIL] Your OTP verification code is: ${otp}`);
+                      try {
+                        await axios.post('http://localhost:5000/api/auth/send-otp', { identifier: forgotEmail });
+                        setForgotStep(2);
+                        await window.customAlert(`🔑 OTP verification code has been sent in real-time! If local SMTP is not configured, check the backend server logs/terminal output.`);
+                      } catch (err) {
+                        await window.customAlert(err.response?.data?.message || 'Failed to send OTP code.');
+                      }
                     }} 
                     style={{ flex: 1, padding: '10px', borderRadius: '8px', background: '#c4a761', color: '#fff', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}
                   >
@@ -373,8 +426,8 @@ const SellerLogin = () => {
                   </button>
                   <button 
                     onClick={async () => {
-                      if (enteredOtp !== generatedOtp) {
-                        await window.customAlert('Invalid OTP code. Please try again.');
+                      if (!enteredOtp) {
+                        await window.customAlert('Please enter the OTP verification code.');
                         return;
                       }
                       if (!newPassword || newPassword.length < 6) {
@@ -382,7 +435,7 @@ const SellerLogin = () => {
                         return;
                       }
                       try {
-                        await axios.post('http://localhost:5000/api/auth/reset-password', { identifier: forgotEmail, newPassword });
+                        await axios.post('http://localhost:5000/api/auth/reset-password', { identifier: forgotEmail, newPassword, otp: enteredOtp });
                         await window.customAlert('Password reset successfully! You can now log in.');
                         setShowForgotModal(false);
                         setForgotStep(1);
@@ -403,6 +456,132 @@ const SellerLogin = () => {
           </div>
         </div>
       )}
+
+      {showSocialModal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(15, 23, 42, 0.4)', backdropFilter: 'blur(10px)', zIndex: 10000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="custom-modal-box" style={{ width: '90%', maxWidth: '420px', background: '#fff', padding: '25px', borderRadius: '15px', border: '1px solid #e2e8f0', boxShadow: '0 20px 40px rgba(0,0,0,0.1)', textAlign: 'center' }}>
+            
+            {/* Logo/Icon */}
+            <div style={{ display: 'inline-flex', padding: '10px', borderRadius: '50%', background: showSocialModal === 'google' ? '#fef2f2' : '#eff6ff', marginBottom: '15px' }}>
+              {showSocialModal === 'google' ? (
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" fill="#1877F2"/>
+                </svg>
+              )}
+            </div>
+
+            <h3 style={{ margin: '0 0 5px 0', fontSize: '1.25rem', color: '#0f172a', fontWeight: '800' }}>
+              Sign in with {showSocialModal === 'google' ? 'Google' : 'Facebook'}
+            </h3>
+            <p style={{ fontSize: '0.85rem', color: '#64748b', margin: '0 0 20px 0' }}>
+              Choose an account to continue to Real Estate Platform
+            </p>
+
+            {/* Account List */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', textAlign: 'left', marginBottom: '20px' }}>
+              {[
+                { name: 'Bala', email: 'Bala@gmail.com', role: 'Seller', desc: 'Registered' },
+                { name: 'lingamSELL', email: 'lingamSELL@gmail.com', role: 'Seller', desc: 'Registered' },
+                { name: 'Athilingam', email: 'lingamAthi@gmail.com', role: 'Seller', desc: 'Registered' },
+                { name: 'Unknown Guest', email: 'guest@gmail.com', role: 'Guest', desc: 'Unregistered Account' }
+              ].map((acc, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleSocialAccountSelect(acc.email, showSocialModal)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    width: '100%',
+                    padding: '12px 15px',
+                    borderRadius: '10px',
+                    border: '1px solid #e2e8f0',
+                    background: '#f8fafc',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    outline: 'none'
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = '#f1f5f9'; e.currentTarget.style.borderColor = '#cbd5e1'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.borderColor = '#e2e8f0'; }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div style={{
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: '50%',
+                      background: acc.desc.includes('Unregistered') ? '#cbd5e1' : '#3b82f6',
+                      color: '#fff',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontWeight: 'bold',
+                      fontSize: '0.9rem'
+                    }}>
+                      {acc.name[0]}
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: '700', fontSize: '0.85rem', color: '#0f172a' }}>{acc.name}</div>
+                      <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{acc.email}</div>
+                    </div>
+                  </div>
+                  <span style={{ fontSize: '0.7rem', fontWeight: 'bold', padding: '3px 8px', borderRadius: '12px', background: acc.desc.includes('Unregistered') ? '#fee2e2' : '#e0f2fe', color: acc.desc.includes('Unregistered') ? '#ef4444' : '#0284c7' }}>
+                    {acc.role}
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            {/* Manual Entry option */}
+            <button
+              onClick={() => {
+                const manualEmail = window.prompt(`Enter your ${showSocialModal === 'google' ? 'Google' : 'Facebook'} email address:`);
+                if (manualEmail) {
+                  handleSocialAccountSelect(manualEmail, showSocialModal);
+                }
+              }}
+              style={{
+                width: '100%',
+                padding: '10px',
+                borderRadius: '8px',
+                background: 'transparent',
+                border: '1px dashed #cbd5e1',
+                color: '#475569',
+                fontWeight: '600',
+                fontSize: '0.8rem',
+                cursor: 'pointer',
+                marginBottom: '15px'
+              }}
+            >
+              Use another account
+            </button>
+
+            {/* Cancel Button */}
+            <button
+              onClick={() => setShowSocialModal(null)}
+              style={{
+                width: '100%',
+                padding: '10px',
+                borderRadius: '8px',
+                background: '#f1f5f9',
+                border: 'none',
+                color: '#475569',
+                fontWeight: 'bold',
+                cursor: 'pointer'
+              }}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

@@ -30,8 +30,7 @@ const BuyerProfile = () => {
       // Fetch enquiries
       const enqRes = await axios.get(`http://localhost:5000/api/enquiries/user/${storedUser.id}`);
       if (Array.isArray(enqRes.data)) {
-        const filtered = enqRes.data.filter(enq => String(enq.buyerId) === String(storedUser.id));
-        setMyEnquiries(filtered);
+        setMyEnquiries(enqRes.data);
       }
     } catch (err) {
       console.error("Failed to load profile data dependencies", err);
@@ -352,7 +351,7 @@ const BuyerProfile = () => {
                 {myEnquiries.map(enq => (
                   <div key={enq.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--secondary-color)', padding: '15px 20px', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
                     <div>
-                      <h4 style={{ color: 'var(--text-main)', margin: '0 0 5px 0' }}>Enquiry for Property ID: {enq.propertyId}</h4>
+                      <h4 style={{ color: 'var(--text-main)', margin: '0 0 5px 0' }}>Enquiry for: {enq.propertyTitle || `Property ID: ${enq.propertyId}`}</h4>
                       <p style={{ color: 'var(--text-light)', margin: 0, fontSize: '0.85rem' }}>Message: "{enq.message}"</p>
                     </div>
                     <span style={{ fontSize: '0.8rem', color: 'var(--primary-color)', fontWeight: 'bold' }}>{enq.date ? enq.date.split('T')[0] : 'N/A'}</span>

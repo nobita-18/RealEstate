@@ -19,6 +19,7 @@ const path = require('path');
 const multer = require('multer');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
 
 const JWT_SECRET = 'your_super_secret_jwt_key_here';
 
@@ -542,22 +543,149 @@ app.put('/api/properties/:id/delete-request', async (req, res) => {
   }
 });
 
-// Forgot Password OTP endpoint
+// --- OTP Email Sending Helper ---
+const sendOTPEmail = async (toEmail, otp) => {
+  try {
+    // If SMTP credentials are provided, use them. Otherwise, log it and return.
+    if (process.env.SMTP_USER && process.env.SMTP_PASS) {
+      const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST || 'smtp.gmail.com',
+        port: Number(process.env.SMTP_PORT) || 587,
+        secure: process.env.SMTP_SECURE === 'true',
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS
+        }
+      });
+      await transporter.sendMail({
+        from: `"Real Estate Platform" <${process.env.SMTP_USER}>`,
+        to: toEmail,
+        subject: "Your OTP Verification Code",
+        text: `Your OTP verification code is: ${otp}. It is valid for 10 minutes.`,
+        html: `<div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px; max-width: 500px;">
+                <h2 style="color: #3b82f6; margin-top: 0;">OTP Verification</h2>
+                <p>You requested a password reset. Use the following 6-digit OTP code to complete the process:</p>
+                <div style="font-size: 24px; font-weight: bold; background: #f1f5f9; padding: 15px; text-align: center; border-radius: 8px; letter-spacing: 5px; color: #0f172a; margin: 20px 0;">
+                  ${otp}
+                </div>
+                <p style="font-size: 12px; color: #64748b;">This OTP is valid for 10 minutes. If you did not request this, please ignore this email.</p>
+               </div>`
+      });
+      console.log(`[REAL-TIME EMAIL] Successfully sent OTP ${otp} to ${toEmail}`);
+    } else {
+      console.log(`
+==================================================
+[REAL-TIME EMAIL OUTBOX - NO SMTP CONFIGURED]
+TO: ${toEmail}
+SUBJECT: Your OTP Verification Code
+BODY: Your OTP verification code is ${otp}
+==================================================
+      `);
+    }
+  } catch (err) {
+    console.error('Failed to send real-time OTP email:', err.message);
+  }
+};
+
+// Send OTP Endpoint
+app.post('/api/auth/send-otp', async (req, res) => {
+  try {
+    const users = await readDb('users');
+    const { identifier } = req.body;
+    if (!identifier) {
+      return res.status(400).json({ message: 'Email or Mobile is required.' });
+    }
+    const userIndex = users.findIndex(u => (
+      (u.email && u.email.toLowerCase() === identifier.toLowerCase()) ||
+      (u.mobile === identifier)
+    ));
+    if (userIndex === -1) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    const otp = String(Math.floor(100000 + Math.random() * 900000));
+    users[userIndex].otp = otp;
+    users[userIndex].otpExpiry = Date.now() + 10 * 60 * 1000; // 10 minutes expiry
+
+    await writeDb('users', users);
+
+    // Send email/log OTP in real-time
+    const targetEmail = users[userIndex].email || 'no-reply@realestate.com';
+    await sendOTPEmail(targetEmail, otp);
+
+    res.json({ message: 'OTP sent successfully.' });
+  } catch (err) {
+    console.error('Send OTP error:', err);
+    res.status(500).json({ message: 'Internal server error during OTP sending.' });
+  }
+});
+
+// Forgot Password OTP verification and reset endpoint
 app.post('/api/auth/reset-password', async (req, res) => {
   const users = await readDb('users');
-  const { identifier, newPassword } = req.body;
+  const { identifier, newPassword, otp } = req.body;
   const userIndex = users.findIndex(u => (
     (u.email && u.email.toLowerCase() === identifier.toLowerCase()) ||
     (u.mobile === identifier)
   ));
-  if (userIndex !== -1) {
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    users[userIndex].password = hashedPassword;
-    users[userIndex].plainPassword = newPassword;
-    await writeDb('users', users);
-    res.json({ message: 'Password reset successfully' });
-  } else {
-    res.status(404).json({ message: 'User not found' });
+  if (userIndex === -1) {
+    return res.status(404).json({ message: 'User not found' });
+  }
+
+  const user = users[userIndex];
+
+  // Verify OTP
+  if (!user.otp || user.otp !== String(otp)) {
+    return res.status(400).json({ message: 'Invalid OTP code. Please request a new one.' });
+  }
+
+  if (user.otpExpiry && Date.now() > user.otpExpiry) {
+    return res.status(400).json({ message: 'OTP code has expired. Please request a new one.' });
+  }
+
+  // Clear OTP and set new password
+  user.otp = null;
+  user.otpExpiry = null;
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  user.password = hashedPassword;
+  user.plainPassword = newPassword;
+  
+  users[userIndex] = user;
+  await writeDb('users', users);
+
+  res.json({ message: 'Password reset successfully' });
+});
+
+// Social Login Verification Endpoint
+app.post('/api/auth/social-login', async (req, res) => {
+  try {
+    const users = await readDb('users');
+    const { email, provider, role } = req.body;
+    if (!email) {
+      return res.status(400).json({ message: 'Email is required' });
+    }
+
+    const user = users.find(u => u.email && u.email.toLowerCase() === email.toLowerCase());
+    if (!user) {
+      return res.status(404).json({ message: `This ${provider} account (${email}) is not registered. Please register first.` });
+    }
+
+    if (user.status === 'deactivated' || user.status === 'rejected') {
+      return res.status(400).json({ message: `Your account is currently ${user.status}.` });
+    }
+
+    // Optional role check if logging into a specific dashboard (seller dashboard or admin console)
+    if (role && user.role !== role) {
+      return res.status(400).json({ message: `This account is registered as a ${user.role}, not a ${role}.` });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, { expiresIn: '24h' });
+    res.json({ token, user });
+  } catch (err) {
+    console.error('Social login error:', err);
+    res.status(500).json({ message: 'Internal server error during social login.' });
   }
 });
 

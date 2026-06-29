@@ -4,7 +4,8 @@ const path = require('path');
 const dns = require('dns');
 
 // Override DNS servers to Google and Cloudflare DNS to avoid querySrv ECONNREFUSED errors
-if (dns.setServers) {
+// This is only applied locally, as Render blocks outbound custom DNS queries (Port 53)
+if (dns.setServers && !process.env.RENDER) {
   try {
     dns.setServers(['8.8.8.8', '1.1.1.1']);
   } catch (err) {

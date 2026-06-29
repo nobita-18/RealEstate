@@ -21,7 +21,7 @@ const UserSchema = new Schema({
   notifications: { type: Array, default: [] },
   rating: { type: Number, default: 0 },
   lastLogin: { type: String, default: '' }
-}, { timestamps: true });
+}, { timestamps: true, strict: false });
 
 // Property Schema
 const PropertySchema = new Schema({
@@ -63,7 +63,7 @@ const PropertySchema = new Schema({
   inquiries: { type: Array, default: [] },
   reviews: { type: Array, default: [] },
   area: { type: Number, default: 0 }
-}, { timestamps: true });
+}, { timestamps: true, strict: false });
 
 // Enquiry Schema
 const EnquirySchema = new Schema({
@@ -76,7 +76,7 @@ const EnquirySchema = new Schema({
   propertyId: { type: Number, required: true },
   propertyTitle: { type: String, default: '' },
   message: { type: String, default: '' }
-}, { timestamps: true });
+}, { timestamps: true, strict: false });
 
 // Booking Schema
 const BookingSchema = new Schema({
@@ -88,7 +88,7 @@ const BookingSchema = new Schema({
   buyerName: { type: String, default: '' },
   price: { type: Number, default: 0 },
   status: { type: String, default: 'pending' }
-}, { timestamps: true });
+}, { timestamps: true, strict: false });
 
 // Log Schema
 const LogSchema = new Schema({
@@ -97,7 +97,7 @@ const LogSchema = new Schema({
   message: { type: String, default: '' },
   details: { type: Schema.Types.Mixed, default: {} },
   timestamp: { type: String, default: () => new Date().toISOString() }
-}, { timestamps: true });
+}, { timestamps: true, strict: false });
 
 module.exports = {
   User: mongoose.model('User', UserSchema),
