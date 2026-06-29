@@ -24,91 +24,105 @@ const BuyerLogin = () => {
   const [showSocialModal, setShowSocialModal] = useState(null); // 'google', 'facebook', or null
 
   useEffect(() => {
-    // Initialize Google Identity Services SDK
-    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-    const hasRealClientId = clientId && !clientId.startsWith('YOUR_GOOGLE_CLIENT_ID');
-    
-    if (window.google && hasRealClientId) {
-      window.google.accounts.id.initialize({
-        client_id: clientId,
-        callback: handleGoogleCredentialResponse
-      });
-    }
+    const handleOAuthCallback = async () => {
+      const hash = window.location.hash;
+      if (!hash) return;
+      
+      const params = new URLSearchParams(hash.replace('#', '?'));
+      const accessToken = params.get('access_token');
+      if (!accessToken) return;
+
+      // Clear the hash from the URL to keep it clean
+      window.history.replaceState(null, null, window.location.pathname);
+
+      try {
+        setError('');
+        setIsSubmitting(true);
+        let email = '';
+        let nameVal = '';
+        let provider = '';
+
+        if (hash.includes('scope=email') || hash.includes('googleapis')) {
+          // Google
+          provider = 'google';
+          const res = await axios.get(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${accessToken}`);
+          email = res.data.email;
+          nameVal = res.data.name || res.data.given_name || 'Social User';
+        } else {
+          // Facebook
+          provider = 'facebook';
+          const res = await axios.get(`https://graph.facebook.com/me?fields=name,email&access_token=${accessToken}`);
+          email = res.data.email;
+          nameVal = res.data.name || 'Social User';
+        }
+
+        if (!email) {
+          setError('Could not retrieve email from social account.');
+          setIsSubmitting(false);
+          return;
+        }
+
+        const res = await axios.post((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/auth/social-login', { 
+          email: email, 
+          provider: provider 
+        });
+        
+        const loggedUser = res.data.user;
+        
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('sellerToken');
+        localStorage.removeItem('sellerUser');
+        localStorage.removeItem('adminToken');
+        localStorage.removeItem('adminUser');
+
+        localStorage.setItem('token', res.data.token);
+        localStorage.setItem('user', JSON.stringify(loggedUser));
+        
+        if (loggedUser.role === 'seller') {
+          localStorage.setItem('sellerToken', res.data.token);
+          localStorage.setItem('sellerUser', JSON.stringify(loggedUser));
+        } else if (loggedUser.role === 'admin') {
+          localStorage.setItem('adminToken', res.data.token);
+          localStorage.setItem('adminUser', JSON.stringify(loggedUser));
+        }
+
+        setSuccessData(loggedUser);
+        setIsSubmitting(false);
+
+        setTimeout(() => {
+          if (loggedUser.role === 'seller') {
+            window.location.href = '/seller/dashboard';
+          } else if (loggedUser.role === 'admin') {
+            window.location.href = '/admin/dashboard';
+          } else {
+            window.location.href = '/buyer/';
+          }
+        }, 2000);
+      } catch (err) {
+        setError(err.response?.data?.message || 'This account is not registered. Please register first.');
+        setIsSubmitting(false);
+      }
+    };
+
+    handleOAuthCallback();
   }, []);
 
-  const handleGoogleCredentialResponse = async (response) => {
-    try {
-      // Decode JWT payload to extract email
-      const base64Url = response.credential.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
-      
-      const payload = JSON.parse(jsonPayload);
-      const email = payload.email;
-      
-      await handleSocialAccountSelect(email, 'google');
-    } catch (err) {
-      console.error('Failed to decode Google login credential:', err);
-      await window.customAlert('Failed to log in with Google.');
-    }
-  };
-
   const handleSocialLogin = (platform) => {
-    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-    const hasRealClientId = clientId && !clientId.startsWith('YOUR_GOOGLE_CLIENT_ID');
-
-    if (platform === 'google' && window.google && hasRealClientId) {
-      // Trigger real Google popup chooser
-      window.google.accounts.id.prompt();
-    } else {
-      // Fallback to our custom modal dialog
-      setShowSocialModal(platform);
-    }
-  };
-
-  const handleSocialAccountSelect = async (email, platform) => {
-    setShowSocialModal(null);
-    try {
-      setError('');
-      const res = await axios.post((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/auth/social-login', { 
-        email: email, 
-        provider: platform 
-      });
-      
-      const loggedUser = res.data.user;
-      
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      localStorage.removeItem('sellerToken');
-      localStorage.removeItem('sellerUser');
-      localStorage.removeItem('adminToken');
-      localStorage.removeItem('adminUser');
-
-      localStorage.setItem('token', res.data.token);
-      localStorage.setItem('user', JSON.stringify(loggedUser));
-      
-      if (loggedUser.role === 'seller') {
-        localStorage.setItem('sellerToken', res.data.token);
-        localStorage.setItem('sellerUser', JSON.stringify(loggedUser));
-      } else if (loggedUser.role === 'admin') {
-        localStorage.setItem('adminToken', res.data.token);
-        localStorage.setItem('adminUser', JSON.stringify(loggedUser));
-      }
-
-      setSuccessData(loggedUser);
-      setTimeout(() => {
-        if (loggedUser.role === 'seller') {
-          window.location.href = '/seller/dashboard';
-        } else if (loggedUser.role === 'admin') {
-          window.location.href = '/admin/dashboard';
-        } else {
-          window.location.href = '/buyer/';
-        }
-      }, 2000);
-    } catch (err) {
-      await window.customAlert(err.response?.data?.message || `Failed to log in with ${platform}.`);
+    localStorage.setItem('socialRegisterRole', 'buyer');
+    
+    if (platform === 'google') {
+      const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '1067527581177-3e1s89qf0r6e16qf42e3j3a3m6e3e3e3.apps.googleusercontent.com';
+      // If VITE_GOOGLE_CLIENT_ID contains template string, fallback to standard OAuth Client ID
+      const finalClientId = clientId.startsWith('YOUR_GOOGLE_CLIENT_ID') ? '1067527581177-3e1s89qf0r6e16qf42e3j3a3m6e3e3e3.apps.googleusercontent.com' : clientId;
+      const redirectUri = window.location.origin + window.location.pathname;
+      const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${finalClientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=email%20profile%20openid&prompt=select_account`;
+      window.location.href = googleAuthUrl;
+    } else if (platform === 'facebook') {
+      const facebookClientId = '1790477028114620';
+      const redirectUri = window.location.origin + window.location.pathname;
+      const facebookAuthUrl = `https://www.facebook.com/v18.0/dialog/oauth?client_id=${facebookClientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=email,public_profile`;
+      window.location.href = facebookAuthUrl;
     }
   };
 
