@@ -850,6 +850,14 @@ app.put('/api/users/:id', async (req, res) => {
     return res.status(404).json({ message: 'User not found' });
   }
 
+  const { email, mobile } = req.body;
+  if (email && users.some(u => String(u.id) !== String(req.params.id) && u.email && u.email.toLowerCase() === email.toLowerCase())) {
+    return res.status(400).json({ message: 'Email Address is already registered by another user.' });
+  }
+  if (mobile && users.some(u => String(u.id) !== String(req.params.id) && u.mobile === mobile)) {
+    return res.status(400).json({ message: 'Mobile Number is already registered by another user.' });
+  }
+
   const updatedUser = { ...users[userIndex], ...req.body };
   users[userIndex] = updatedUser;
   await writeDb('users', users);
