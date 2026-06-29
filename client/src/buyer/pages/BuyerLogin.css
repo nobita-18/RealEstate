@@ -1149,9 +1149,23 @@
     min-height: auto;
   }
   .estify-login-hero-pane {
-    display: none !important;
+    display: flex !important;
+    min-height: 280px;
+    padding: 2.5rem 2rem;
+    border-bottom: 3px solid #c4a761;
   }
-  .login-curved-divider-wrapper {
+  .hero-headline-group {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+  .hero-headline-group h1 {
+    font-size: 2.2rem !important;
+  }
+  .hero-feature-badges-pill {
+    margin-bottom: 1.5rem !important;
+    margin-top: 1rem !important;
+  }
+  .hero-reviews-floating-card {
     display: none !important;
   }
   .estify-login-bottom-features-bar {

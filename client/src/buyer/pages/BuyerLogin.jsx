@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { 
@@ -306,13 +306,7 @@ const BuyerLogin = () => {
 
             </div>
 
-            {/* CURVED GOLD DIVIDER */}
-            <div className="login-curved-divider-wrapper">
-              <svg className="login-curved-divider-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-                <path d="M100,0 C40,25 40,75 100,100 L100,100 L100,0 Z" fill="#ffffff" />
-                <path d="M100,0 C40,25 40,75 100,100" stroke="#c4a761" strokeWidth="3" fill="none" />
-              </svg>
-            </div>
+
 
             {/* 2. LOGIN CARD AREA (RIGHT - 45%) */}
             <div className="estify-login-form-pane">

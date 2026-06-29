@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: real-estate-platform-frontend
+    env: static
+    buildCommand: npm run build
+    staticPublishPath: ./client/dist
+    routes:
+      - type: rewrite
+        source: /buyer/*
+        destination: /buyer/index.html
+      - type: rewrite
+        source: /seller/*
+        destination: /seller/index.html
+      - type: rewrite
+        source: /admin/*
+        destination: /admin/index.html
+      - type: rewrite
+        source: /*
+        destination: /index.html
