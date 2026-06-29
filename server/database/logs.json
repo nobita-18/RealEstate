@@ -1,1 +1,266 @@
-[]
+[
+  {
+    "id": 1782746376151.7659,
+    "type": "LOGIN",
+    "message": "User ADM0001 (Rajesh Admin) logged in.",
+    "details": {
+      "userId": "ADM0001",
+      "name": "Rajesh Admin",
+      "role": "admin"
+    },
+    "timestamp": "2026-06-29T15:19:36.151Z"
+  },
+  {
+    "id": 1782746376271.8958,
+    "type": "LOGIN",
+    "message": "User ADM0002 (Suresh Admin) logged in.",
+    "details": {
+      "userId": "ADM0002",
+      "name": "Suresh Admin",
+      "role": "admin"
+    },
+    "timestamp": "2026-06-29T15:19:36.271Z"
+  },
+  {
+    "id": 1782746376378.7031,
+    "type": "LOGIN",
+    "message": "User SEL0001 (Karthik Seller) logged in.",
+    "details": {
+      "userId": "SEL0001",
+      "name": "Karthik Seller",
+      "role": "seller"
+    },
+    "timestamp": "2026-06-29T15:19:36.378Z"
+  },
+  {
+    "id": 1782746376489.4565,
+    "type": "LOGIN",
+    "message": "User SEL0002 (Priya Seller) logged in.",
+    "details": {
+      "userId": "SEL0002",
+      "name": "Priya Seller",
+      "role": "seller"
+    },
+    "timestamp": "2026-06-29T15:19:36.489Z"
+  },
+  {
+    "id": 1782746376607.4424,
+    "type": "LOGIN",
+    "message": "User SEL0003 (Vijay Seller) logged in.",
+    "details": {
+      "userId": "SEL0003",
+      "name": "Vijay Seller",
+      "role": "seller"
+    },
+    "timestamp": "2026-06-29T15:19:36.607Z"
+  },
+  {
+    "id": 1782746376722.4304,
+    "type": "LOGIN",
+    "message": "User BUY0001 (Anand Buyer) logged in.",
+    "details": {
+      "userId": "BUY0001",
+      "name": "Anand Buyer",
+      "role": "buyer"
+    },
+    "timestamp": "2026-06-29T15:19:36.722Z"
+  },
+  {
+    "id": 1782746376829.7227,
+    "type": "LOGIN",
+    "message": "User BUY0002 (Divya Buyer) logged in.",
+    "details": {
+      "userId": "BUY0002",
+      "name": "Divya Buyer",
+      "role": "buyer"
+    },
+    "timestamp": "2026-06-29T15:19:36.829Z"
+  },
+  {
+    "id": 1782746376941.2632,
+    "type": "LOGIN",
+    "message": "User BUY0003 (Manoj Buyer) logged in.",
+    "details": {
+      "userId": "BUY0003",
+      "name": "Manoj Buyer",
+      "role": "buyer"
+    },
+    "timestamp": "2026-06-29T15:19:36.942Z"
+  },
+  {
+    "id": 1782746396731.0227,
+    "type": "LOGIN",
+    "message": "User ADM0001 (Rajesh Admin) logged in.",
+    "details": {
+      "userId": "ADM0001",
+      "name": "Rajesh Admin",
+      "role": "admin"
+    },
+    "timestamp": "2026-06-29T15:19:56.731Z"
+  },
+  {
+    "id": 1782746396855.7622,
+    "type": "LOGIN",
+    "message": "User ADM0002 (Suresh Admin) logged in.",
+    "details": {
+      "userId": "ADM0002",
+      "name": "Suresh Admin",
+      "role": "admin"
+    },
+    "timestamp": "2026-06-29T15:19:56.855Z"
+  },
+  {
+    "id": 1782746396963.3545,
+    "type": "LOGIN",
+    "message": "User SEL0001 (Karthik Seller) logged in.",
+    "details": {
+      "userId": "SEL0001",
+      "name": "Karthik Seller",
+      "role": "seller"
+    },
+    "timestamp": "2026-06-29T15:19:56.963Z"
+  },
+  {
+    "id": 1782746397073.2205,
+    "type": "LOGIN",
+    "message": "User SEL0002 (Priya Seller) logged in.",
+    "details": {
+      "userId": "SEL0002",
+      "name": "Priya Seller",
+      "role": "seller"
+    },
+    "timestamp": "2026-06-29T15:19:57.073Z"
+  },
+  {
+    "id": 1782746397182.2175,
+    "type": "LOGIN",
+    "message": "User SEL0003 (Vijay Seller) logged in.",
+    "details": {
+      "userId": "SEL0003",
+      "name": "Vijay Seller",
+      "role": "seller"
+    },
+    "timestamp": "2026-06-29T15:19:57.182Z"
+  },
+  {
+    "id": 1782746397293.9475,
+    "type": "LOGIN",
+    "message": "User BUY0001 (Anand Buyer) logged in.",
+    "details": {
+      "userId": "BUY0001",
+      "name": "Anand Buyer",
+      "role": "buyer"
+    },
+    "timestamp": "2026-06-29T15:19:57.293Z"
+  },
+  {
+    "id": 1782746397528.0222,
+    "type": "LOGIN",
+    "message": "User BUY0002 (Divya Buyer) logged in.",
+    "details": {
+      "userId": "BUY0002",
+      "name": "Divya Buyer",
+      "role": "buyer"
+    },
+    "timestamp": "2026-06-29T15:19:57.528Z"
+  },
+  {
+    "id": 1782746397683.3335,
+    "type": "LOGIN",
+    "message": "User BUY0003 (Manoj Buyer) logged in.",
+    "details": {
+      "userId": "BUY0003",
+      "name": "Manoj Buyer",
+      "role": "buyer"
+    },
+    "timestamp": "2026-06-29T15:19:57.683Z"
+  },
+  {
+    "id": 1782746408957.3738,
+    "type": "LOGIN",
+    "message": "User ADM0001 (Rajesh Admin) logged in.",
+    "details": {
+      "userId": "ADM0001",
+      "name": "Rajesh Admin",
+      "role": "admin"
+    },
+    "timestamp": "2026-06-29T15:20:08.957Z"
+  },
+  {
+    "id": 1782746409145.226,
+    "type": "LOGIN",
+    "message": "User ADM0002 (Suresh Admin) logged in.",
+    "details": {
+      "userId": "ADM0002",
+      "name": "Suresh Admin",
+      "role": "admin"
+    },
+    "timestamp": "2026-06-29T15:20:09.145Z"
+  },
+  {
+    "id": 1782746409251.621,
+    "type": "LOGIN",
+    "message": "User SEL0001 (Karthik Seller) logged in.",
+    "details": {
+      "userId": "SEL0001",
+      "name": "Karthik Seller",
+      "role": "seller"
+    },
+    "timestamp": "2026-06-29T15:20:09.251Z"
+  },
+  {
+    "id": 1782746409363.732,
+    "type": "LOGIN",
+    "message": "User SEL0002 (Priya Seller) logged in.",
+    "details": {
+      "userId": "SEL0002",
+      "name": "Priya Seller",
+      "role": "seller"
+    },
+    "timestamp": "2026-06-29T15:20:09.363Z"
+  },
+  {
+    "id": 1782746409477.241,
+    "type": "LOGIN",
+    "message": "User SEL0003 (Vijay Seller) logged in.",
+    "details": {
+      "userId": "SEL0003",
+      "name": "Vijay Seller",
+      "role": "seller"
+    },
+    "timestamp": "2026-06-29T15:20:09.477Z"
+  },
+  {
+    "id": 1782746409586.3499,
+    "type": "LOGIN",
+    "message": "User BUY0001 (Anand Buyer) logged in.",
+    "details": {
+      "userId": "BUY0001",
+      "name": "Anand Buyer",
+      "role": "buyer"
+    },
+    "timestamp": "2026-06-29T15:20:09.586Z"
+  },
+  {
+    "id": 1782746409699.5327,
+    "type": "LOGIN",
+    "message": "User BUY0002 (Divya Buyer) logged in.",
+    "details": {
+      "userId": "BUY0002",
+      "name": "Divya Buyer",
+      "role": "buyer"
+    },
+    "timestamp": "2026-06-29T15:20:09.699Z"
+  },
+  {
+    "id": 1782746409805.142,
+    "type": "LOGIN",
+    "message": "User BUY0003 (Manoj Buyer) logged in.",
+    "details": {
+      "userId": "BUY0003",
+      "name": "Manoj Buyer",
+      "role": "buyer"
+    },
+    "timestamp": "2026-06-29T15:20:09.805Z"
+  }
+]

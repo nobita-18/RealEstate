@@ -10,7 +10,8 @@
     "theme": "blue",
     "favorites": [],
     "notifications": [],
-    "rating": 0
+    "rating": 0,
+    "lastLogin": "29-06-2026 08:50 PM"
   },
   {
     "id": "ADM0002",
@@ -23,7 +24,8 @@
     "theme": "blue",
     "favorites": [],
     "notifications": [],
-    "rating": 0
+    "rating": 0,
+    "lastLogin": "29-06-2026 08:50 PM"
   },
   {
     "id": "SEL0001",
@@ -36,7 +38,8 @@
     "theme": "blue",
     "favorites": [],
     "notifications": [],
-    "rating": 5
+    "rating": 5,
+    "lastLogin": "29-06-2026 08:50 PM"
   },
   {
     "id": "SEL0002",
@@ -49,7 +52,8 @@
     "theme": "blue",
     "favorites": [],
     "notifications": [],
-    "rating": 4.8
+    "rating": 4.8,
+    "lastLogin": "29-06-2026 08:50 PM"
   },
   {
     "id": "SEL0003",
@@ -62,7 +66,8 @@
     "theme": "blue",
     "favorites": [],
     "notifications": [],
-    "rating": 4.9
+    "rating": 4.9,
+    "lastLogin": "29-06-2026 08:50 PM"
   },
   {
     "id": "BUY0001",
@@ -75,7 +80,8 @@
     "theme": "blue",
     "favorites": [],
     "notifications": [],
-    "rating": 0
+    "rating": 0,
+    "lastLogin": "29-06-2026 08:50 PM"
   },
   {
     "id": "BUY0002",
@@ -88,7 +94,8 @@
     "theme": "blue",
     "favorites": [],
     "notifications": [],
-    "rating": 0
+    "rating": 0,
+    "lastLogin": "29-06-2026 08:50 PM"
   },
   {
     "id": "BUY0003",
@@ -101,6 +108,7 @@
     "theme": "blue",
     "favorites": [],
     "notifications": [],
-    "rating": 0
+    "rating": 0,
+    "lastLogin": "29-06-2026 08:50 PM"
   }
 ]
