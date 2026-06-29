@@ -7,7 +7,11 @@ import {
 } from 'lucide-react';
 import './SellerLogin.css';
 
+import { useSignIn, useUser } from '@clerk/clerk-react';
+
 const SellerLogin = () => {
+  const { signIn, isLoaded } = useSignIn();
+  const { user, isSignedIn } = useUser();
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -24,119 +28,71 @@ const SellerLogin = () => {
   const [showSocialModal, setShowSocialModal] = useState(null); // 'google', 'facebook', or null
 
   useEffect(() => {
-    const handleOAuthCallback = async () => {
-      const hash = window.location.hash;
-      if (!hash) return;
-      
-      const params = new URLSearchParams(hash.replace('#', '?'));
-      const accessToken = params.get('access_token');
-      if (!accessToken) return;
+    const syncClerkUser = async () => {
+      if (isSignedIn && user) {
+        try {
+          setIsSubmitting(true);
+          setError('');
+          const email = user.primaryEmailAddress?.emailAddress;
 
-      // Clear the hash from the URL
-      window.history.replaceState(null, null, window.location.pathname);
+          // Identify provider
+          const activeAccount = user.externalAccounts.find(acc => acc.verification?.status === 'verified') || user.externalAccounts[0];
+          const provider = activeAccount?.provider === 'oauth_google' || activeAccount?.verification?.strategy === 'oauth_google' ? 'google' : 'facebook';
 
-      try {
-        setError('');
-        setIsSubmitting(true);
-        let email = '';
-        let nameVal = '';
-        let provider = '';
-
-        if (hash.includes('scope=email') || hash.includes('googleapis')) {
-          // Google
-          provider = 'google';
-          try {
-            const res = await axios.get(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${accessToken}`);
-            email = res.data.email;
-            nameVal = res.data.name || res.data.given_name || 'Social User';
-          } catch (gErr) {
-            console.error('Google userinfo fetch failed (401):', gErr);
-            const testEmail = window.prompt('Google Auth returned 401 (domain not authorized in your Google console). For testing, enter the email to log in with:');
-            if (testEmail) {
-              email = testEmail;
-              nameVal = testEmail.split('@')[0];
-            } else {
-              setError('Google authentication failed (401).');
-              setIsSubmitting(false);
-              return;
-            }
+          if (!email) {
+            setError('Could not retrieve email from Clerk social account.');
+            setIsSubmitting(false);
+            return;
           }
-        } else {
-          // Facebook
-          provider = 'facebook';
-          try {
-            const res = await axios.get(`https://graph.facebook.com/me?fields=name,email&access_token=${accessToken}`);
-            email = res.data.email;
-            nameVal = res.data.name || 'Social User';
-          } catch (fbErr) {
-            console.error('Facebook userinfo fetch failed (401):', fbErr);
-            const testEmail = window.prompt('Facebook Auth returned 401 (domain not authorized in your Facebook console). For testing, enter the email to log in with:');
-            if (testEmail) {
-              email = testEmail;
-              nameVal = testEmail.split('@')[0];
-            } else {
-              setError('Facebook authentication failed (401).');
-              setIsSubmitting(false);
-              return;
-            }
-          }
-        }
 
-        if (!email) {
-          setError('Could not retrieve email from social account.');
+          const res = await axios.post((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/auth/social-login', { 
+            email: email, 
+            provider: provider,
+            role: 'seller'
+          });
+          
+          const loggedUser = res.data.user;
+          
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          localStorage.removeItem('sellerToken');
+          localStorage.removeItem('sellerUser');
+          localStorage.removeItem('adminToken');
+          localStorage.removeItem('adminUser');
+
+          localStorage.setItem('token', res.data.token);
+          localStorage.setItem('user', JSON.stringify(loggedUser));
+          localStorage.setItem('sellerToken', res.data.token);
+          localStorage.setItem('sellerUser', JSON.stringify(loggedUser));
+
+          setSuccessData(loggedUser);
           setIsSubmitting(false);
-          return;
+
+          setTimeout(() => {
+            window.location.href = '/seller/dashboard';
+          }, 2000);
+        } catch (err) {
+          setError(err.response?.data?.message || 'This account is not registered. Please register first.');
+          setIsSubmitting(false);
         }
-
-        const res = await axios.post((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/auth/social-login', { 
-          email: email, 
-          provider: provider,
-          role: 'seller'
-        });
-        
-        const loggedUser = res.data.user;
-        
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        localStorage.removeItem('sellerToken');
-        localStorage.removeItem('sellerUser');
-        localStorage.removeItem('adminToken');
-        localStorage.removeItem('adminUser');
-
-        localStorage.setItem('token', res.data.token);
-        localStorage.setItem('user', JSON.stringify(loggedUser));
-        localStorage.setItem('sellerToken', res.data.token);
-        localStorage.setItem('sellerUser', JSON.stringify(loggedUser));
-
-        setSuccessData(loggedUser);
-        setIsSubmitting(false);
-
-        setTimeout(() => {
-          window.location.href = '/seller/dashboard';
-        }, 2000);
-      } catch (err) {
-        setError(err.response?.data?.message || 'This account is not registered. Please register first.');
-        setIsSubmitting(false);
       }
     };
 
-    handleOAuthCallback();
-  }, []);
+    syncClerkUser();
+  }, [isSignedIn, user]);
 
-  const handleSocialLogin = (platform) => {
+  const handleSocialLogin = async (platform) => {
+    if (!isLoaded) return;
     localStorage.setItem('socialRegisterRole', 'seller');
-    
-    if (platform === 'google') {
-      const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '1067527581177-3e1s89qf0r6e16qf42e3j3a3m6e3e3e3.apps.googleusercontent.com';
-      const finalClientId = clientId.startsWith('YOUR_GOOGLE_CLIENT_ID') ? '1067527581177-3e1s89qf0r6e16qf42e3j3a3m6e3e3e3.apps.googleusercontent.com' : clientId;
-      const redirectUri = window.location.origin + window.location.pathname;
-      const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${finalClientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=email%20profile%20openid&prompt=select_account`;
-      window.location.href = googleAuthUrl;
-    } else if (platform === 'facebook') {
-      const facebookClientId = '1790477028114620';
-      const redirectUri = window.location.origin + window.location.pathname;
-      const facebookAuthUrl = `https://www.facebook.com/v18.0/dialog/oauth?client_id=${facebookClientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=email,public_profile`;
-      window.location.href = facebookAuthUrl;
+    try {
+      await signIn.authenticateWithRedirect({
+        strategy: platform === 'google' ? 'oauth_google' : 'oauth_facebook',
+        redirectUrl: window.location.origin + window.location.pathname,
+        redirectUrlComplete: window.location.origin + window.location.pathname
+      });
+    } catch (err) {
+      console.error('Clerk redirect error:', err);
+      setError('Social login redirection failed.');
     }
   };
 
