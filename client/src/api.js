@@ -35,7 +35,7 @@ axios.interceptors.request.use(
 // Helper function to resolve static asset URLs (like profile pictures and property images) dynamically
 export const getAssetUrl = (path) => {
   if (!path) return '';
-  if (path.startsWith('http')) return path;
+  if (path.startsWith('http') || path.startsWith('data:image')) return path;
   return `${API_BASE_URL}${path.startsWith('/') ? '' : '/'}${path}`;
 };
 

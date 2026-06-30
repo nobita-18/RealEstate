@@ -1,9 +1,11 @@
-﻿import React, { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminNavbar from './components/AdminNavbar';
 import AdminFooter from './components/AdminFooter';
+
+import { getSafeLocalStorage } from '../api';
 
 function AppContent() {
   const navigate = useNavigate();
@@ -13,28 +15,23 @@ function AppContent() {
     const isPublicRoute = location.pathname === '/login';
 
     // If logged in as buyer, redirect to buyer home
-    const userStr = localStorage.getItem('user');
-    if (userStr && !isPublicRoute) {
-      try {
-        const parsed = JSON.parse(userStr);
-        if (parsed && parsed.role === 'buyer') {
-          window.location.href = '/buyer/';
-          return;
-        }
-      } catch (e) {
-        console.error(e);
+    const user = getSafeLocalStorage('user');
+    if (user && !isPublicRoute) {
+      if (user.role === 'buyer') {
+        window.location.href = '/buyer/';
+        return;
       }
     }
 
     // If logged in as seller, redirect to seller dashboard
-    const sellerUser = localStorage.getItem('sellerUser');
+    const sellerUser = getSafeLocalStorage('sellerUser');
     if (sellerUser && !isPublicRoute) {
       window.location.href = '/seller/dashboard';
       return;
     }
 
     // If not logged in as admin and trying to access protected admin routes:
-    const adminUser = localStorage.getItem('adminUser');
+    const adminUser = getSafeLocalStorage('adminUser');
 
     if (!adminUser && !isPublicRoute) {
       navigate('/login');

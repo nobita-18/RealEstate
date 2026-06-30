@@ -1,4 +1,4 @@
-﻿import React, { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import SellerRegister from './pages/SellerRegister';
 import SellerLogin from './pages/SellerLogin';
@@ -9,6 +9,8 @@ import SellerProfile from './pages/SellerProfile';
 import SellerFooter from './components/SellerFooter';
 import PageTransition from '../components/PageTransition';
 
+import { getSafeLocalStorage } from '../api';
+
 function AppContent() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -18,28 +20,23 @@ function AppContent() {
     const isPublicRoute = ['/login', '/register'].includes(location.pathname);
 
     // If logged in as buyer, redirect to buyer home
-    const userStr = localStorage.getItem('user');
-    if (userStr && !isPublicRoute) {
-      try {
-        const parsed = JSON.parse(userStr);
-        if (parsed && parsed.role === 'buyer') {
-          window.location.href = '/buyer/';
-          return;
-        }
-      } catch (e) {
-        console.error(e);
+    const user = getSafeLocalStorage('user');
+    if (user && !isPublicRoute) {
+      if (user.role === 'buyer') {
+        window.location.href = '/buyer/';
+        return;
       }
     }
 
     // If logged in as admin, redirect to admin dashboard
-    const adminUser = localStorage.getItem('adminUser');
+    const adminUser = getSafeLocalStorage('adminUser');
     if (adminUser && !isPublicRoute) {
       window.location.href = '/admin/dashboard';
       return;
     }
 
     // If not logged in as seller and trying to access protected seller routes:
-    const sellerUser = localStorage.getItem('sellerUser');
+    const sellerUser = getSafeLocalStorage('sellerUser');
     
     if (!sellerUser && !isPublicRoute) {
       navigate('/login');

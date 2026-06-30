@@ -97,8 +97,7 @@ const Navbar = ({ role = 'buyer' }) => {
             )}
           </div>
 
-          {/* Right side actions */}
-          <div className="nav-right-grouped" style={{ flex: 'none', gap: '15px' }}>
+          <div className="nav-right-grouped" style={{ display: 'flex', alignItems: 'center', flex: 'none', gap: '15px' }}>
             
             {isLoggedIn ? (
               <div style={{ display: 'flex', alignItems: 'center', gap: '15px', position: 'relative' }}>

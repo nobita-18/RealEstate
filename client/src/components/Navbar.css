@@ -233,6 +233,12 @@
   box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25);
 }
 
+.nav-right-grouped {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
 .mobile-menu-btn {
   display: none;
   background: none;

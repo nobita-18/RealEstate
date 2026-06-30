@@ -1,4 +1,4 @@
-﻿import React, { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import BuyerHome from './pages/BuyerHome';
 import BuyerLogin from './pages/BuyerLogin';
@@ -14,6 +14,8 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import PageTransition from '../components/PageTransition';
 
+import { getSafeLocalStorage } from '../api';
+
 function AppContent() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -23,34 +25,25 @@ function AppContent() {
     const isProfileRoute = location.pathname === '/profile';
     const isPublicAuthRoute = ['/login', '/register'].includes(location.pathname);
 
-    const sellerUser = localStorage.getItem('sellerUser');
-    const adminUser = localStorage.getItem('adminUser');
-    const user = localStorage.getItem('user');
+    const sellerUser = getSafeLocalStorage('sellerUser');
+    const adminUser = getSafeLocalStorage('adminUser');
+    const user = getSafeLocalStorage('user');
 
     if (sellerUser) {
-      if (isProfileRoute || isPublicAuthRoute) {
-        window.location.href = '/seller/dashboard';
-        return;
-      }
+      window.location.href = '/seller/dashboard';
+      return;
     }
     
     if (adminUser) {
-      if (isProfileRoute || isPublicAuthRoute) {
-        window.location.href = '/admin/dashboard';
-        return;
-      }
+      window.location.href = '/admin/dashboard';
+      return;
     }
     
     if (user) {
-      try {
-        const parsed = JSON.parse(user);
-        if (parsed && parsed.role === 'buyer') {
-          if (isPublicAuthRoute) {
-            navigate('/');
-          }
+      if (user.role === 'buyer') {
+        if (isPublicAuthRoute) {
+          navigate('/');
         }
-      } catch (e) {
-        console.error(e);
       }
     } else {
       if (isProfileRoute) {

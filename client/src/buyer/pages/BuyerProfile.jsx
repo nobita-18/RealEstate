@@ -230,7 +230,7 @@ const BuyerProfile = () => {
         
         {/* 1. PROFILE DETAILS TAB */}
         {activeTab === 'details' && (
-          <div className="profile-grid fade-in-tab" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '20px' }}>
+          <div className="profile-grid fade-in-tab">
             {/* PERSONAL INFORMATION */}
             <div className="profile-section glass">
               <h2><User size={20} /> Personal Information</h2>

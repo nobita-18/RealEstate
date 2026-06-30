@@ -61,7 +61,12 @@
   --border-color: rgba(245, 158, 11, 0.2);
 }
 
-html, body, #root {
+html, body {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+#root {
   scroll-behavior: smooth;
 }
 
