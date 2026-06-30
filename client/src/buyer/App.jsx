@@ -66,7 +66,8 @@ function AppContent() {
           <Route path="/agents" element={<BuyerAgents />} />
           <Route path="/blog" element={<BuyerBlog />} />
           <Route path="/contact" element={<BuyerContact />} />
-          <Route path="*" element={<Navigate to="/" />} />
+          <Route path="/index.html" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </PageTransition>
       {!hideNavbarFooter && <Footer />}

@@ -47,7 +47,9 @@ function AppContent() {
         <Routes>
           <Route path="/login" element={<AdminLogin />} />
           <Route path="/dashboard" element={<AdminDashboard />} />
-          <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/index.html" element={<Navigate to="/login" replace />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </div>
       <AdminFooter />

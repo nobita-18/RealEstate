@@ -56,7 +56,9 @@ function AppContent() {
           <Route path="/profile" element={<Navigate to="/dashboard" state={{ tab: 'settings' }} replace />} />
           <Route path="/add-property" element={<AddProperty />} />
           <Route path="/edit-property/:id" element={<EditProperty />} />
-          <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/index.html" element={<Navigate to="/login" replace />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </PageTransition>
       {!hideFooter && <SellerFooter />}
