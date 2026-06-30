@@ -5,7 +5,7 @@ import SellerProfile from './SellerProfile';
 import { 
   Home, Plus, Edit2, Eye, Trash2, Settings, List, 
   MessageSquare, Star, Bell, Users, FileText, LogOut,
-  ChevronDown, ChevronUp, Check, X, ArrowUp
+  ChevronDown, ChevronUp, Check, X, ArrowUp, Menu
 } from 'lucide-react';
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart,
@@ -40,6 +40,12 @@ const SellerDashboard = () => {
   
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isPropertyMenuOpen, setIsPropertyMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const handleMenuClick = (tab) => {
+    setActiveTab(tab);
+    setIsMobileMenuOpen(false);
+  };
   
   const [properties, setProperties] = useState([]);
   const [inquiries, setInquiries] = useState([]);
@@ -184,83 +190,91 @@ const SellerDashboard = () => {
 
   // Render Sidebar
   const renderSidebar = () => (
-    <aside className="sd-sidebar">
-      <div className="sd-brand">
-        <Home className="sd-brand-icon" size={24} />
-        <div>
-          HomeFind
-          <span className="sd-brand-sub">Seller Dashboard</span>
-        </div>
-      </div>
-
-      <div className="sd-menu-group">
-        <button className={`sd-menu-item ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => setActiveTab('dashboard')}>
-          <div className="sd-menu-item-inner"><Home size={18} /> Dashboard</div>
-        </button>
-      </div>
-
-      <div className="sd-menu-section">
-        <div className="sd-menu-section-title" onClick={() => setIsPropertyMenuOpen(!isPropertyMenuOpen)}>
-          PROPERTY DETAILS
-          {isPropertyMenuOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-        </div>
-        {isPropertyMenuOpen && (
-          <div className="sd-submenu">
-            <button className={`sd-submenu-item`} onClick={() => navigate('/add-property')}>
-              <Plus size={16} /> Add Property
-            </button>
-            <button className={`sd-submenu-item ${activeTab === 'edit-property' ? 'active' : ''}`} onClick={() => setActiveTab('edit-property')}>
-              <Edit2 size={16} /> Edit Property
-            </button>
-            <button className={`sd-submenu-item ${activeTab === 'view-property' ? 'active' : ''}`} onClick={() => setActiveTab('view-property')}>
-              <Eye size={16} /> View Property
-            </button>
-            <button className={`sd-submenu-item ${activeTab === 'delete-property' ? 'active' : ''}`} onClick={() => setActiveTab('delete-property')}>
-              <Trash2 size={16} /> Delete Property
-            </button>
+    <>
+      {isMobileMenuOpen && (
+        <div 
+          className="sd-mobile-overlay" 
+          onClick={() => setIsMobileMenuOpen(false)} 
+        />
+      )}
+      <aside className={`sd-sidebar ${isMobileMenuOpen ? 'show-mobile' : ''}`}>
+        <div className="sd-brand">
+          <Home className="sd-brand-icon" size={24} />
+          <div>
+            HomeFind
+            <span className="sd-brand-sub">Seller Dashboard</span>
           </div>
-        )}
-      </div>
+        </div>
 
-      <div className="sd-menu-group" style={{ marginTop: '16px' }}>
-        <button className={`sd-menu-item ${activeTab === 'product-details' ? 'active' : ''}`} onClick={() => setActiveTab('product-details')}>
-          <div className="sd-menu-item-inner"><List size={18} /> Product Details</div>
-          <span className="sd-badge">{properties.length}</span>
-        </button>
-        <button className={`sd-menu-item ${activeTab === 'messages' ? 'active' : ''}`} onClick={() => setActiveTab('messages')}>
-          <div className="sd-menu-item-inner"><MessageSquare size={18} /> Messages</div>
-          {inquiries.length > 0 && <span className="sd-badge">{inquiries.length}</span>}
-        </button>
-        <button className={`sd-menu-item ${activeTab === 'reviews' ? 'active' : ''}`} onClick={() => setActiveTab('reviews')}>
-          <div className="sd-menu-item-inner"><Star size={18} /> Reviews</div>
-        </button>
-        <button className={`sd-menu-item ${activeTab === 'notifications' ? 'active' : ''}`} onClick={handleSelectNotifications}>
-          <div className="sd-menu-item-inner" style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><Bell size={18} /> Notifications</span>
-            {getFilteredNotifications(sellerProfile?.notifications).filter(n => !n.read).length > 0 && (
-              <span className="sd-badge" style={{ margin: 0 }}>
-                {getFilteredNotifications(sellerProfile?.notifications).filter(n => !n.read).length}
-              </span>
-            )}
+        <div className="sd-menu-group">
+          <button className={`sd-menu-item ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => handleMenuClick('dashboard')}>
+            <div className="sd-menu-item-inner"><Home size={18} /> Dashboard</div>
+          </button>
+        </div>
+
+        <div className="sd-menu-section">
+          <div className="sd-menu-section-title" onClick={() => setIsPropertyMenuOpen(!isPropertyMenuOpen)}>
+            PROPERTY DETAILS
+            {isPropertyMenuOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
           </div>
-        </button>
-        <button className={`sd-menu-item ${activeTab === 'buyer-profiles' ? 'active' : ''}`} onClick={() => setActiveTab('buyer-profiles')}>
-          <div className="sd-menu-item-inner"><Users size={18} /> Buyer Profiles</div>
-        </button>
-        <button className={`sd-menu-item ${activeTab === 'transactions' ? 'active' : ''}`} onClick={() => setActiveTab('transactions')}>
-          <div className="sd-menu-item-inner"><FileText size={18} /> Transaction Details</div>
-        </button>
-        <button className={`sd-menu-item ${activeTab === 'profile' ? 'active' : ''}`} onClick={() => setActiveTab('profile')}>
-          <div className="sd-menu-item-inner"><Settings size={18} /> Profile & Settings</div>
-        </button>
-      </div>
+          {isPropertyMenuOpen && (
+            <div className="sd-submenu">
+              <button className={`sd-submenu-item`} onClick={() => { setIsMobileMenuOpen(false); navigate('/add-property'); }}>
+                <Plus size={16} /> Add Property
+              </button>
+              <button className={`sd-submenu-item ${activeTab === 'edit-property' ? 'active' : ''}`} onClick={() => handleMenuClick('edit-property')}>
+                <Edit2 size={16} /> Edit Property
+              </button>
+              <button className={`sd-submenu-item ${activeTab === 'view-property' ? 'active' : ''}`} onClick={() => handleMenuClick('view-property')}>
+                <Eye size={16} /> View Property
+              </button>
+              <button className={`sd-submenu-item ${activeTab === 'delete-property' ? 'active' : ''}`} onClick={() => handleMenuClick('delete-property')}>
+                <Trash2 size={16} /> Delete Property
+              </button>
+            </div>
+          )}
+        </div>
+
+        <div className="sd-menu-group" style={{ marginTop: '16px' }}>
+          <button className={`sd-menu-item ${activeTab === 'product-details' ? 'active' : ''}`} onClick={() => handleMenuClick('product-details')}>
+            <div className="sd-menu-item-inner"><List size={18} /> Product Details</div>
+            <span className="sd-badge">{properties.length}</span>
+          </button>
+          <button className={`sd-menu-item ${activeTab === 'messages' ? 'active' : ''}`} onClick={() => handleMenuClick('messages')}>
+            <div className="sd-menu-item-inner"><MessageSquare size={18} /> Messages</div>
+            {inquiries.length > 0 && <span className="sd-badge">{inquiries.length}</span>}
+          </button>
+          <button className={`sd-menu-item ${activeTab === 'reviews' ? 'active' : ''}`} onClick={() => handleMenuClick('reviews')}>
+            <div className="sd-menu-item-inner"><Star size={18} /> Reviews</div>
+          </button>
+          <button className={`sd-menu-item ${activeTab === 'notifications' ? 'active' : ''}`} onClick={() => { setIsMobileMenuOpen(false); handleSelectNotifications(); }}>
+            <div className="sd-menu-item-inner" style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><Bell size={18} /> Notifications</span>
+              {getFilteredNotifications(sellerProfile?.notifications).filter(n => !n.read).length > 0 && (
+                <span className="sd-badge" style={{ margin: 0 }}>
+                  {getFilteredNotifications(sellerProfile?.notifications).filter(n => !n.read).length}
+                </span>
+              )}
+            </div>
+          </button>
+          <button className={`sd-menu-item ${activeTab === 'buyer-profiles' ? 'active' : ''}`} onClick={() => handleMenuClick('buyer-profiles')}>
+            <div className="sd-menu-item-inner"><Users size={18} /> Buyer Profiles</div>
+          </button>
+          <button className={`sd-menu-item ${activeTab === 'transactions' ? 'active' : ''}`} onClick={() => handleMenuClick('transactions')}>
+            <div className="sd-menu-item-inner"><FileText size={18} /> Transaction Details</div>
+          </button>
+          <button className={`sd-menu-item ${activeTab === 'profile' ? 'active' : ''}`} onClick={() => handleMenuClick('profile')}>
+            <div className="sd-menu-item-inner"><Settings size={18} /> Profile & Settings</div>
+          </button>
+        </div>
 
       <div className="sd-logout-container">
         <button className="sd-menu-item" onClick={handleLogout}>
           <div className="sd-menu-item-inner"><LogOut size={18} /> Logout</div>
         </button>
       </div>
-    </aside>
+      </aside>
+    </>
   );
 
   const renderDashboard = () => (
@@ -972,9 +986,14 @@ const SellerDashboard = () => {
       {renderSidebar()}
       <main className="sd-main">
         <header className="sd-header">
-          <div className="sd-welcome">
-            <h1>Welcome back, Seller!</h1>
-            <p>Here's what's happening with your properties.</p>
+          <div className="sd-welcome-wrap">
+            <button className="sd-hamburger-btn" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+              <Menu size={22} />
+            </button>
+            <div className="sd-welcome">
+              <h1>Welcome back, Seller!</h1>
+              <p>Here's what's happening with your properties.</p>
+            </div>
           </div>
           <div className="sd-header-actions">
             <button className="sd-btn-primary" onClick={() => navigate('/add-property')}>

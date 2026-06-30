@@ -308,8 +308,31 @@ app.get('/api/properties/:id', async (req, res) => {
     if (prop.status === 'deleted' && req.query.preview !== 'pending' && req.query.status !== 'all') {
       return res.status(404).json({ message: 'Property not found' });
     }
-    props[propIndex].views = (props[propIndex].views || 0) + 1;
-    await writeDb('properties', props);
+
+    // Unique views count tracking logic (based on JWT user ID or client IP address)
+    let viewerId = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    const authHeader = req.headers['authorization'];
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      const token = authHeader.split(' ')[1];
+      try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        if (decoded && decoded.id) {
+          viewerId = decoded.id;
+        }
+      } catch (err) {
+        // Token verification failed or expired, fall back to IP address
+      }
+    }
+
+    if (!props[propIndex].viewedBy) {
+      props[propIndex].viewedBy = [];
+    }
+
+    if (!props[propIndex].viewedBy.includes(viewerId)) {
+      props[propIndex].viewedBy.push(viewerId);
+      props[propIndex].views = (props[propIndex].views || 0) + 1;
+      await writeDb('properties', props);
+    }
     
     let responseData = { ...props[propIndex] };
     if (req.query.preview === 'pending' && responseData.hasPendingChanges && responseData.pendingChanges) {

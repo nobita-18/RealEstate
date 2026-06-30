@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { MapPin, Bed, Square, ArrowLeft, Mail, Info } from 'lucide-react';
@@ -19,7 +19,10 @@ const BuyerPropertyDetails = () => {
   const currentUser = JSON.parse(localStorage.getItem('user')) || JSON.parse(localStorage.getItem('sellerUser'));
 
   useEffect(() => {
-    axios.get(`${window.API_BASE_URL || "https://realestatelisting-u2kp.onrender.com"}/api/properties/${id}${window.location.search}`)
+    const token = localStorage.getItem('token') || localStorage.getItem('sellerToken');
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+    
+    axios.get(`${window.API_BASE_URL || "https://realestatelisting-u2kp.onrender.com"}/api/properties/${id}${window.location.search}`, { headers })
       .then(res => {
         setProperty(res.data);
         setReviews(res.data.reviews || []);
