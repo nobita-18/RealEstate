@@ -8,39 +8,22 @@ import {
 import { useSignIn, useUser } from '@clerk/clerk-react';
 import './BuyerLogin.css';
 
-const BuyerLogin = () => {
+const ClerkAuthHandler = ({ onSyncStart, onSyncSuccess, onSyncError }) => {
   const { signIn, isLoaded } = useSignIn();
   const { user, isSignedIn } = useUser();
-  const [identifier, setIdentifier] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
-  const [error, setError] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [successData, setSuccessData] = useState(null); // stores user info upon login
-  const [showForgotModal, setShowForgotModal] = useState(false);
-  const [forgotStep, setForgotStep] = useState(1);
-  const [forgotEmail, setForgotEmail] = useState('');
-  const [generatedOtp, setGeneratedOtp] = useState('');
-  const [enteredOtp, setEnteredOtp] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [showSocialModal, setShowSocialModal] = useState(null); // 'google', 'facebook', or null
 
   useEffect(() => {
     const syncClerkUser = async () => {
       if (isSignedIn && user) {
         try {
-          setIsSubmitting(true);
-          setError('');
+          onSyncStart();
           const email = user.primaryEmailAddress?.emailAddress;
           
-          // Identify provider
           const activeAccount = user.externalAccounts.find(acc => acc.verification?.status === 'verified') || user.externalAccounts[0];
           const provider = activeAccount?.provider === 'oauth_google' || activeAccount?.verification?.strategy === 'oauth_google' ? 'google' : 'facebook';
 
           if (!email) {
-            setError('Could not retrieve email from Clerk social account.');
-            setIsSubmitting(false);
+            onSyncError('Could not retrieve email from Clerk social account.');
             return;
           }
 
@@ -69,21 +52,9 @@ const BuyerLogin = () => {
             localStorage.setItem('adminUser', JSON.stringify(loggedUser));
           }
 
-          setSuccessData(loggedUser);
-          setIsSubmitting(false);
-
-          setTimeout(() => {
-            if (loggedUser.role === 'seller') {
-              window.location.href = '/seller/dashboard';
-            } else if (loggedUser.role === 'admin') {
-              window.location.href = '/admin/dashboard';
-            } else {
-              window.location.href = '/buyer/';
-            }
-          }, 2000);
+          onSyncSuccess(loggedUser);
         } catch (err) {
-          setError(err.response?.data?.message || 'This account is not registered. Please register first.');
-          setIsSubmitting(false);
+          onSyncError(err.response?.data?.message || 'This account is not registered. Please register first.');
         }
       }
     };
@@ -105,8 +76,69 @@ const BuyerLogin = () => {
       });
     } catch (err) {
       console.error('Clerk redirect error:', err);
-      setError('Social login redirection failed.');
+      onSyncError('Social login redirection failed.');
     }
+  };
+
+  return (
+    <div className="social-buttons-row">
+      <button className="social-btn google-btn" type="button" onClick={() => handleSocialLogin('google')}>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+        </svg>
+        <span>Google</span>
+      </button>
+      <button className="social-btn facebook-btn" type="button" onClick={() => handleSocialLogin('facebook')}>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" fill="#1877F2"/>
+        </svg>
+        <span>Facebook</span>
+      </button>
+    </div>
+  );
+};
+
+const BuyerLogin = () => {
+  const [identifier, setIdentifier] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+  const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successData, setSuccessData] = useState(null); // stores user info upon login
+  const [showForgotModal, setShowForgotModal] = useState(false);
+  const [forgotStep, setForgotStep] = useState(1);
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [generatedOtp, setGeneratedOtp] = useState('');
+  const [enteredOtp, setEnteredOtp] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [showSocialModal, setShowSocialModal] = useState(null); // 'google', 'facebook', or null
+
+  const handleSocialSyncStart = () => {
+    setIsSubmitting(true);
+    setError('');
+  };
+
+  const handleSocialSyncSuccess = (loggedUser) => {
+    setSuccessData(loggedUser);
+    setIsSubmitting(false);
+    setTimeout(() => {
+      if (loggedUser.role === 'seller') {
+        window.location.href = '/seller/dashboard';
+      } else if (loggedUser.role === 'admin') {
+        window.location.href = '/admin/dashboard';
+      } else {
+        window.location.href = '/buyer/';
+      }
+    }, 2000);
+  };
+
+  const handleSocialSyncError = (errMsg) => {
+    setError(errMsg);
+    setIsSubmitting(false);
   };
 
   const handleLogin = async (e) => {
@@ -403,27 +435,28 @@ const BuyerLogin = () => {
                 </form>
 
                 {/* Social Login */}
-                <div className="social-login-divider">
-                  <span>or continue with</span>
-                </div>
+                {(() => {
+                  const isClerkAvailable = typeof window !== 'undefined' && 
+                    (window.location.hostname.includes('localhost') || 
+                     window.location.hostname.includes('127.0.0.1') || 
+                     !import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || 
+                     !import.meta.env.VITE_CLERK_PUBLISHABLE_KEY.startsWith('pk_test_'));
+                  
+                  if (!isClerkAvailable) return null;
 
-                <div className="social-buttons-row">
-                  <button className="social-btn google-btn" type="button" onClick={() => handleSocialLogin('google')}>
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
-                      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
-                    </svg>
-                    <span>Google</span>
-                  </button>
-                  <button className="social-btn facebook-btn" type="button" onClick={() => handleSocialLogin('facebook')}>
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" fill="#1877F2"/>
-                    </svg>
-                    <span>Facebook</span>
-                  </button>
-                </div>
+                  return (
+                    <>
+                      <div className="social-login-divider">
+                        <span>or continue with</span>
+                      </div>
+                      <ClerkAuthHandler 
+                        onSyncStart={handleSocialSyncStart}
+                        onSyncSuccess={handleSocialSyncSuccess}
+                        onSyncError={handleSocialSyncError}
+                      />
+                    </>
+                  );
+                })()}
 
                 {/* Sign up prompt footer */}
                 <div className="login-signup-prompt">

@@ -13,12 +13,21 @@ if (!CLERK_PUB_KEY || CLERK_PUB_KEY === 'undefined' || !CLERK_PUB_KEY.startsWith
 
 import ErrorBoundary from '../components/ErrorBoundary';
 
+const isClerkAvailable = typeof window !== 'undefined' && 
+  (window.location.hostname.includes('localhost') || 
+   window.location.hostname.includes('127.0.0.1') || 
+   !CLERK_PUB_KEY.startsWith('pk_test_'));
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ErrorBoundary>
-      <ClerkProvider publishableKey={CLERK_PUB_KEY}>
+      {isClerkAvailable ? (
+        <ClerkProvider publishableKey={CLERK_PUB_KEY}>
+          <App />
+        </ClerkProvider>
+      ) : (
         <App />
-      </ClerkProvider>
+      )}
     </ErrorBoundary>
   </React.StrictMode>,
 )
