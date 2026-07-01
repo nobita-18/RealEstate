@@ -198,8 +198,8 @@ const SellerDashboard = () => {
         />
       )}
       <aside className={`sd-sidebar ${isMobileMenuOpen ? 'show-mobile' : ''}`}>
-        <div className="sd-brand">
-          <Home className="sd-brand-icon" size={24} />
+        <div className="sd-brand" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <img src="/logo.jpg" alt="HomeFind Logo" style={{ width: '32px', height: '32px', borderRadius: '8px', objectFit: 'cover' }} />
           <div>
             HomeFind
             <span className="sd-brand-sub">Seller Dashboard</span>

@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Home } from 'lucide-react';
 import './Footer.css';
@@ -44,10 +44,8 @@ const Footer = () => {
         <div className="footer-bottom-bar">
           
           {/* Logo */}
-          <div className="footer-logo">
-            <div className="footer-house-icon">
-              <Home size={15} color="white" fill="white" />
-            </div>
+          <div className="footer-logo" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <img src="/logo.jpg" alt="HomeFind Logo" style={{ width: '28px', height: '28px', borderRadius: '6px', objectFit: 'cover' }} />
             <span className="footer-logo-text">HomeFind</span>
           </div>
 

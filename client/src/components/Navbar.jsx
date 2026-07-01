@@ -35,10 +35,8 @@ const Navbar = ({ role = 'buyer' }) => {
         <div className="nav-container">
           
           {/* Logo Section */}
-          <Link to="/" className="nav-logo estify-logo-box">
-            <div className="estify-house-icon">
-              <Home size={18} color="white" fill="white" />
-            </div>
+          <Link to="/" className="nav-logo estify-logo-box" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <img src="/logo.jpg" alt="HomeFind Logo" style={{ width: '32px', height: '32px', borderRadius: '8px', objectFit: 'cover', boxShadow: '0 0 10px rgba(0, 210, 255, 0.3)' }} />
             <span className="estify-logo-text">HomeFind</span>
           </Link>
           
@@ -47,9 +45,7 @@ const Navbar = ({ role = 'buyer' }) => {
             
             {/* Unique stylish header inside the drawer for mobile view */}
             <div className="show-mobile drawer-header" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px', paddingBottom: '15px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-              <div className="estify-house-icon" style={{ width: '28px', height: '28px', background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)', borderRadius: '6px' }}>
-                <Home size={14} color="white" fill="white" />
-              </div>
+              <img src="/logo.jpg" alt="HomeFind Logo" style={{ width: '28px', height: '28px', borderRadius: '6px', objectFit: 'cover' }} />
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <span style={{ fontWeight: '800', color: '#ffffff', fontSize: '1.05rem', letterSpacing: '-0.3px', lineHeight: 1.1 }}>HomeFind Menu</span>
                 <span style={{ color: '#94a3b8', fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.5px', marginTop: '2px' }}>Premium Portal</span>
