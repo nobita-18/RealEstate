@@ -312,22 +312,24 @@ const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfi
     if (!formData.mobile || !/^\d{10}$/.test(formData.mobile)) {
       errs.mobile = 'Mobile number must contain 10 digits.';
     }
-    if (!formData.dob) {
-      errs.dob = 'Date of birth is required.';
-    } else {
-      const birthDate = new Date(formData.dob);
-      const today = new Date();
-      let age = today.getFullYear() - birthDate.getFullYear();
-      const m = today.getMonth() - birthDate.getMonth();
-      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-        age--;
+    if (!isDashboardView) {
+      if (!formData.dob) {
+        errs.dob = 'Date of birth is required.';
+      } else {
+        const birthDate = new Date(formData.dob);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
+        }
+        if (age < 18) {
+          errs.dob = 'Seller must be at least 18 years old.';
+        }
       }
-      if (age < 18) {
-        errs.dob = 'Seller must be at least 18 years old.';
+      if (!formData.gender) {
+        errs.gender = 'Gender is required.';
       }
-    }
-    if (!formData.gender) {
-      errs.gender = 'Gender is required.';
     }
     
     // Profile Photo validation
@@ -352,7 +354,7 @@ const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfi
         errs.reraNumber = 'RERA Number must be unique. This number is already registered.';
       }
     }
-    if (formData.gstNumber && !/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(formData.gstNumber.toUpperCase())) {
+    if (formData.gstNumber && formData.gstNumber.trim() !== '' && !/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(formData.gstNumber.toUpperCase())) {
       errs.gstNumber = 'GST Number is invalid.';
     }
     if (!formData.businessEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.businessEmail)) {
@@ -361,7 +363,7 @@ const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfi
     if (!formData.businessPhone || !/^\d{10}$/.test(formData.businessPhone)) {
       errs.businessPhone = 'Mobile number must contain 10 digits.';
     }
-    if (formData.websiteUrl && !/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/.test(formData.websiteUrl)) {
+    if (formData.websiteUrl && formData.websiteUrl.trim() !== '' && !/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/.test(formData.websiteUrl)) {
       errs.websiteUrl = 'Enter a valid Website URL.';
     }
     if (formData.experience === undefined || formData.experience === '') {
@@ -398,42 +400,64 @@ const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfi
     const panErr = validateBase64File(formData.panUpload, ['image/jpeg', 'image/png', 'application/pdf'], 'PAN Upload');
     if (panErr) errs.panUpload = panErr;
 
-    if (!formData.selfieUpload) {
-      errs.selfieUpload = 'Selfie Verification is required.';
-    } else {
-      const selfieErr = validateBase64File(formData.selfieUpload, ['image/jpeg', 'image/png'], 'Selfie Verification');
-      if (selfieErr) errs.selfieUpload = selfieErr;
-    }
+    if (!isDashboardView) {
+      if (!formData.selfieUpload) {
+        errs.selfieUpload = 'Selfie Verification is required.';
+      } else {
+        const selfieErr = validateBase64File(formData.selfieUpload, ['image/jpeg', 'image/png'], 'Selfie Verification');
+        if (selfieErr) errs.selfieUpload = selfieErr;
+      }
 
-    if (!formData.addressProofUpload) {
-      errs.addressProofUpload = 'Address Proof Upload is required.';
-    } else {
-      const proofErr = validateBase64File(formData.addressProofUpload, ['image/jpeg', 'image/png', 'application/pdf'], 'Address Proof Upload');
-      if (proofErr) errs.addressProofUpload = proofErr;
-    }
+      if (!formData.addressProofUpload) {
+        errs.addressProofUpload = 'Address Proof Upload is required.';
+      } else {
+        const proofErr = validateBase64File(formData.addressProofUpload, ['image/jpeg', 'image/png', 'application/pdf'], 'Address Proof Upload');
+        if (proofErr) errs.addressProofUpload = proofErr;
+      }
 
-    if (!formData.termsAccepted) {
-      errs.termsAccepted = 'Please accept Terms & Conditions.';
+      if (!formData.termsAccepted) {
+        errs.termsAccepted = 'Please accept Terms & Conditions.';
+      }
+    } else {
+      // In Dashboard Edit, only validate the file structure if they uploaded a NEW file (starts with data:)
+      if (formData.selfieUpload && formData.selfieUpload.startsWith('data:')) {
+        const selfieErr = validateBase64File(formData.selfieUpload, ['image/jpeg', 'image/png'], 'Selfie Verification');
+        if (selfieErr) errs.selfieUpload = selfieErr;
+      }
+      if (formData.addressProofUpload && formData.addressProofUpload.startsWith('data:')) {
+        const proofErr = validateBase64File(formData.addressProofUpload, ['image/jpeg', 'image/png', 'application/pdf'], 'Address Proof Upload');
+        if (proofErr) errs.addressProofUpload = proofErr;
+      }
     }
     
     // Additional Real Estate Seller Fields
-    if (!formData.preferredLocations || formData.preferredLocations.length === 0) {
-      errs.preferredLocations = 'Preferred Selling Locations is required.';
+    if (!isDashboardView) {
+      if (!formData.preferredLocations || formData.preferredLocations.length === 0) {
+        errs.preferredLocations = 'Preferred Selling Locations is required.';
+      }
+      if (!formData.bankHolderName) {
+        errs.bankHolderName = 'Bank Account Holder Name is required.';
+      }
+      if (!formData.bankAccountNumber) {
+        errs.bankAccountNumber = 'Bank Account Number is required.';
+      } else if (!/^\d+$/.test(formData.bankAccountNumber)) {
+        errs.bankAccountNumber = 'Bank Account Number must be a valid number.';
+      }
+      if (!formData.ifscCode) {
+        errs.ifscCode = 'IFSC Code is required.';
+      } else if (!/^[A-Z]{4}0[A-Z0-9]{6}$/i.test(formData.ifscCode)) {
+        errs.ifscCode = 'IFSC Code is invalid. Format: SBIN0001234';
+      }
+    } else {
+      // In Dashboard Edit, bank info is optional unless they type something in them
+      if (formData.bankAccountNumber && !/^\d+$/.test(formData.bankAccountNumber)) {
+        errs.bankAccountNumber = 'Bank Account Number must be a valid number.';
+      }
+      if (formData.ifscCode && !/^[A-Z]{4}0[A-Z0-9]{6}$/i.test(formData.ifscCode)) {
+        errs.ifscCode = 'IFSC Code is invalid. Format: SBIN0001234';
+      }
     }
-    if (!formData.bankHolderName) {
-      errs.bankHolderName = 'Bank Account Holder Name is required.';
-    }
-    if (!formData.bankAccountNumber) {
-      errs.bankAccountNumber = 'Bank Account Number is required.';
-    } else if (!/^\d+$/.test(formData.bankAccountNumber)) {
-      errs.bankAccountNumber = 'Bank Account Number must be a valid number.';
-    }
-    if (!formData.ifscCode) {
-      errs.ifscCode = 'IFSC Code is required.';
-    } else if (!/^[A-Z]{4}0[A-Z0-9]{6}$/i.test(formData.ifscCode)) {
-      errs.ifscCode = 'IFSC Code is invalid. Format: SBIN0001234';
-    }
-    if (formData.upiId && !/^[a-zA-Z0-9\.\-_]{3,}@[a-zA-Z]{3,}$/.test(formData.upiId)) {
+    if (formData.upiId && formData.upiId.trim() !== '' && !/^[a-zA-Z0-9\.\-_]{3,}@[a-zA-Z]{3,}$/.test(formData.upiId)) {
       errs.upiId = 'UPI ID is invalid. e.g. name@upi';
     }
     
