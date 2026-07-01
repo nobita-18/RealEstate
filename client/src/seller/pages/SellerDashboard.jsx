@@ -1020,28 +1020,32 @@ const SellerDashboard = () => {
             <button className="sd-hamburger-btn" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
               <Menu size={22} />
             </button>
-            <div className="sd-welcome">
-              <h1>Welcome back, Seller!</h1>
-              <p>Here's what's happening with your properties.</p>
-            </div>
+            {activeTab !== 'profile' && (
+              <div className="sd-welcome">
+                <h1>Welcome back, Seller!</h1>
+                <p>Here's what's happening with your properties.</p>
+              </div>
+            )}
           </div>
-          <div className="sd-header-actions">
-            <button className="sd-btn-primary" onClick={() => navigate('/add-property')}>
-              <Plus size={18} /> Add Property
-            </button>
-            <div className="sd-user-profile" style={{ cursor: 'pointer' }} onClick={() => setActiveTab('profile')}>
-              <img 
-                src={getAssetUrl(sellerProfile?.photo) || '/images/default/default-avatar.jpg'} 
-                alt="Seller" 
-                className="sd-user-avatar" 
-                onError={(e) => { e.target.onerror = null; e.target.src = '/images/default/default-avatar.jpg'; }}
-              />
-              <div className="sd-user-info">
-                <span className="sd-user-name">{sellerProfile?.name || sellerUser?.name || 'Seller Name'}</span>
-                <span className="sd-user-email">{sellerProfile?.email || sellerUser?.email || 'seller@email.com'}</span>
+          {activeTab !== 'profile' && (
+            <div className="sd-header-actions">
+              <button className="sd-btn-primary" onClick={() => navigate('/add-property')}>
+                <Plus size={18} /> Add Property
+              </button>
+              <div className="sd-user-profile" style={{ cursor: 'pointer' }} onClick={() => setActiveTab('profile')}>
+                <img 
+                  src={getAssetUrl(sellerProfile?.photo) || '/images/default/default-avatar.jpg'} 
+                  alt="Seller" 
+                  className="sd-user-avatar" 
+                  onError={(e) => { e.target.onerror = null; e.target.src = '/images/default/default-avatar.jpg'; }}
+                />
+                <div className="sd-user-info">
+                  <span className="sd-user-name">{sellerProfile?.name || sellerUser?.name || 'Seller Name'}</span>
+                  <span className="sd-user-email">{sellerProfile?.email || sellerUser?.email || 'seller@email.com'}</span>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </header>
 
         {renderViewContent()}
