@@ -14,9 +14,27 @@ function AppContent() {
   useEffect(() => {
     const isPublicRoute = location.pathname === '/login';
 
-    // If logged in as buyer, redirect to buyer home
     const user = getSafeLocalStorage('user');
-    if (user && !isPublicRoute) {
+    const sellerUser = getSafeLocalStorage('sellerUser');
+    const adminUser = getSafeLocalStorage('adminUser');
+
+    // Conflict Resolution: If logged in as admin, ensure primary 'user' matches adminUser, preventing loops
+    if (adminUser) {
+      if (!user || user.role !== 'admin') {
+        localStorage.setItem('user', JSON.stringify(adminUser));
+        const adminToken = localStorage.getItem('adminToken');
+        if (adminToken) {
+          localStorage.setItem('token', adminToken);
+        }
+      }
+      if (localStorage.getItem('sellerUser')) {
+        localStorage.removeItem('sellerUser');
+        localStorage.removeItem('sellerToken');
+      }
+    }
+
+    // If logged in as buyer, redirect to buyer home
+    if (user && !adminUser && !isPublicRoute) {
       if (user.role === 'buyer') {
         window.location.href = '/buyer/';
         return;
@@ -24,15 +42,12 @@ function AppContent() {
     }
 
     // If logged in as seller, redirect to seller dashboard
-    const sellerUser = getSafeLocalStorage('sellerUser');
-    if (sellerUser && !isPublicRoute) {
+    if (sellerUser && !adminUser && !isPublicRoute) {
       window.location.href = '/seller/dashboard';
       return;
     }
 
     // If not logged in as admin and trying to access protected admin routes:
-    const adminUser = getSafeLocalStorage('adminUser');
-
     if (!adminUser && !isPublicRoute) {
       navigate('/login');
     } else if (adminUser && isPublicRoute) {

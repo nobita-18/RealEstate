@@ -29,12 +29,22 @@ function AppContent() {
     const adminUser = getSafeLocalStorage('adminUser');
     const user = getSafeLocalStorage('user');
 
-    if (sellerUser) {
+    // Conflict Resolution: If logged in as a buyer, clean up any seller/admin keys to prevent redirect loops
+    if (user && user.role === 'buyer') {
+      if (localStorage.getItem('sellerUser') || localStorage.getItem('adminUser')) {
+        localStorage.removeItem('sellerUser');
+        localStorage.removeItem('sellerToken');
+        localStorage.removeItem('adminUser');
+        localStorage.removeItem('adminToken');
+      }
+    }
+
+    if (sellerUser && (!user || user.role !== 'buyer')) {
       window.location.href = '/seller/dashboard';
       return;
     }
     
-    if (adminUser) {
+    if (adminUser && (!user || user.role !== 'buyer')) {
       window.location.href = '/admin/dashboard';
       return;
     }

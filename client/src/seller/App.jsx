@@ -19,9 +19,27 @@ function AppContent() {
   useEffect(() => {
     const isPublicRoute = ['/login', '/register'].includes(location.pathname);
 
-    // If logged in as buyer, redirect to buyer home
     const user = getSafeLocalStorage('user');
-    if (user && !isPublicRoute) {
+    const sellerUser = getSafeLocalStorage('sellerUser');
+    const adminUser = getSafeLocalStorage('adminUser');
+
+    // Conflict Resolution: If logged in as seller, ensure primary 'user' matches sellerUser, preventing loops
+    if (sellerUser) {
+      if (!user || user.role !== 'seller') {
+        localStorage.setItem('user', JSON.stringify(sellerUser));
+        const sellerToken = localStorage.getItem('sellerToken');
+        if (sellerToken) {
+          localStorage.setItem('token', sellerToken);
+        }
+      }
+      if (localStorage.getItem('adminUser')) {
+        localStorage.removeItem('adminUser');
+        localStorage.removeItem('adminToken');
+      }
+    }
+
+    // If logged in as buyer, redirect to buyer home
+    if (user && !sellerUser && !isPublicRoute) {
       if (user.role === 'buyer') {
         window.location.href = '/buyer/';
         return;
@@ -29,15 +47,12 @@ function AppContent() {
     }
 
     // If logged in as admin, redirect to admin dashboard
-    const adminUser = getSafeLocalStorage('adminUser');
-    if (adminUser && !isPublicRoute) {
+    if (adminUser && !sellerUser && !isPublicRoute) {
       window.location.href = '/admin/dashboard';
       return;
     }
 
     // If not logged in as seller and trying to access protected seller routes:
-    const sellerUser = getSafeLocalStorage('sellerUser');
-    
     if (!sellerUser && !isPublicRoute) {
       navigate('/login');
     } else if (sellerUser && isPublicRoute) {
