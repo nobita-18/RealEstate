@@ -1,1 +1,68 @@
-[]
+[
+  {
+    "id": 1782804827837.591,
+    "type": "LOGIN",
+    "message": "User SEL0002 (Priya Seller) logged in.",
+    "details": {
+      "userId": "SEL0002",
+      "name": "Priya Seller",
+      "role": "seller"
+    },
+    "timestamp": "2026-06-30T07:33:47.837Z"
+  },
+  {
+    "id": 1782804990673.0603,
+    "type": "LOGIN",
+    "message": "User BUY0003 (Manoj Buyer) logged in.",
+    "details": {
+      "userId": "BUY0003",
+      "name": "Manoj Buyer",
+      "role": "buyer"
+    },
+    "timestamp": "2026-06-30T07:36:30.673Z"
+  },
+  {
+    "id": 1782805264692.2993,
+    "type": "LOGIN",
+    "message": "User ADM0001 (Rajesh Admin) logged in.",
+    "details": {
+      "userId": "ADM0001",
+      "name": "Rajesh Admin",
+      "role": "admin"
+    },
+    "timestamp": "2026-06-30T07:41:04.692Z"
+  },
+  {
+    "id": 1782813854328.8562,
+    "type": "LOGIN",
+    "message": "User ADM0001 (Rajesh Admin) logged in.",
+    "details": {
+      "userId": "ADM0001",
+      "name": "Rajesh Admin",
+      "role": "admin"
+    },
+    "timestamp": "2026-06-30T10:04:14.329Z"
+  },
+  {
+    "id": 1782875519309.526,
+    "type": "LOGIN",
+    "message": "User ADM0001 (Rajesh Admin) logged in.",
+    "details": {
+      "userId": "ADM0001",
+      "name": "Rajesh Admin",
+      "role": "admin"
+    },
+    "timestamp": "2026-07-01T03:11:59.309Z"
+  },
+  {
+    "id": 1782875543869.19,
+    "type": "LOGIN",
+    "message": "User SEL0002 (Priya Seller) logged in.",
+    "details": {
+      "userId": "SEL0002",
+      "name": "Priya Seller",
+      "role": "seller"
+    },
+    "timestamp": "2026-07-01T03:12:23.869Z"
+  }
+]

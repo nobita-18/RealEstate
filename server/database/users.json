@@ -10,7 +10,8 @@
     "theme": "blue",
     "favorites": [],
     "notifications": [],
-    "rating": 0
+    "rating": 0,
+    "lastLogin": "01-07-2026 08:41 AM"
   },
   {
     "id": "ADM0002",
@@ -49,7 +50,8 @@
     "theme": "blue",
     "favorites": [],
     "notifications": [],
-    "rating": 4.8
+    "rating": 4.8,
+    "lastLogin": "01-07-2026 08:42 AM"
   },
   {
     "id": "SEL0003",
@@ -101,6 +103,7 @@
     "theme": "blue",
     "favorites": [],
     "notifications": [],
-    "rating": 0
+    "rating": 0,
+    "lastLogin": "30-06-2026 01:06 PM"
   }
 ]

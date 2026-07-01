@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { 
@@ -9,9 +9,121 @@ import './BuyerRegister.css';
 
 import { useSignUp, useUser } from '@clerk/clerk-react';
 
-const BuyerRegister = () => {
+const ClerkRegisterHandler = ({ onSyncStart, onSyncSuccess, onSyncError, onLoadedRef }) => {
   const { signUp, isLoaded } = useSignUp();
   const { user, isSignedIn } = useUser();
+
+  useEffect(() => {
+    if (onLoadedRef) {
+      onLoadedRef.current = { signUp, isLoaded };
+    }
+  }, [signUp, isLoaded, onLoadedRef]);
+
+  useEffect(() => {
+    const syncClerkRegisterUser = async () => {
+      if (isSignedIn && user) {
+        try {
+          onSyncStart();
+          const emailVal = user.primaryEmailAddress?.emailAddress;
+          const nameVal = user.fullName || 'Social User';
+          
+          // Identify provider
+          const activeAccount = user.externalAccounts.find(acc => acc.verification?.status === 'verified') || user.externalAccounts[0];
+          const provider = activeAccount?.provider === 'oauth_google' || activeAccount?.verification?.strategy === 'oauth_google' ? 'google' : 'facebook';
+
+          if (!emailVal) {
+            onSyncError('Could not retrieve email from Clerk social account.');
+            return;
+          }
+
+          const selectedRole = localStorage.getItem('socialRegisterRole') || 'buyer';
+          localStorage.removeItem('socialRegisterRole');
+
+          // Check if user already exists
+          try {
+            const checkRes = await axios.post((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/auth/social-login', { 
+              email: emailVal, 
+              provider: provider 
+            });
+
+            // User already exists! Log them in.
+            const loggedUser = checkRes.data.user;
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            localStorage.removeItem('sellerToken');
+            localStorage.removeItem('sellerUser');
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminUser');
+
+            localStorage.setItem('token', checkRes.data.token);
+            localStorage.setItem('user', JSON.stringify(loggedUser));
+
+            if (loggedUser.role === 'seller') {
+              localStorage.setItem('sellerToken', checkRes.data.token);
+              localStorage.setItem('sellerUser', JSON.stringify(loggedUser));
+            }
+
+            onSyncSuccess(loggedUser, selectedRole);
+            return;
+          } catch (checkErr) {
+            if (checkErr.response && checkErr.response.status !== 404) {
+              onSyncError(checkErr.response?.data?.message || 'Social verification failed.');
+              return;
+            }
+          }
+
+          // Register new user dynamically
+          const generatedMobile = String(Math.floor(6000000000 + Math.random() * 4000000000));
+          const generatedPass = `OAuth_${Math.random().toString(36).substring(2, 8)}@123A`;
+
+          const submitData = new FormData();
+          submitData.append('name', nameVal);
+          submitData.append('email', emailVal);
+          submitData.append('mobile', generatedMobile);
+          submitData.append('password', generatedPass);
+          submitData.append('plainPassword', generatedPass);
+          submitData.append('role', selectedRole);
+          submitData.append('address', 'Not Provided');
+          submitData.append('city', 'Not Provided');
+          submitData.append('state', 'Not Provided');
+          submitData.append('pincode', 'Not Provided');
+
+          const registerRes = await axios.post((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/auth/register', submitData, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+          });
+
+          const registeredUser = registerRes.data.user;
+
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          localStorage.removeItem('sellerToken');
+          localStorage.removeItem('sellerUser');
+          localStorage.removeItem('adminToken');
+          localStorage.removeItem('adminUser');
+
+          localStorage.setItem('token', registerRes.data.token);
+          localStorage.setItem('user', JSON.stringify(registeredUser));
+
+          if (selectedRole === 'seller') {
+            localStorage.setItem('sellerToken', registerRes.data.token);
+            localStorage.setItem('sellerUser', JSON.stringify(registeredUser));
+          }
+
+          onSyncSuccess(registeredUser, selectedRole);
+        } catch (err) {
+          onSyncError(err.response?.data?.message || 'Social registration failed.');
+        }
+      }
+    };
+
+    syncClerkRegisterUser();
+  }, [isSignedIn, user, onSyncStart, onSyncSuccess, onSyncError]);
+
+  return null;
+};
+
+const BuyerRegister = () => {
+  const clerkRef = useRef(null);
   const [role, setRole] = useState(''); // 'buyer', 'seller', or empty for step 1
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -58,129 +170,6 @@ const BuyerRegister = () => {
     const finalStrength = Math.min(4, Math.floor((strength / 5) * 4) || 1);
     setPasswordStrength(finalStrength);
   }, [password]);
-
-  useEffect(() => {
-    const syncClerkRegisterUser = async () => {
-      if (isSignedIn && user) {
-        try {
-          setIsSubmitting(true);
-          setError('');
-          const emailVal = user.primaryEmailAddress?.emailAddress;
-          const nameVal = user.fullName || 'Social User';
-          
-          // Identify provider
-          const activeAccount = user.externalAccounts.find(acc => acc.verification?.status === 'verified') || user.externalAccounts[0];
-          const provider = activeAccount?.provider === 'oauth_google' || activeAccount?.verification?.strategy === 'oauth_google' ? 'google' : 'facebook';
-
-          if (!emailVal) {
-            setError('Could not retrieve email from Clerk social account.');
-            setIsSubmitting(false);
-            return;
-          }
-
-          const selectedRole = localStorage.getItem('socialRegisterRole') || 'buyer';
-          localStorage.removeItem('socialRegisterRole');
-
-          // Check if user already exists
-          try {
-            const checkRes = await axios.post((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/auth/social-login', { 
-              email: emailVal, 
-              provider: provider 
-            });
-
-            // User already exists! Log them in.
-            const loggedUser = checkRes.data.user;
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            localStorage.removeItem('sellerToken');
-            localStorage.removeItem('sellerUser');
-            localStorage.removeItem('adminToken');
-            localStorage.removeItem('adminUser');
-
-            localStorage.setItem('token', checkRes.data.token);
-            localStorage.setItem('user', JSON.stringify(loggedUser));
-
-            if (loggedUser.role === 'seller') {
-              localStorage.setItem('sellerToken', checkRes.data.token);
-              localStorage.setItem('sellerUser', JSON.stringify(loggedUser));
-            }
-
-            setSuccessData(loggedUser);
-            setIsSubmitting(false);
-
-            setTimeout(() => {
-              if (loggedUser.role === 'seller') {
-                window.location.href = `/seller/dashboard`;
-              } else {
-                window.location.href = `/buyer/`;
-              }
-            }, 2000);
-            return;
-          } catch (checkErr) {
-            if (checkErr.response && checkErr.response.status !== 404) {
-              setError(checkErr.response?.data?.message || 'Social verification failed.');
-              setIsSubmitting(false);
-              return;
-            }
-            // 404 means proceed to automatic registration!
-          }
-
-          // Register new user dynamically
-          const generatedMobile = String(Math.floor(6000000000 + Math.random() * 4000000000));
-          const generatedPass = `OAuth_${Math.random().toString(36).substring(2, 8)}@123A`;
-
-          const submitData = new FormData();
-          submitData.append('name', nameVal);
-          submitData.append('email', emailVal);
-          submitData.append('mobile', generatedMobile);
-          submitData.append('password', generatedPass);
-          submitData.append('plainPassword', generatedPass);
-          submitData.append('role', selectedRole);
-          submitData.append('address', 'Not Provided');
-          submitData.append('city', 'Not Provided');
-          submitData.append('state', 'Not Provided');
-          submitData.append('pincode', 'Not Provided');
-
-          const registerRes = await axios.post((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/auth/register', submitData, {
-            headers: { 'Content-Type': 'multipart/form-data' }
-          });
-
-          const registeredUser = registerRes.data.user;
-
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
-          localStorage.removeItem('sellerToken');
-          localStorage.removeItem('sellerUser');
-          localStorage.removeItem('adminToken');
-          localStorage.removeItem('adminUser');
-
-          localStorage.setItem('token', registerRes.data.token);
-          localStorage.setItem('user', JSON.stringify(registeredUser));
-
-          if (selectedRole === 'seller') {
-            localStorage.setItem('sellerToken', registerRes.data.token);
-            localStorage.setItem('sellerUser', JSON.stringify(registeredUser));
-          }
-
-          setSuccessData(registeredUser);
-          setIsSubmitting(false);
-
-          setTimeout(() => {
-            if (selectedRole === 'seller') {
-              window.location.href = `/seller/dashboard?registered=true&name=${encodeURIComponent(registeredUser.name)}`;
-            } else {
-              window.location.href = `/buyer/?registered=true&name=${encodeURIComponent(registeredUser.name)}&role=buyer`;
-            }
-          }, 2500);
-        } catch (err) {
-          setError(err.response?.data?.message || 'Social registration failed.');
-          setIsSubmitting(false);
-        }
-      }
-    };
-
-    syncClerkRegisterUser();
-  }, [isSignedIn, user]);
 
   const handleFileDrop = (e) => {
     e.preventDefault();
@@ -440,9 +429,10 @@ const BuyerRegister = () => {
     const clerkKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || '';
     const hasRealClerkKey = clerkKey && !clerkKey.startsWith('YOUR_CLERK') && (!isRenderDomain || !clerkKey.startsWith('pk_test'));
 
-    if (hasRealClerkKey && isLoaded) {
+    const clerk = clerkRef.current;
+    if (hasRealClerkKey && clerk && clerk.isLoaded) {
       try {
-        await signUp.authenticateWithRedirect({
+        await clerk.signUp.authenticateWithRedirect({
           strategy: platform === 'google' ? 'oauth_google' : 'oauth_facebook',
           redirectUrl: window.location.origin + window.location.pathname,
           redirectUrlComplete: window.location.origin + window.location.pathname
@@ -456,9 +446,33 @@ const BuyerRegister = () => {
     }
   };
 
+  const isRenderDomain = typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+  const clerkKeyStr = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || '';
+  const isClerkAvailable = clerkKeyStr && !clerkKeyStr.startsWith('YOUR_CLERK') && (!isRenderDomain || !clerkKeyStr.startsWith('pk_test'));
 
   return (
     <div className="estify-register-page-wrapper">
+      {isClerkAvailable && (
+        <ClerkRegisterHandler
+          onSyncStart={() => setIsSubmitting(true)}
+          onSyncSuccess={(loggedUser, selectedRole) => {
+            setSuccessData(loggedUser);
+            setIsSubmitting(false);
+            setTimeout(() => {
+              if (selectedRole === 'seller') {
+                window.location.href = `/seller/dashboard?registered=true&name=${encodeURIComponent(loggedUser.name)}`;
+              } else {
+                window.location.href = `/buyer/?registered=true&name=${encodeURIComponent(loggedUser.name)}&role=buyer`;
+              }
+            }, 2500);
+          }}
+          onSyncError={(errMsg) => {
+            setError(errMsg);
+            setIsSubmitting(false);
+          }}
+          onLoadedRef={clerkRef}
+        />
+      )}
       
       {/* Registration Successful POPUP Modal Overlay */}
       {successData && (
