@@ -43,7 +43,7 @@ const BuyerProfile = () => {
     if (storedUser) {
       // Redirect to seller dashboard if user is seller
       if (storedUser.role === 'seller') {
-        window.location.href = '/seller/dashboard';
+        window.location.href = '/seller/dashboard?portal=seller';
         return;
       }
       setUser(storedUser);
