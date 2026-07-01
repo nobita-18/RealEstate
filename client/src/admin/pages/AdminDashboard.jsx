@@ -160,7 +160,7 @@ const AdminDashboard = () => {
       <div className="admin-secure-box" style={{ maxWidth: '1100px', width: '95%' }}>
         
         {/* Dashboard Header */}
-        <div className="admin-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div className="admin-header-flex">
           <div style={{ textAlign: 'left' }}>
             <h2>SYSTEM_CORE_ONLINE</h2>
             <p>Welcome, {adminUser?.name || 'Administrator'} | Secure Panel Protocol</p>
@@ -214,12 +214,12 @@ const AdminDashboard = () => {
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '20px' }}>
               {pendingProps.map(prop => (
-                <div key={prop.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#111', padding: '20px', borderLeft: '4px solid #00ff80' }}>
+                <div key={prop.id} className="admin-moderation-item">
                   <div style={{ textAlign: 'left' }}>
                     <h4 style={{ color: 'white', margin: '0 0 5px 0' }}>{prop.title}</h4>
                     <p style={{ color: '#aaa', margin: 0, fontSize: '0.9rem' }}>Seller ID: {prop.ownerId} | Location: {prop.location} | Price: ₹{prop.price.toLocaleString('en-IN')}</p>
                   </div>
-                  <div style={{ display: 'flex', gap: '10px' }}>
+                  <div className="admin-moderation-actions">
                     <button onClick={() => setSelectedAdminProperty(prop)} style={{ background: '#00d2ff', color: 'black', border: 'none', padding: '8px 15px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 'bold' }}>
                       <Eye size={16} /> View
                     </button>
@@ -287,31 +287,32 @@ const AdminDashboard = () => {
                        </span>
                      </td>
                      <td style={{ padding: '15px', color: '#aaa' }}>{usr.memberSince || 'N/A'}</td>
-                     <td style={{ padding: '15px', textAlign: 'right', display: 'flex', gap: '8px', justifyContent: 'flex-end', alignItems: 'center' }}>
-                       
-                       {/* VIEW USER DETAIL */}
-                       <button onClick={() => openUserView(usr)} style={{ background: 'transparent', border: 'none', color: '#00d2ff', cursor: 'pointer' }} title="View User Details">
-                         <Info size={18} />
-                       </button>
-
-                       {/* VIEW SELLER PROPERTIES */}
-                       {usr.role === 'seller' && (
-                         <button onClick={() => openSellerProps(usr)} style={{ background: 'transparent', border: 'none', color: '#ffdf80', cursor: 'pointer' }} title="View Seller Properties">
-                           <BarChart size={18} />
+                     <td style={{ padding: '15px', textAlign: 'right' }}>
+                       <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', alignItems: 'center', minWidth: '120px' }}>
+                         {/* VIEW USER DETAIL */}
+                         <button onClick={() => openUserView(usr)} style={{ background: 'transparent', border: 'none', color: '#00d2ff', cursor: 'pointer' }} title="View User Details">
+                           <Info size={18} />
                          </button>
-                       )}
 
-                       {/* ACTIVATE/DEACTIVATE */}
-                       {usr.role !== 'admin' && (
-                         <button onClick={() => handleToggleStatus(usr.id, usr.status)} style={{ background: 'transparent', border: 'none', color: usr.status === 'deactivated' ? '#10b981' : '#f59e0b', cursor: 'pointer' }} title={usr.status === 'deactivated' ? 'Activate User' : 'Deactivate User'}>
-                           {usr.status === 'deactivated' ? <UserCheck size={18} /> : <UserX size={18} />}
+                         {/* VIEW SELLER PROPERTIES */}
+                         {usr.role === 'seller' && (
+                           <button onClick={() => openSellerProps(usr)} style={{ background: 'transparent', border: 'none', color: '#ffdf80', cursor: 'pointer' }} title="View Seller Properties">
+                             <BarChart size={18} />
+                           </button>
+                         )}
+
+                         {/* ACTIVATE/DEACTIVATE */}
+                         {usr.role !== 'admin' && (
+                           <button onClick={() => handleToggleStatus(usr.id, usr.status)} style={{ background: 'transparent', border: 'none', color: usr.status === 'deactivated' ? '#10b981' : '#f59e0b', cursor: 'pointer' }} title={usr.status === 'deactivated' ? 'Activate User' : 'Deactivate User'}>
+                             {usr.status === 'deactivated' ? <UserCheck size={18} /> : <UserX size={18} />}
+                           </button>
+                         )}
+
+                         {/* DELETE USER */}
+                         <button onClick={() => handleDeleteUser(usr.id, usr.role)} style={{ background: 'transparent', color: usr.role === 'admin' ? '#555' : '#ff3366', border: 'none', cursor: usr.role === 'admin' ? 'not-allowed' : 'pointer' }} disabled={usr.role === 'admin'} title="Delete User Node">
+                           <Trash2 size={18} />
                          </button>
-                       )}
-
-                       {/* DELETE USER */}
-                       <button onClick={() => handleDeleteUser(usr.id, usr.role)} style={{ background: 'transparent', color: usr.role === 'admin' ? '#555' : '#ff3366', border: 'none', cursor: usr.role === 'admin' ? 'not-allowed' : 'pointer' }} disabled={usr.role === 'admin'} title="Delete User Node">
-                         <Trash2 size={18} />
-                       </button>
+                       </div>
                      </td>
                    </tr>
                  ))}
@@ -509,12 +510,12 @@ const AdminDashboard = () => {
                 <p style={{ color: '#aaa', textAlign: 'center', padding: '30px' }}>[ No properties submitted by this seller ]</p>
               ) : (
                 activeModalProps.props.map(prop => (
-                  <div key={prop.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#111', padding: '15px 20px', borderLeft: '3px solid #ffdf80' }}>
+                  <div key={prop.id} className="admin-seller-property-item">
                     <div>
                       <h4 style={{ color: 'white', margin: '0 0 5px 0' }}>{prop.title}</h4>
                       <p style={{ color: '#aaa', margin: 0, fontSize: '0.85rem' }}>Type: {prop.propertyType} | City: {prop.location} | Status: <span style={{ color: prop.status === 'approved' ? '#10b981' : prop.status === 'rejected' ? '#ef4444' : '#fbbf24' }}>{(prop.status || 'pending').toUpperCase()}</span></p>
                     </div>
-                    <div style={{ display: 'flex', gap: '10px' }}>
+                    <div className="admin-seller-property-actions">
                       {prop.status === 'pending' && (
                         <>
                           <button onClick={() => handleStatus(prop.id, 'approved')} style={{ background: '#10b981', color: 'black', border: 'none', padding: '5px 10px', cursor: 'pointer', fontWeight: 'bold' }}>Accept</button>

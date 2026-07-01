@@ -289,7 +289,8 @@
 .seller-profile-section.info-stats { animation: sellerFadeInProfileElement 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.42s forwards; }
 
 /* Stagger fields inside sections */
-.seller-profile-field, .seller-profile-stat-box {
+.seller-profile-section .seller-profile-field, 
+.seller-profile-section .seller-profile-stat-box {
   opacity: 0;
   transform: translateY(10px);
 }
@@ -396,6 +397,40 @@
   .seller-glass-card {
     padding: 20px !important;
     border-radius: 20px !important;
+  }
+}
+
+/* ==========================================
+   Responsive Profile Grid Utilities
+   ========================================== */
+.seller-profile-span-2 {
+  grid-column: span 2;
+}
+
+.seller-profile-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .seller-profile-grid {
+    grid-template-columns: 1fr !important;
+    gap: 15px !important;
+  }
+
+  .seller-profile-span-2 {
+    grid-column: span 1 !important;
+  }
+
+  .seller-profile-stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+  
+  .sd-panel {
+    padding: 15px !important;
   }
 }
 

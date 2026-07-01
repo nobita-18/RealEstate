@@ -259,3 +259,98 @@
 .admin-details-card strong {
   color: #fff;
 }
+
+/* ==========================================
+   Admin Dashboard Responsive Overrides
+   ========================================== */
+.admin-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  width: 100%;
+}
+
+.admin-moderation-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #111;
+  padding: 20px;
+  border-left: 4px solid #00ff80;
+}
+
+.admin-moderation-actions {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.admin-seller-property-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #111;
+  padding: 15px 20px;
+  border-left: 3px solid #ffdf80;
+}
+
+.admin-seller-property-actions {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .admin-header-flex {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 15px !important;
+    text-align: center !important;
+  }
+  
+  .admin-header-flex div {
+    text-align: center !important;
+  }
+  
+  .admin-header-flex button {
+    width: 100% !important;
+  }
+
+  .admin-secure-box {
+    padding: 20px !important;
+  }
+
+  .admin-moderation-item {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 15px !important;
+  }
+  
+  .admin-moderation-actions {
+    flex-wrap: wrap !important;
+    justify-content: flex-start !important;
+  }
+  
+  .admin-moderation-actions button {
+    flex: 1 1 calc(50% - 10px) !important;
+    justify-content: center !important;
+    padding: 10px !important;
+  }
+
+  .admin-seller-property-item {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
+  
+  .admin-seller-property-actions {
+    justify-content: flex-start !important;
+    width: 100% !important;
+  }
+  
+  .admin-seller-property-actions button {
+    flex: 1 !important;
+    text-align: center !important;
+  }
+}

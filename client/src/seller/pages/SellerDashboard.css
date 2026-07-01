@@ -1244,4 +1244,20 @@
   .sd-layout {
     overflow-x: hidden;
   }
+
+  /* Responsive Form Grid and Controls */
+  .sd-form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .sd-form-group {
+    grid-column: span 1 !important;
+    margin-bottom: 12px !important;
+  }
+
+  .sd-form-grid button[type="submit"] {
+    grid-column: span 1 !important;
+    width: 100% !important;
+  }
 }

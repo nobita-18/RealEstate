@@ -1273,7 +1273,7 @@ const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfi
           </div>
 
           {/* Card 5: BANK & SPECIALIZATION DETAILS */}
-          <div className="sd-panel" style={{ padding: '25px', gridColumn: 'span 2' }}>
+          <div className="sd-panel seller-profile-span-2" style={{ padding: '25px' }}>
             <h3 style={{ color: 'var(--sd-text-main)', margin: '0 0 20px 0', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.2rem', fontWeight: 600 }}>
               <CreditCard size={20} color="var(--sd-primary)"/> Additional Seller & Bank Details
             </h3>
@@ -1281,11 +1281,11 @@ const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfi
           </div>
 
           {/* PROPERTY SUMMARY */}
-          <div className="sd-panel" style={{ padding: '25px', gridColumn: 'span 2' }}>
+          <div className="sd-panel seller-profile-span-2" style={{ padding: '25px' }}>
             <h3 style={{ color: 'var(--sd-text-main)', margin: '0 0 20px 0', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.2rem', fontWeight: 600 }}>
               <BarChart2 size={20} color="var(--sd-primary)"/> Property Performance Summary
             </h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '15px', textAlign: 'center' }}>
+            <div className="seller-profile-stats-grid">
               <div style={{ background: '#f8fafc', padding: '15px', borderRadius: '10px', border: '1px solid var(--sd-border)' }}>
                 <div style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--sd-primary)' }}>{sellerStats.total}</div>
                 <div style={{ fontSize: '0.75rem', color: 'var(--sd-text-muted)', marginTop: '5px', fontWeight: 600 }}>TOTAL LISTINGS</div>
@@ -1306,7 +1306,7 @@ const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfi
           </div>
 
           {/* SETTINGS */}
-          <div className="sd-panel" style={{ padding: '25px', gridColumn: 'span 2' }}>
+          <div className="sd-panel seller-profile-span-2" style={{ padding: '25px' }}>
             <h3 style={{ color: 'var(--sd-text-main)', margin: '0 0 20px 0', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.2rem', fontWeight: 600 }}>
               <Settings size={20} color="var(--sd-primary)"/> Settings
             </h3>
@@ -1445,7 +1445,7 @@ const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfi
           </div>
 
           {/* Card 5: BANK & SPECIALIZATION DETAILS */}
-          <div style={{ background: 'rgba(255,255,255,0.02)', padding: '25px', borderRadius: '15px', border: '1px solid rgba(196,167,97,0.2)', gridColumn: 'span 2' }}>
+          <div className="seller-profile-span-2" style={{ background: 'rgba(255,255,255,0.02)', padding: '25px', borderRadius: '15px', border: '1px solid rgba(196,167,97,0.2)' }}>
             <h3 style={{ color: '#ffdf80', margin: '0 0 20px 0', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.2rem' }}>
               <CreditCard size={20} color="#c4a761"/> Additional Seller & Bank Details
             </h3>
@@ -1453,11 +1453,11 @@ const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfi
           </div>
 
           {/* PROPERTY SUMMARY */}
-          <div className="seller-profile-section info-stats" style={{ background: 'rgba(255,255,255,0.02)', padding: '25px', borderRadius: '15px', border: '1px solid rgba(196,167,97,0.2)', gridColumn: 'span 2' }}>
+          <div className="seller-profile-section info-stats seller-profile-span-2" style={{ background: 'rgba(255,255,255,0.02)', padding: '25px', borderRadius: '15px', border: '1px solid rgba(196,167,97,0.2)' }}>
             <h3 style={{ color: '#ffdf80', margin: '0 0 20px 0', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.2rem' }}>
               <BarChart2 size={20} color="#c4a761"/> Property Performance Summary
             </h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '15px', textAlign: 'center' }}>
+            <div className="seller-profile-stats-grid">
               <div style={{ background: 'rgba(255,255,255,0.03)', padding: '15px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.05)' }}>
                 <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#ffdf80' }}>{sellerStats.total}</div>
                 <div style={{ fontSize: '0.75rem', color: '#aaa', marginTop: '5px' }}>TOTAL LISTINGS</div>
@@ -1478,7 +1478,7 @@ const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfi
           </div>
 
           {/* SETTINGS */}
-          <div style={{ background: 'rgba(255,255,255,0.02)', padding: '25px', borderRadius: '15px', border: '1px solid rgba(196,167,97,0.2)', gridColumn: 'span 2' }}>
+          <div className="seller-profile-span-2" style={{ background: 'rgba(255,255,255,0.02)', padding: '25px', borderRadius: '15px', border: '1px solid rgba(196,167,97,0.2)' }}>
             <h3 style={{ color: '#ffdf80', margin: '0 0 20px 0', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.2rem' }}>
               <Settings size={20} color="#c4a761"/> Settings
             </h3>
