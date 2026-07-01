@@ -36,14 +36,14 @@ function AppContent() {
     // If logged in as buyer, redirect to buyer home
     if (user && !adminUser && !isPublicRoute) {
       if (user.role === 'buyer') {
-        window.location.href = '/buyer/';
+        window.location.href = '/buyer/index.html';
         return;
       }
     }
 
     // If logged in as seller, redirect to seller dashboard
     if (sellerUser && !adminUser && !isPublicRoute) {
-      window.location.href = '/seller/dashboard';
+      window.location.href = '/seller/index.html?portal=seller';
       return;
     }
 

@@ -127,11 +127,11 @@ const BuyerLogin = () => {
     setIsSubmitting(false);
     setTimeout(() => {
       if (loggedUser.role === 'seller') {
-        window.location.href = '/seller/dashboard?portal=seller';
+        window.location.href = '/seller/index.html?portal=seller';
       } else if (loggedUser.role === 'admin') {
-        window.location.href = '/admin/dashboard?portal=admin';
+        window.location.href = '/admin/index.html?portal=admin';
       } else {
-        window.location.href = '/buyer/';
+        window.location.href = '/buyer/index.html';
       }
     }, 2000);
   };
@@ -181,11 +181,11 @@ const BuyerLogin = () => {
       // Auto-redirect after 2 seconds to show the welcome splash
       setTimeout(() => {
         if (loggedUser.role === 'seller') {
-          window.location.href = '/seller/dashboard?portal=seller';
+          window.location.href = '/seller/index.html?portal=seller';
         } else if (loggedUser.role === 'admin') {
-          window.location.href = '/admin/dashboard?portal=admin';
+          window.location.href = '/admin/index.html?portal=admin';
         } else {
-          window.location.href = '/buyer/';
+          window.location.href = '/buyer/index.html';
         }
       }, 2000);
 
@@ -197,11 +197,11 @@ const BuyerLogin = () => {
 
   const handlePortalRedirect = () => {
     if (successData.role === 'seller') {
-      window.location.href = '/seller/dashboard?portal=seller';
+      window.location.href = '/seller/index.html?portal=seller';
     } else if (successData.role === 'admin') {
-      window.location.href = '/admin/dashboard?portal=admin';
+      window.location.href = '/admin/index.html?portal=admin';
     } else {
-      window.location.href = '/buyer/';
+      window.location.href = '/buyer/index.html';
     }
   };
 

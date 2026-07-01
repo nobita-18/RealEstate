@@ -291,9 +291,9 @@ const BuyerRegister = () => {
       // Soft auto-redirect after 3.5 seconds to show visual completion
       setTimeout(() => {
         if (role === 'seller') {
-          window.location.href = `/seller/dashboard?registered=true&portal=seller&name=${encodeURIComponent(res.data.user.name)}`;
+          window.location.href = `/seller/index.html?registered=true&portal=seller&name=${encodeURIComponent(res.data.user.name)}`;
         } else {
-          window.location.href = `/buyer/?registered=true&name=${encodeURIComponent(res.data.user.name)}&role=buyer`;
+          window.location.href = `/buyer/index.html?registered=true&name=${encodeURIComponent(res.data.user.name)}&role=buyer`;
         }
       }, 3500);
     } catch (err) {
@@ -305,9 +305,9 @@ const BuyerRegister = () => {
 
   const handlePortalRedirect = () => {
     if (role === 'seller') {
-      window.location.href = '/seller/dashboard?portal=seller';
+      window.location.href = '/seller/index.html?portal=seller';
     } else {
-      window.location.href = '/buyer/';
+      window.location.href = '/buyer/index.html';
     }
   };
 
@@ -347,9 +347,9 @@ const BuyerRegister = () => {
 
         setTimeout(() => {
           if (loggedUser.role === 'seller') {
-            window.location.href = `/seller/dashboard?portal=seller`;
+            window.location.href = `/seller/index.html?portal=seller`;
           } else {
-            window.location.href = `/buyer/`;
+            window.location.href = `/buyer/index.html`;
           }
         }, 2000);
         return;
@@ -405,9 +405,9 @@ const BuyerRegister = () => {
 
       setTimeout(() => {
         if (selectedRole === 'seller') {
-          window.location.href = `/seller/dashboard?registered=true&portal=seller&name=${encodeURIComponent(registeredUser.name)}`;
+          window.location.href = `/seller/index.html?registered=true&portal=seller&name=${encodeURIComponent(registeredUser.name)}`;
         } else {
-          window.location.href = `/buyer/?registered=true&name=${encodeURIComponent(registeredUser.name)}&role=buyer`;
+          window.location.href = `/buyer/index.html?registered=true&name=${encodeURIComponent(registeredUser.name)}&role=buyer`;
         }
       }, 2500);
     } catch (err) {
@@ -460,9 +460,9 @@ const BuyerRegister = () => {
             setIsSubmitting(false);
             setTimeout(() => {
               if (selectedRole === 'seller') {
-                window.location.href = `/seller/dashboard?registered=true&portal=seller&name=${encodeURIComponent(loggedUser.name)}`;
+                window.location.href = `/seller/index.html?registered=true&portal=seller&name=${encodeURIComponent(loggedUser.name)}`;
               } else {
-                window.location.href = `/buyer/?registered=true&name=${encodeURIComponent(loggedUser.name)}&role=buyer`;
+                window.location.href = `/buyer/index.html?registered=true&name=${encodeURIComponent(loggedUser.name)}&role=buyer`;
               }
             }, 2500);
           }}

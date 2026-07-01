@@ -40,12 +40,12 @@ function AppContent() {
     }
 
     if (sellerUser && (!user || user.role !== 'buyer')) {
-      window.location.href = '/seller/dashboard?portal=seller';
+      window.location.href = '/seller/index.html?portal=seller';
       return;
     }
     
     if (adminUser && (!user || user.role !== 'buyer')) {
-      window.location.href = '/admin/dashboard?portal=admin';
+      window.location.href = '/admin/index.html?portal=admin';
       return;
     }
     

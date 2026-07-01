@@ -21,7 +21,7 @@ const Navbar = ({ role = 'buyer' }) => {
     localStorage.removeItem('adminToken');
     localStorage.removeItem('adminUser');
     setIsOpen(false);
-    window.location.href = '/buyer/';
+    window.location.href = '/buyer/index.html';
   };
 
   const isHome = location.pathname === '/';

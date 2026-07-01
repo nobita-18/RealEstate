@@ -183,7 +183,7 @@ const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfi
     localStorage.removeItem('user');
     localStorage.removeItem('adminToken');
     localStorage.removeItem('adminUser');
-    window.location.href = '/buyer/';
+    window.location.href = '/buyer/index.html';
   };
 
   const handleFileUpload = async (e, field) => {

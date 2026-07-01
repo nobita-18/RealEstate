@@ -130,7 +130,7 @@ const SellerDashboard = () => {
     localStorage.removeItem('user');
     localStorage.removeItem('adminToken');
     localStorage.removeItem('adminUser');
-    window.location.href = '/buyer/';
+    window.location.href = '/buyer/index.html';
   };
 
   const handleSelectNotifications = async () => {

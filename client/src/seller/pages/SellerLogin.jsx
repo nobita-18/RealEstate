@@ -122,7 +122,7 @@ const SellerLogin = () => {
     setSuccessData(loggedUser);
     setIsSubmitting(false);
     setTimeout(() => {
-      window.location.href = '/seller/dashboard?portal=seller';
+      window.location.href = '/seller/index.html?portal=seller';
     }, 2000);
   };
 
@@ -172,11 +172,11 @@ const SellerLogin = () => {
       // Auto-redirect after 2 seconds to show the welcome splash
       setTimeout(() => {
         if (loggedUser.role === 'seller') {
-          window.location.href = '/seller/dashboard?portal=seller';
+          window.location.href = '/seller/index.html?portal=seller';
         } else if (loggedUser.role === 'admin') {
-          window.location.href = '/admin/dashboard?portal=admin';
+          window.location.href = '/admin/index.html?portal=admin';
         } else {
-          window.location.href = '/buyer/';
+          window.location.href = '/buyer/index.html';
         }
       }, 2000);
 
@@ -191,7 +191,7 @@ const SellerLogin = () => {
     const isAdmin = successData.role === 'admin';
     const roleLabel = isSeller ? 'Seller Portal' : (isAdmin ? 'Admin Console' : 'Buyer Lounge');
     const portalThemeClass = isSeller ? 'seller-theme' : (isAdmin ? 'admin-theme' : 'buyer-theme');
-    const targetUrl = isSeller ? '/seller/dashboard?portal=seller' : (isAdmin ? '/admin/dashboard?portal=admin' : '/buyer/');
+    const targetUrl = isSeller ? '/seller/index.html?portal=seller' : (isAdmin ? '/admin/index.html?portal=admin' : '/buyer/index.html');
     
     return (
       <div className="estify-login-success-overlay">
