@@ -359,17 +359,24 @@ const SellerDashboard = () => {
                   <td>{makeString(prop.location).substring(0, 15)}</td>
                   <td>₹{Number(prop.price || 0).toLocaleString('en-IN')}</td>
                   <td>
-                    <span className={`sd-status ${prop.status === 'approved' ? 'live' : (prop.status === 'pending' || prop.status === 'pending_delete') ? 'pending' : prop.status === 'deleted' ? 'deleted' : 'rejected'}`}>
-                      {prop.status === 'approved' 
-                        ? (prop.hasPendingChanges ? 'Live (Edit Pending)' : 'Live') 
-                        : prop.status === 'pending_delete' 
-                          ? 'Pending Deletion' 
-                          : prop.status === 'pending' 
-                            ? 'Pending' 
-                            : prop.status === 'deleted' 
-                              ? 'Deleted' 
-                              : 'Rejected'}
-                    </span>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      <span className={`sd-status ${prop.status === 'approved' ? 'live' : (prop.status === 'pending' || prop.status === 'pending_delete') ? 'pending' : prop.status === 'deleted' ? 'deleted' : 'rejected'}`}>
+                        {prop.status === 'approved' 
+                          ? (prop.hasPendingChanges ? 'Live (Edit Pending)' : 'Live') 
+                          : prop.status === 'pending_delete' 
+                            ? 'Pending Deletion' 
+                            : prop.status === 'pending' 
+                              ? 'Pending' 
+                              : prop.status === 'deleted' 
+                                ? 'Deleted' 
+                                : 'Rejected'}
+                      </span>
+                      {prop.status === 'rejected' && prop.statusReason && (
+                        <span style={{ fontSize: '0.75rem', color: '#ef4444', maxWidth: '120px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={prop.statusReason}>
+                          Reason: {prop.statusReason}
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td>{prop.views || 0}</td>
                   <td>
@@ -804,6 +811,29 @@ const SellerDashboard = () => {
         </button>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {/* Deletion Request Status Block */}
+          {prop.status === 'pending_delete' && prop.deleteReason && (
+            <div style={{ background: 'rgba(239, 68, 68, 0.08)', border: '1px solid rgba(239, 68, 68, 0.2)', padding: '15px', borderRadius: '8px', color: '#ef4444', fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <strong>⚠️ Deletion Request Submitted:</strong>
+              <p style={{ margin: 0 }}>Reason you provided: "{prop.deleteReason}"</p>
+            </div>
+          )}
+
+          {/* Admin Rejection Status Block */}
+          {prop.status === 'rejected' && prop.statusReason && (
+            <div style={{ background: 'rgba(239, 68, 68, 0.08)', border: '1px solid rgba(239, 68, 68, 0.2)', padding: '15px', borderRadius: '8px', color: '#ef4444', fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <strong>❌ Rejection Reason from Admin:</strong>
+              <p style={{ margin: 0, fontWeight: '700' }}>"{prop.statusReason}"</p>
+            </div>
+          )}
+
+          {/* Admin Approval Message Block */}
+          {prop.status === 'approved' && prop.statusReason && (
+            <div style={{ background: 'rgba(16, 185, 129, 0.08)', border: '1px solid rgba(16, 185, 129, 0.2)', padding: '15px', borderRadius: '8px', color: '#16a34a', fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <strong>✅ Admin Approval Remarks:</strong>
+              <p style={{ margin: 0 }}>"{prop.statusReason}"</p>
+            </div>
+          )}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid #e2e8f0', paddingBottom: '15px' }}>
             <div>
               <h2 style={{ fontSize: '1.75rem', fontWeight: '800', color: '#1e293b', margin: '0 0 5px 0' }}>{prop.title}</h2>

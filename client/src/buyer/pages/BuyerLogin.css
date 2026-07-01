@@ -428,6 +428,8 @@
   gap: 8px;
   box-shadow: 0 4px 12px rgba(15, 82, 186, 0.2);
   margin-top: 1rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .estify-login-gradient-btn:hover {

@@ -309,6 +309,17 @@
     text-align: center !important;
   }
   
+  .admin-header-flex h2 {
+    font-size: 1.8rem !important;
+    color: #00ff80 !important;
+    text-shadow: 0 0 10px rgba(0, 255, 128, 0.5) !important;
+  }
+
+  .admin-header-flex p {
+    font-size: 0.85rem !important;
+    color: #aaa !important;
+  }
+
   .admin-header-flex div {
     text-align: center !important;
   }

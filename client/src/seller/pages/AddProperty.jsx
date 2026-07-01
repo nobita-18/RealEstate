@@ -293,7 +293,7 @@ const AddProperty = () => {
           
           <div className="sd-form-group" style={{ gridColumn: 'span 2' }}>
             <label>Property Type</label>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '16px', marginTop: '8px' }}>
+            <div className="sd-property-type-selector">
               {[
                 { type: 'House', icon: <Home size={24} />, desc: 'Independent House' },
                 { type: 'Penthouse', icon: <Building size={24} />, desc: 'Luxury Top Floor' },

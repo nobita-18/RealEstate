@@ -959,8 +959,28 @@
 .sd-form-control:focus {
   border-color: #3b82f6 !important;
   box-shadow: 0 4px 15px rgba(59, 130, 246, 0.18), 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
-  transform: translateY(-2px) !important;
   background: #ffffff !important;
+}
+
+/* Property type selector grid */
+.sd-property-type-selector {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  margin-top: 8px;
+}
+
+@media (max-width: 768px) {
+  .sd-property-type-selector {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+  .sd-property-type-selector > div {
+    padding: 10px 8px !important;
+  }
+  .sd-property-type-selector span {
+    font-size: 0.8rem !important;
+  }
 }
 
 /* Property type grid items hover effects */
