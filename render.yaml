@@ -6,11 +6,20 @@ services:
     staticPublishPath: ./client/dist
     routes:
       - type: rewrite
+        source: /buyer
+        destination: /buyer/index.html
+      - type: rewrite
         source: /buyer/*
         destination: /buyer/index.html
       - type: rewrite
+        source: /seller
+        destination: /seller/index.html
+      - type: rewrite
         source: /seller/*
         destination: /seller/index.html
+      - type: rewrite
+        source: /admin
+        destination: /admin/index.html
       - type: rewrite
         source: /admin/*
         destination: /admin/index.html
