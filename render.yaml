@@ -26,3 +26,25 @@ services:
       - type: rewrite
         source: /*
         destination: /index.html
+    headers:
+      - path: /buyer
+        name: Cache-Control
+        value: no-cache, no-store, must-revalidate
+      - path: /buyer/*
+        name: Cache-Control
+        value: no-cache, no-store, must-revalidate
+      - path: /seller
+        name: Cache-Control
+        value: no-cache, no-store, must-revalidate
+      - path: /seller/*
+        name: Cache-Control
+        value: no-cache, no-store, must-revalidate
+      - path: /admin
+        name: Cache-Control
+        value: no-cache, no-store, must-revalidate
+      - path: /admin/*
+        name: Cache-Control
+        value: no-cache, no-store, must-revalidate
+      - path: /*.html
+        name: Cache-Control
+        value: no-cache, no-store, must-revalidate
