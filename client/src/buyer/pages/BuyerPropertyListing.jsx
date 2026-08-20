@@ -430,20 +430,6 @@ const BuyerPropertyListing = () => {
 
       {!filters.favorites && (
         <>
-          {/* AI Recommendations Carousel */}
-          {getAIRecommendations().length > 0 && (
-            <div className="ai-recommendations-section glass" style={{ marginBottom: '30px', padding: '24px', borderRadius: '15px', background: 'linear-gradient(135deg, rgba(37,99,235,0.05) 0%, rgba(0,210,255,0.05) 100%)', border: '1px solid rgba(37,99,235,0.15)', textAlign: 'left' }}>
-              <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1.2rem', color: '#1e293b', marginBottom: '15px', fontWeight: '700' }}>
-                🤖 AI RECOMMENDED FOR YOU
-              </h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
-                {getAIRecommendations().map(p => (
-                  <PropertyCard key={p.id} property={p} index={p.id} onFavoriteToggle={handleFavoriteToggle} />
-                ))}
-              </div>
-            </div>
-          )}
-
           {/* Search Mode Toggles */}
           <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
             <button 
@@ -747,6 +733,20 @@ const BuyerPropertyListing = () => {
               )}
               <div className="filter-actions" style={{ marginTop: '15px' }}>
                 <button className="btn btn-outline btn-sm" onClick={clearFilters}>Clear All Filters</button>
+              </div>
+            </div>
+          )}
+
+          {/* AI Recommendations Carousel */}
+          {getAIRecommendations().length > 0 && (
+            <div className="ai-recommendations-section glass" style={{ marginBottom: '30px', marginTop: '20px', padding: '24px', borderRadius: '15px', background: 'linear-gradient(135deg, rgba(37,99,235,0.05) 0%, rgba(0,210,255,0.05) 100%)', border: '1px solid rgba(37,99,235,0.15)', textAlign: 'left' }}>
+              <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1.2rem', color: '#1e293b', marginBottom: '15px', fontWeight: '700' }}>
+                🤖 AI RECOMMENDED FOR YOU
+              </h3>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
+                {getAIRecommendations().map(p => (
+                  <PropertyCard key={p.id} property={p} index={p.id} onFavoriteToggle={handleFavoriteToggle} />
+                ))}
               </div>
             </div>
           )}
