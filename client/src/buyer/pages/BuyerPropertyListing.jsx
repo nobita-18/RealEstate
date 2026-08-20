@@ -39,6 +39,8 @@ const BuyerPropertyListing = () => {
   const [searchMode, setSearchMode] = useState('standard'); // 'standard' or 'ai'
   const [aiSearchPrompt, setAiSearchPrompt] = useState('');
   const [parsedAiFilters, setParsedAiFilters] = useState(null);
+  const [userBookings, setUserBookings] = useState([]);
+  const [userEnquiries, setUserEnquiries] = useState([]);
 
   const [userFavorites, setUserFavorites] = useState(() => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -114,7 +116,11 @@ const BuyerPropertyListing = () => {
   };
 
   const getAIRecommendations = () => {
-    if (userFavorites.length === 0) {
+    const bookedIds = userBookings.map(b => String(b.propertyId));
+    const enquiredIds = userEnquiries.map(e => String(e.propertyId));
+    const interactedIds = [...new Set([...userFavorites, ...bookedIds, ...enquiredIds])];
+
+    if (interactedIds.length === 0) {
       return [...properties]
         .map(p => {
           const avgRating = p.reviews && p.reviews.length > 0 
@@ -126,23 +132,40 @@ const BuyerPropertyListing = () => {
         .slice(0, 4);
     }
 
-    const favProps = properties.filter(p => userFavorites.includes(String(p.id)));
-    if (favProps.length === 0) return [];
+    const favoredProps = properties.filter(p => userFavorites.includes(String(p.id)));
+    const bookedProps = properties.filter(p => bookedIds.includes(String(p.id)));
+    const enquiredProps = properties.filter(p => enquiredIds.includes(String(p.id)));
 
     const favoriteTypes = {};
     const favoriteCities = {};
     let totalPrice = 0;
-    
-    favProps.forEach(p => {
+    let totalInteractions = 0;
+
+    favoredProps.forEach(p => {
       if (p.propertyType) favoriteTypes[p.propertyType] = (favoriteTypes[p.propertyType] || 0) + 1;
       if (p.city) favoriteCities[p.city.toLowerCase()] = (favoriteCities[p.city.toLowerCase()] || 0) + 1;
       totalPrice += p.price || 0;
+      totalInteractions += 1;
     });
 
-    const averagePrice = totalPrice / favProps.length;
+    enquiredProps.forEach(p => {
+      if (p.propertyType) favoriteTypes[p.propertyType] = (favoriteTypes[p.propertyType] || 0) + 1.5;
+      if (p.city) favoriteCities[p.city.toLowerCase()] = (favoriteCities[p.city.toLowerCase()] || 0) + 1.5;
+      totalPrice += (p.price || 0) * 1.5;
+      totalInteractions += 1.5;
+    });
+
+    bookedProps.forEach(p => {
+      if (p.propertyType) favoriteTypes[p.propertyType] = (favoriteTypes[p.propertyType] || 0) + 3;
+      if (p.city) favoriteCities[p.city.toLowerCase()] = (favoriteCities[p.city.toLowerCase()] || 0) + 3;
+      totalPrice += (p.price || 0) * 3;
+      totalInteractions += 3;
+    });
+
+    const averagePrice = totalInteractions > 0 ? totalPrice / totalInteractions : 0;
 
     const scored = properties
-      .filter(p => !userFavorites.includes(String(p.id)))
+      .filter(p => !interactedIds.includes(String(p.id)))
       .map(p => {
         let score = 0;
         if (p.propertyType && favoriteTypes[p.propertyType]) {
@@ -183,6 +206,19 @@ const BuyerPropertyListing = () => {
         console.error(err);
         setLoading(false);
       });
+
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user?.id) {
+      axios.get((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + `/api/bookings?buyerId=${user.id}`)
+        .then(res => {
+          if (Array.isArray(res.data)) setUserBookings(res.data);
+        }).catch(err => console.error("Error loading user bookings for AI recommendations:", err));
+
+      axios.get((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + `/api/enquiries?buyerId=${user.id}`)
+        .then(res => {
+          if (Array.isArray(res.data)) setUserEnquiries(res.data);
+        }).catch(err => console.error("Error loading user enquiries for AI recommendations:", err));
+    }
   }, []);
 
   useEffect(() => {
