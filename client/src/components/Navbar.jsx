@@ -72,6 +72,21 @@ const Navbar = ({ role = 'buyer' }) => {
 
   const isHome = location.pathname === '/';
 
+  const isActive = (path, searchParamKey, searchParamValue) => {
+    const cleanPath = path.replace(/\/$/, "");
+    const currentPath = location.pathname.replace(/\/$/, "");
+    if (currentPath !== cleanPath) return false;
+    if (searchParamKey) {
+      const params = new URLSearchParams(location.search);
+      return params.get(searchParamKey) === searchParamValue;
+    }
+    if (path === '/properties') {
+      const params = new URLSearchParams(location.search);
+      return !params.has('type') && !params.has('deals') && !params.has('favorites');
+    }
+    return true;
+  };
+
   return (
     <>
       {/* Semi-transparent backdrop blur when mobile drawer is open */}
@@ -98,14 +113,14 @@ const Navbar = ({ role = 'buyer' }) => {
               </div>
             </div>
 
-            <Link to="/properties?type=Villa" className="nav-link" onClick={() => setIsOpen(false)}>Villa</Link>
-            <Link to="/properties?type=Penthouse" className="nav-link" onClick={() => setIsOpen(false)}>Penthouse</Link>
-            <Link to="/properties?type=PG" className="nav-link" onClick={() => setIsOpen(false)}>PG</Link>
-            <Link to="/properties?type=Land" className="nav-link" onClick={() => setIsOpen(false)}>Land</Link>
-            <Link to="/properties?type=House" className="nav-link" onClick={() => setIsOpen(false)}>House</Link>
-            <Link to="/contact" className="nav-link" onClick={() => setIsOpen(false)}>Contact</Link>
-            <Link to="/properties?deals=true" className="nav-link" onClick={() => setIsOpen(false)}>Deals</Link>
-            <Link to="/agents" className="nav-link" onClick={() => setIsOpen(false)}>Agent</Link>
+            <Link to="/properties?type=Villa" className={`nav-link ${isActive('/properties', 'type', 'Villa') ? 'active' : ''}`} onClick={() => setIsOpen(false)}>Villa</Link>
+            <Link to="/properties?type=Penthouse" className={`nav-link ${isActive('/properties', 'type', 'Penthouse') ? 'active' : ''}`} onClick={() => setIsOpen(false)}>Penthouse</Link>
+            <Link to="/properties?type=PG" className={`nav-link ${isActive('/properties', 'type', 'PG') ? 'active' : ''}`} onClick={() => setIsOpen(false)}>PG</Link>
+            <Link to="/properties?type=Land" className={`nav-link ${isActive('/properties', 'type', 'Land') ? 'active' : ''}`} onClick={() => setIsOpen(false)}>Land</Link>
+            <Link to="/properties?type=House" className={`nav-link ${isActive('/properties', 'type', 'House') ? 'active' : ''}`} onClick={() => setIsOpen(false)}>House</Link>
+            <Link to="/contact" className={`nav-link ${isActive('/contact') ? 'active' : ''}`} onClick={() => setIsOpen(false)}>Contact</Link>
+            <Link to="/properties?deals=true" className={`nav-link ${isActive('/properties', 'deals', 'true') ? 'active' : ''}`} onClick={() => setIsOpen(false)}>Deals</Link>
+            <Link to="/agents" className={`nav-link ${isActive('/agents') ? 'active' : ''}`} onClick={() => setIsOpen(false)}>Agent</Link>
 
             {/* Mobile-only Auth buttons inside Drawer */}
             {!isLoggedIn ? (
