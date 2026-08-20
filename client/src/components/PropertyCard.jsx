@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Heart } from 'lucide-react';
 import './PropertyCard.css';
@@ -89,6 +89,13 @@ const PropertyCard = ({ property, index = 0, onFavoriteToggle }) => {
     }
   };
 
+  const getAverageRating = () => {
+    if (!property.reviews || property.reviews.length === 0) return 0;
+    const sum = property.reviews.reduce((acc, rev) => acc + (rev.rating || 0), 0);
+    return (sum / property.reviews.length).toFixed(1);
+  };
+  const avgRating = getAverageRating();
+
   let badgeType = 'popular';
   if (property.isFeatured) badgeType = 'featured';
   else if (property.isNew) badgeType = 'new';
@@ -121,6 +128,18 @@ const PropertyCard = ({ property, index = 0, onFavoriteToggle }) => {
 
       <div className="estify-prop-info">
         <h4 className="estify-prop-card-title">{property.title}</h4>
+        
+        {avgRating > 0 ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '8px', fontSize: '0.8rem' }}>
+            <span style={{ color: '#f59e0b', fontWeight: 'bold' }}>★ {avgRating}</span>
+            <span style={{ color: '#64748b' }}>({property.reviews.length} reviews)</span>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '8px', fontSize: '0.8rem', color: '#94a3b8', fontStyle: 'italic' }}>
+            No reviews yet
+          </div>
+        )}
+
         <div className="estify-prop-location">
           <MapPin size={14} color="#94a3b8" />
           <span>{property.city ? `${property.city}, ${property.state}` : property.location}</span>

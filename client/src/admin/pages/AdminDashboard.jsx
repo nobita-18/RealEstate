@@ -16,6 +16,8 @@ const AdminDashboard = () => {
   const [usersList, setUsersList] = useState([]);
   const [selectedAdminProperty, setSelectedAdminProperty] = useState(null);
   const [logs, setLogs] = useState([]);
+  const [logSearchText, setLogSearchText] = useState('');
+  const [logTypeFilter, setLogTypeFilter] = useState('ALL');
   
   // Modals
   const [activeModalUser, setActiveModalUser] = useState(null);
@@ -179,6 +181,13 @@ const AdminDashboard = () => {
       { name: 'Sellers', count: roles.Seller, color: '#e74c3c' }
     ];
   };
+
+  const filteredLogs = logs.filter(log => {
+    const matchesSearch = (log.message || '').toLowerCase().includes(logSearchText.toLowerCase()) || 
+                          (log.type || '').toLowerCase().includes(logSearchText.toLowerCase());
+    if (logTypeFilter === 'ALL') return matchesSearch;
+    return matchesSearch && log.type === logTypeFilter;
+  });
 
   return (
     <div className="admin-login-wrapper" style={{ alignItems: 'flex-start', paddingTop: '50px', minHeight: '100vh', paddingBottom: '100px' }}>
@@ -400,10 +409,35 @@ const AdminDashboard = () => {
 
         {/* SYSTEM SECURITY & ACTIVITY LOGS (TERMINAL VIEW) */}
         <div style={{ padding: '30px', border: '1px solid #333', background: 'rgba(0,0,0,0.6)', marginTop: '20px', fontFamily: 'monospace' }}>
-          <h3 style={{ color: '#00ff80', borderBottom: '1px solid #333', paddingBottom: '15px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', margin: 0, fontSize: '1.25rem' }}>
+          <h3 style={{ color: '#00ff80', borderBottom: '1px solid #333', paddingBottom: '15px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', margin: 0, fontSize: '1.25rem', flexWrap: 'wrap', gap: '15px' }}>
             <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><ShieldCheck size={20} /> SYSTEM SECURITY & ACTIVITY MONITORING</span>
             <span style={{ fontSize: '0.8rem', color: '#888' }}>STATUS: ONLINE</span>
           </h3>
+
+          {/* Filters Bar */}
+          <div style={{ display: 'flex', gap: '10px', marginTop: '15px', alignItems: 'center', flexWrap: 'wrap' }}>
+            <select
+              value={logTypeFilter}
+              onChange={e => setLogTypeFilter(e.target.value)}
+              style={{ background: '#111', color: '#00ff80', border: '1px solid #333', padding: '8px 12px', outline: 'none', fontFamily: 'monospace', borderRadius: '4px', fontSize: '0.85rem' }}
+            >
+              <option value="ALL">ALL EVENT TYPES</option>
+              <option value="LOGIN">LOGIN</option>
+              <option value="REGISTRATION">REGISTRATION</option>
+              <option value="DELETION">PROPERTY DELETION</option>
+              <option value="USER_DELETION">USER DELETION</option>
+              <option value="USER_STATUS_CHANGE">USER STATUS CHANGE</option>
+              <option value="ENQUIRY">ENQUIRY</option>
+              <option value="BOOKING">BOOKING</option>
+            </select>
+            <input 
+              type="text"
+              placeholder="Search logs by message or type..."
+              value={logSearchText}
+              onChange={e => setLogSearchText(e.target.value)}
+              style={{ background: '#111', color: '#00ff80', border: '1px solid #333', padding: '8px 12px', outline: 'none', fontFamily: 'monospace', flex: 1, borderRadius: '4px', fontSize: '0.85rem' }}
+            />
+          </div>
 
           <div style={{
             background: '#0a0d14',
@@ -418,10 +452,10 @@ const AdminDashboard = () => {
             gap: '10px',
             boxShadow: 'inset 0 0 10px rgba(0,0,0,0.8)'
           }}>
-            {logs.length === 0 ? (
-              <div style={{ color: '#666', textAlign: 'center', padding: '20px' }}>[ No system events recorded ]</div>
+            {filteredLogs.length === 0 ? (
+              <div style={{ color: '#666', textAlign: 'center', padding: '20px' }}>[ No matching system events found ]</div>
             ) : (
-              logs.map((log) => {
+              filteredLogs.map((log) => {
                 let badgeColor = '#00d2ff'; // LOGIN
                 let dotColor = '#00d2ff';
                 if (log.type === 'DELETION') {

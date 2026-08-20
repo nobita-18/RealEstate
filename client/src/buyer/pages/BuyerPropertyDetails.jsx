@@ -19,6 +19,7 @@ const BuyerPropertyDetails = () => {
   const [bookingDate, setBookingDate] = useState('');
   const [offerPrice, setOfferPrice] = useState('');
   const [bookingSent, setBookingSent] = useState(false);
+  const [activeImageIdx, setActiveImageIdx] = useState(0);
 
   const [reviews, setReviews] = useState([]);
   const [rating, setRating] = useState(0);
@@ -147,22 +148,119 @@ const BuyerPropertyDetails = () => {
   if (loading) return <div className="page-container fade-in">Loading...</div>;
   if (error) return <div className="page-container fade-in"><h2>{error}</h2><Link to="/properties">Back to properties</Link></div>;
 
+  const avgRatingVal = reviews.length === 0 ? 0 : (reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / reviews.length).toFixed(1);
+
   return (
     <div className="property-details page-container fade-in">
       <Link to="/properties" className="back-link">
         <ArrowLeft size={18} /> Back to Search
       </Link>
 
-      <div className="details-header">
-        <h1>{property.title}</h1>
-        <p className="location-tag"><MapPin size={20} /> {property.city ? `${property.address}, ${property.city}, ${property.state} ${property.pincode}` : property.location}</p>
+      <div className="details-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '15px' }}>
+        <div style={{ textAlign: 'left' }}>
+          <h1>{property.title}</h1>
+          <p className="location-tag"><MapPin size={20} /> {property.city ? `${property.address}, ${property.city}, ${property.state} ${property.pincode}` : property.location}</p>
+        </div>
+        {Number(avgRatingVal) > 0 && (
+          <div style={{ background: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '10px', padding: '10px 15px', textAlign: 'right', minWidth: '120px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', justifyContent: 'flex-end', color: '#f59e0b', fontSize: '1.25rem', fontWeight: 'bold' }}>
+              ★ {avgRatingVal}
+            </div>
+            <span style={{ fontSize: '0.85rem', color: '#64748b', fontWeight: '600' }}>({reviews.length} reviews)</span>
+          </div>
+        )}
       </div>
 
       <div className="details-grid">
         <div className="details-main">
-          <div className="main-image-container">
-            <img src={property.images && property.images[0] ? getAssetUrl(property.images[0]) : ''} alt={property.title} className="main-image" />
+          <div className="main-image-container" style={{ position: 'relative', width: '100%', height: '450px', background: '#0a0d14', borderRadius: '12px', overflow: 'hidden' }}>
+            <img 
+              src={property.images && property.images.length > 0 ? getAssetUrl(property.images[activeImageIdx]) : ''} 
+              alt={property.title} 
+              style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'all 0.3s ease' }}
+            />
+            {property.images && property.images.length > 1 && (
+              <>
+                <button 
+                  onClick={() => setActiveImageIdx(prev => (prev === 0 ? property.images.length - 1 : prev - 1))}
+                  style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '15px',
+                    transform: 'translateY(-50%)',
+                    background: 'rgba(0, 0, 0, 0.5)',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '50%',
+                    width: '40px',
+                    height: '40px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '1.5rem',
+                    zIndex: 10,
+                    fontWeight: 'bold',
+                    transition: 'background 0.2s'
+                  }}
+                  onMouseOver={(e) => e.target.style.background = 'rgba(0, 0, 0, 0.8)'}
+                  onMouseOut={(e) => e.target.style.background = 'rgba(0, 0, 0, 0.5)'}
+                >
+                  ‹
+                </button>
+                <button 
+                  onClick={() => setActiveImageIdx(prev => (prev === property.images.length - 1 ? 0 : prev + 1))}
+                  style={{
+                    position: 'absolute',
+                    top: '50%',
+                    right: '15px',
+                    transform: 'translateY(-50%)',
+                    background: 'rgba(0, 0, 0, 0.5)',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '50%',
+                    width: '40px',
+                    height: '40px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '1.5rem',
+                    zIndex: 10,
+                    fontWeight: 'bold',
+                    transition: 'background 0.2s'
+                  }}
+                  onMouseOver={(e) => e.target.style.background = 'rgba(0, 0, 0, 0.8)'}
+                  onMouseOut={(e) => e.target.style.background = 'rgba(0, 0, 0, 0.5)'}
+                >
+                  ›
+                </button>
+              </>
+            )}
           </div>
+
+          {property.images && property.images.length > 1 && (
+            <div style={{ display: 'flex', gap: '10px', marginTop: '12px', overflowX: 'auto', paddingBottom: '5px', marginBottom: '20px' }}>
+              {property.images.map((img, idx) => (
+                <img 
+                  key={idx}
+                  src={getAssetUrl(img)}
+                  alt={`Thumbnail ${idx + 1}`}
+                  onClick={() => setActiveImageIdx(idx)}
+                  style={{
+                    width: '80px',
+                    height: '60px',
+                    objectFit: 'cover',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    border: activeImageIdx === idx ? '3px solid #3b82f6' : '2px solid transparent',
+                    opacity: activeImageIdx === idx ? 1 : 0.6,
+                    transition: 'all 0.2s'
+                  }}
+                />
+              ))}
+            </div>
+          )}
 
           <div className="info-section glass">
             <h2><Info size={24} className="icon-blue" /> Property Description</h2>
@@ -210,6 +308,33 @@ const BuyerPropertyDetails = () => {
             <h2 style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.5rem', marginBottom: '20px', color: '#1e293b' }}>
               ⭐ Customer Reviews ({reviews.length})
             </h2>
+
+            {reviews.length > 0 && (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', background: '#f8fafc', padding: '20px', borderRadius: '10px', marginBottom: '24px', border: '1px solid #cbd5e1', textAlign: 'left' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', borderRight: '1px solid #cbd5e1', paddingRight: '20px' }}>
+                  <span style={{ fontSize: '3rem', fontWeight: '800', color: '#1e293b', lineHeight: '1' }}>{avgRatingVal}</span>
+                  <div style={{ color: '#f59e0b', fontSize: '1.25rem', marginTop: '5px', marginBottom: '5px' }}>
+                    {'★'.repeat(Math.round(Number(avgRatingVal))) + '☆'.repeat(5 - Math.round(Number(avgRatingVal)))}
+                  </div>
+                  <span style={{ fontSize: '0.85rem', color: '#64748b' }}>Average Rating ({reviews.length} reviews)</span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', justifyContent: 'center' }}>
+                  {[5, 4, 3, 2, 1].map(stars => {
+                    const count = reviews.filter(r => r.rating === stars).length;
+                    const percentage = reviews.length > 0 ? (count / reviews.length) * 100 : 0;
+                    return (
+                      <div key={stars} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.85rem' }}>
+                        <span style={{ width: '50px', color: '#475569', fontWeight: '600', textAlign: 'right' }}>{stars} Star</span>
+                        <div style={{ flex: 1, height: '8px', background: '#cbd5e1', borderRadius: '4px', overflow: 'hidden' }}>
+                          <div style={{ width: `${percentage}%`, height: '100%', background: '#f59e0b', borderRadius: '4px' }}></div>
+                        </div>
+                        <span style={{ width: '25px', color: '#64748b', textAlign: 'left' }}>({count})</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
             
             {/* Reviews List */}
             <div className="reviews-list" style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '30px' }}>

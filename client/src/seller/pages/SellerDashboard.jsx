@@ -596,6 +596,7 @@ const SellerDashboard = () => {
   );
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [sellerStatusFilter, setSellerStatusFilter] = useState('ALL');
 
   const handlePropertyAction = async (action, prop) => {
     if (action === 'delete') {
@@ -624,22 +625,41 @@ const SellerDashboard = () => {
   };
 
   const renderManageProperties = (mode) => {
-    const filteredProps = properties.filter(p => 
-      p.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-      p.location.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const filteredProps = properties.filter(p => {
+      const matchesSearch = 
+        p.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        p.location.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      if (sellerStatusFilter === 'ALL') return matchesSearch;
+      if (sellerStatusFilter === 'APPROVED') return matchesSearch && p.status === 'approved';
+      if (sellerStatusFilter === 'PENDING') return matchesSearch && (p.status === 'pending' || p.status === 'pending_delete');
+      if (sellerStatusFilter === 'REJECTED') return matchesSearch && p.status === 'rejected';
+      return matchesSearch;
+    });
 
     return (
       <div className="sd-panel">
-        <div className="sd-panel-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div className="sd-panel-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '15px', flexWrap: 'wrap' }}>
           <h2 className="sd-panel-title">{mode.charAt(0).toUpperCase() + mode.slice(1)} Properties</h2>
-          <input 
-            type="text" 
-            placeholder="Search properties..." 
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-            style={{ padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: '6px', outline: 'none' }}
-          />
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+            <select
+              value={sellerStatusFilter}
+              onChange={e => setSellerStatusFilter(e.target.value)}
+              style={{ padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: '6px', outline: 'none', background: '#fff', fontSize: '0.9rem' }}
+            >
+              <option value="ALL">All Statuses</option>
+              <option value="APPROVED">Live / Approved</option>
+              <option value="PENDING">Pending Approval</option>
+              <option value="REJECTED">Rejected</option>
+            </select>
+            <input 
+              type="text" 
+              placeholder="Search properties..." 
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              style={{ padding: '8px 12px', border: '1px solid #cbd5e1', borderRadius: '6px', outline: 'none', fontSize: '0.9rem' }}
+            />
+          </div>
         </div>
         <table className="sd-table">
           <thead>
