@@ -341,6 +341,17 @@ const BuyerLogin = () => {
             <div className="estify-login-form-pane">
               <div className="login-form-card scale-in-entrance">
                 
+                {/* Mobile-only logo */}
+                <div className="hero-logo-container mobile-only-logo" style={{ marginBottom: '20px', justifyContent: 'center', alignItems: 'center' }}>
+                  <div className="hero-house-icon" style={{ background: '#2563eb', width: '32px', height: '32px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Home size={18} className="text-white" />
+                  </div>
+                  <div className="logo-text-group" style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', marginLeft: '10px' }}>
+                    <span className="logo-brand" style={{ fontWeight: '800', fontSize: '1.25rem', color: '#0f172a' }}>HomeFind</span>
+                    <span className="logo-tagline" style={{ fontSize: '0.65rem', textTransform: 'uppercase', color: '#64748b' }}>Real Estate Portal</span>
+                  </div>
+                </div>
+
                 {/* Sketch illustration */}
                 <div className="sketch-house-illustration">
                   <svg className="house-svg" viewBox="0 0 100 60" fill="none" stroke="#cbd5e1" strokeWidth="1.5">

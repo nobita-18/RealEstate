@@ -1177,11 +1177,39 @@
   }
 }
 
-@media (max-width: 640px) {
+.mobile-only-logo {
+  display: none;
+}
+
+.estify-login-gradient-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 10px rgba(15, 82, 186, 0.2);
+}
+
+.social-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+@media (max-width: 768px) {
+  .mobile-only-logo {
+    display: flex !important;
+  }
+  .estify-login-hero-pane {
+    display: none !important;
+  }
+  .estify-login-bottom-features-bar {
+    display: none !important;
+  }
+  .estify-login-split-layout {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
   .estify-login-desktop-main-card {
     border: none;
-    border-radius: 0;
-    box-shadow: none;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    width: 100%;
   }
   .estify-login-form-pane {
     padding: 2.5rem 1.5rem;
@@ -1189,17 +1217,13 @@
   .login-header-group h2 {
     font-size: 1.8rem;
   }
-  .estify-login-bottom-features-bar {
-    grid-template-columns: 1fr;
-    padding: 1.5rem;
-  }
   .social-buttons-row {
     grid-template-columns: 1fr;
   }
   .estify-login-page-inner-grid {
     width: 100%;
     margin: 0;
-    padding: 0;
+    padding: 10px;
   }
 }
 
