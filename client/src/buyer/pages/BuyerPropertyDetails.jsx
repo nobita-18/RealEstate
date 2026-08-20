@@ -36,6 +36,18 @@ const BuyerPropertyDetails = () => {
         setReviews(res.data.reviews || []);
         setOfferPrice(res.data.price);
         setLoading(false);
+
+        try {
+          const viewedIds = JSON.parse(localStorage.getItem('viewedPropertyIds') || '[]');
+          const idStr = String(res.data.id);
+          if (!viewedIds.includes(idStr)) {
+            viewedIds.push(idStr);
+            if (viewedIds.length > 8) viewedIds.shift();
+            localStorage.setItem('viewedPropertyIds', JSON.stringify(viewedIds));
+          }
+        } catch (e) {
+          console.error("Failed to store viewed property in localStorage:", e);
+        }
         
         // Check if current user has already enquired
         const user = JSON.parse(localStorage.getItem('user'));

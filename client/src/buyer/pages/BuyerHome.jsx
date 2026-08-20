@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { Search, MapPin, Building, ShieldCheck, Headphones, Home, Users, Check, Gift, Compass } from 'lucide-react';
@@ -7,6 +7,8 @@ import './BuyerHome.css';
 
 const BuyerHome = () => {
   const [properties, setProperties] = useState([]);
+  const [featuredProperties, setFeaturedProperties] = useState([]);
+  const [recs, setRecs] = useState([]);
   const [searchTab, setSearchTab] = useState('Buy'); // 'Buy', 'Rent', 'PG'
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoaded, setIsLoaded] = useState(false);
@@ -50,12 +52,131 @@ const BuyerHome = () => {
   useEffect(() => {
     axios.get((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/properties')
       .then(res => {
-        // Only show approved properties and take top 4 for featured
         const approvedProps = res.data.filter(p => !p.status || p.status === 'approved');
-        setProperties(approvedProps.slice(0, 4));
+        setProperties(approvedProps);
+        setFeaturedProperties(approvedProps.slice(0, 4));
       })
       .catch(err => console.error(err));
   }, []);
+
+  useEffect(() => {
+    if (properties.length === 0) return;
+
+    const user = JSON.parse(localStorage.getItem('user'));
+    const favorites = (user?.favorites || []).map(id => String(id));
+    const viewedIds = JSON.parse(localStorage.getItem('viewedPropertyIds') || '[]');
+
+    let bookingsPromise = Promise.resolve([]);
+    let enquiriesPromise = Promise.resolve([]);
+    if (user?.id) {
+      bookingsPromise = axios.get((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + `/api/bookings?buyerId=${user.id}`)
+        .then(res => Array.isArray(res.data) ? res.data : [])
+        .catch(() => []);
+      enquiriesPromise = axios.get((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + `/api/enquiries?buyerId=${user.id}`)
+        .then(res => Array.isArray(res.data) ? res.data : [])
+        .catch(() => []);
+    }
+
+    Promise.all([bookingsPromise, enquiriesPromise]).then(([bookings, enquiries]) => {
+      const bookedIds = bookings.map(b => String(b.propertyId));
+      const enquiredIds = enquiries.map(e => String(e.propertyId));
+      const interactedIds = [...new Set([...favorites, ...bookedIds, ...enquiredIds, ...viewedIds])];
+
+      if (interactedIds.length === 0) {
+        const rated = properties.map(p => {
+          const avg = p.reviews && p.reviews.length > 0
+            ? p.reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / p.reviews.length
+            : 0;
+          return { ...p, ratingScore: avg };
+        })
+        .sort((a, b) => b.ratingScore - a.ratingScore)
+        .slice(0, 4);
+        setRecs(rated);
+      } else {
+        const favoredProps = properties.filter(p => favorites.includes(String(p.id)));
+        const bookedProps = properties.filter(p => bookedIds.includes(String(p.id)));
+        const enquiredProps = properties.filter(p => enquiredIds.includes(String(p.id)));
+        const viewedProps = properties.filter(p => viewedIds.includes(String(p.id)));
+
+        const prefTypes = {};
+        const prefCities = {};
+        let totalPrice = 0;
+        let totalInteractions = 0;
+
+        favoredProps.forEach(p => {
+          if (p.propertyType) prefTypes[p.propertyType] = (prefTypes[p.propertyType] || 0) + 1.5;
+          if (p.city) prefCities[p.city.toLowerCase()] = (prefCities[p.city.toLowerCase()] || 0) + 1.5;
+          totalPrice += (p.price || 0) * 1.5;
+          totalInteractions += 1.5;
+        });
+
+        enquiredProps.forEach(p => {
+          if (p.propertyType) prefTypes[p.propertyType] = (prefTypes[p.propertyType] || 0) + 2;
+          if (p.city) prefCities[p.city.toLowerCase()] = (prefCities[p.city.toLowerCase()] || 0) + 2;
+          totalPrice += (p.price || 0) * 2;
+          totalInteractions += 2;
+        });
+
+        bookedProps.forEach(p => {
+          if (p.propertyType) prefTypes[p.propertyType] = (prefTypes[p.propertyType] || 0) + 4;
+          if (p.city) prefCities[p.city.toLowerCase()] = (prefCities[p.city.toLowerCase()] || 0) + 4;
+          totalPrice += (p.price || 0) * 4;
+          totalInteractions += 4;
+        });
+
+        viewedProps.forEach(p => {
+          if (p.propertyType) prefTypes[p.propertyType] = (prefTypes[p.propertyType] || 0) + 1;
+          if (p.city) prefCities[p.city.toLowerCase()] = (prefCities[p.city.toLowerCase()] || 0) + 1;
+          totalPrice += p.price || 0;
+          totalInteractions += 1;
+        });
+
+        const averagePrice = totalInteractions > 0 ? totalPrice / totalInteractions : 0;
+
+        const scored = properties
+          .filter(p => !interactedIds.includes(String(p.id)))
+          .map(p => {
+            let score = 0;
+            if (p.propertyType && prefTypes[p.propertyType]) {
+              score += prefTypes[p.propertyType] * 3;
+            }
+            if (p.city && prefCities[p.city.toLowerCase()]) {
+              score += prefCities[p.city.toLowerCase()] * 2;
+            }
+            if (p.price && averagePrice > 0) {
+              const diff = Math.abs(p.price - averagePrice) / averagePrice;
+              if (diff <= 0.25) score += 2;
+              else if (diff <= 0.5) score += 1;
+            }
+            const avg = p.reviews && p.reviews.length > 0
+              ? p.reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / p.reviews.length
+              : 0;
+            score += avg * 0.5;
+
+            return { ...p, recScore: score };
+          });
+
+        const recommended = scored
+          .filter(p => p.recScore > 0)
+          .sort((a, b) => b.recScore - a.recScore)
+          .slice(0, 4);
+
+        if (recommended.length > 0) {
+          setRecs(recommended);
+        } else {
+          const rated = properties.map(p => {
+            const avg = p.reviews && p.reviews.length > 0
+              ? p.reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / p.reviews.length
+              : 0;
+            return { ...p, ratingScore: avg };
+          })
+          .sort((a, b) => b.ratingScore - a.ratingScore)
+          .slice(0, 4);
+          setRecs(rated);
+        }
+      }
+    });
+  }, [properties]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -239,8 +360,8 @@ const BuyerHome = () => {
         </div>
 
         <div className="homefind-cards-grid animate-slide-up">
-          {properties.length > 0 ? (
-            properties.map((prop, idx) => (
+          {featuredProperties.length > 0 ? (
+            featuredProperties.map((prop, idx) => (
               <PropertyCard key={prop.id} property={prop} index={idx} />
             ))
           ) : (
@@ -248,6 +369,20 @@ const BuyerHome = () => {
           )}
         </div>
       </section>
+
+      {/* AI Recommended Properties Section */}
+      {recs.length > 0 && (
+        <section className="homefind-featured-section" style={{ marginTop: '40px', padding: '24px', borderRadius: '15px', background: 'linear-gradient(135deg, rgba(37,99,235,0.03) 0%, rgba(0,210,255,0.03) 100%)', border: '1px solid rgba(37,99,235,0.1)' }}>
+          <div className="homefind-section-header" style={{ textAlign: 'left', marginBottom: '15px' }}>
+            <h2 className="homefind-section-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>🤖 AI Recommended For You</h2>
+          </div>
+          <div className="homefind-cards-grid animate-slide-up">
+            {recs.map((prop, idx) => (
+              <PropertyCard key={prop.id} property={prop} index={idx} />
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Categories Horizontal Pills */}
       <section className="homefind-categories-section">

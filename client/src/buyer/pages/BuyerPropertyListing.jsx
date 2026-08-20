@@ -41,6 +41,7 @@ const BuyerPropertyListing = () => {
   const [parsedAiFilters, setParsedAiFilters] = useState(null);
   const [userBookings, setUserBookings] = useState([]);
   const [userEnquiries, setUserEnquiries] = useState([]);
+  const [isListening, setIsListening] = useState(false);
 
   const [userFavorites, setUserFavorites] = useState(() => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -414,6 +415,62 @@ const BuyerPropertyListing = () => {
     clearFilters();
   };
 
+  const handleVoiceSearch = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      window.customAlert("Speech recognition is not supported in this browser. Please use Chrome, Edge, or Safari.");
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onstart = () => {
+      setIsListening(true);
+    };
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      setIsListening(false);
+      
+      const cleanTranscript = transcript.trim().toLowerCase();
+      if (cleanTranscript === 'default' || cleanTranscript === 'all' || cleanTranscript === 'clear') {
+        handleClearAISearch();
+        return;
+      }
+
+      if (searchMode === 'standard') {
+        setFilters(prev => ({ ...prev, title: transcript }));
+      } else {
+        setAiSearchPrompt(transcript);
+        const parsed = parseAISearch(transcript);
+        setParsedAiFilters(parsed);
+        setFilters(prev => ({
+          ...prev,
+          type: parsed.type || 'Any',
+          bhk: parsed.bhk || '',
+          maxPrice: parsed.maxPrice || '',
+          minArea: parsed.minArea || '',
+          location: parsed.location || '',
+          title: parsed.title || ''
+        }));
+      }
+    };
+
+    recognition.onerror = (err) => {
+      console.error("Speech recognition error:", err);
+      setIsListening(false);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+
+    recognition.start();
+  };
+
   const handleFavoriteToggle = (propertyId, isSaved) => {
     const user = JSON.parse(localStorage.getItem('user'));
     if (user) {
@@ -470,20 +527,49 @@ const BuyerPropertyListing = () => {
           </div>
 
           <div className="listing-controls glass animate-slide-down" style={{ textAlign: 'left' }}>
+            <style>{`
+              @keyframes pulseListening {
+                0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+                70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+                100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+              }
+            `}</style>
             {searchMode === 'standard' ? (
-              <div className="search-bar primary-search">
-                <Search size={20} className="text-muted" />
-                <input 
-                  type="text" 
-                  name="title"
-                  placeholder="Search by property name..." 
-                  value={filters.title}
-                  onChange={handleFilterChange}
-                />
+              <div style={{ display: 'flex', gap: '10px', flex: 1, alignItems: 'center' }}>
+                <div className="search-bar primary-search">
+                  <Search size={20} className="text-muted" />
+                  <input 
+                    type="text" 
+                    name="title"
+                    placeholder="Search by property name..." 
+                    value={filters.title}
+                    onChange={handleFilterChange}
+                  />
+                </div>
+                <button 
+                  onClick={handleVoiceSearch} 
+                  type="button"
+                  style={{
+                    background: isListening ? '#ef4444' : '#f1f5f9',
+                    border: '1px solid #cbd5e1',
+                    borderRadius: '8px',
+                    padding: '8px 15px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    color: isListening ? '#fff' : '#475569',
+                    fontWeight: 'bold',
+                    fontSize: '0.85rem',
+                    animation: isListening ? 'pulseListening 1.5s infinite' : 'none'
+                  }}
+                >
+                  🎙️ {isListening ? 'Listening...' : 'Voice Search'}
+                </button>
               </div>
             ) : (
               <form onSubmit={handleAISearchSubmit} style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                <div style={{ display: 'flex', gap: '10px', width: '100%' }}>
+                <div style={{ display: 'flex', gap: '10px', width: '100%', alignItems: 'center' }}>
                   <div className="search-bar primary-search" style={{ flex: 1 }}>
                     <Search size={20} className="text-muted" />
                     <input 
@@ -493,11 +579,31 @@ const BuyerPropertyListing = () => {
                       onChange={e => setAiSearchPrompt(e.target.value)}
                     />
                   </div>
-                  <button type="submit" className="sd-btn-primary" style={{ background: '#3b82f6', color: '#fff', border: 'none', padding: '0 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
+                  <button 
+                    onClick={handleVoiceSearch} 
+                    type="button"
+                    style={{
+                      background: isListening ? '#ef4444' : '#f1f5f9',
+                      border: '1px solid #cbd5e1',
+                      borderRadius: '8px',
+                      padding: '10px 15px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                      color: isListening ? '#fff' : '#475569',
+                      fontWeight: 'bold',
+                      fontSize: '0.85rem',
+                      animation: isListening ? 'pulseListening 1.5s infinite' : 'none'
+                    }}
+                  >
+                    🎙️ {isListening ? 'Listening...' : 'Voice Search'}
+                  </button>
+                  <button type="submit" className="sd-btn-primary" style={{ background: '#3b82f6', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
                     Parse
                   </button>
                   {parsedAiFilters && (
-                    <button type="button" onClick={handleClearAISearch} className="sd-btn-primary" style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '0 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
+                    <button type="button" onClick={handleClearAISearch} className="sd-btn-primary" style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
                       Clear
                     </button>
                   )}
@@ -733,20 +839,6 @@ const BuyerPropertyListing = () => {
               )}
               <div className="filter-actions" style={{ marginTop: '15px' }}>
                 <button className="btn btn-outline btn-sm" onClick={clearFilters}>Clear All Filters</button>
-              </div>
-            </div>
-          )}
-
-          {/* AI Recommendations Carousel */}
-          {getAIRecommendations().length > 0 && (
-            <div className="ai-recommendations-section glass" style={{ marginBottom: '30px', marginTop: '20px', padding: '24px', borderRadius: '15px', background: 'linear-gradient(135deg, rgba(37,99,235,0.05) 0%, rgba(0,210,255,0.05) 100%)', border: '1px solid rgba(37,99,235,0.15)', textAlign: 'left' }}>
-              <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1.2rem', color: '#1e293b', marginBottom: '15px', fontWeight: '700' }}>
-                🤖 AI RECOMMENDED FOR YOU
-              </h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
-                {getAIRecommendations().map(p => (
-                  <PropertyCard key={p.id} property={p} index={p.id} onFavoriteToggle={handleFavoriteToggle} />
-                ))}
               </div>
             </div>
           )}
