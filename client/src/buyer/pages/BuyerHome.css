@@ -839,3 +839,22 @@
   opacity: 0;
   animation: welcomeTextFadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
 }
+
+@media (max-width: 640px) {
+  .homefind-featured-section, 
+  .homefind-categories-section, 
+  .homefind-trust-banner {
+    padding: 0 15px !important;
+  }
+  .homefind-cards-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+  .homefind-hero-banner {
+    padding: 40px 15px !important;
+  }
+  .homefind-category-pill {
+    padding: 10px 15px !important;
+    font-size: 0.8rem !important;
+  }
+}

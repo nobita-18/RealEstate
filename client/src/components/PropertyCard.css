@@ -291,3 +291,21 @@
     opacity: 0;
   }
 }
+
+@media (max-width: 480px) {
+  .estify-prop-specs-grid {
+    gap: 4px !important;
+  }
+  .estify-prop-spec-item {
+    font-size: 0.65rem !important;
+  }
+  .estify-prop-spec-val {
+    font-size: 0.75rem !important;
+  }
+  .estify-prop-card-title {
+    font-size: 1rem !important;
+  }
+  .estify-prop-price {
+    font-size: 1.25rem !important;
+  }
+}

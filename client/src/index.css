@@ -291,6 +291,9 @@ img:active, .box:active, .card:active {
   .agents-grid {
     grid-template-columns: 1fr !important;
   }
+  .page-container {
+    padding: 1rem !important;
+  }
 }
 
 /* Global Image Transition (Fade-in, De-blur, Scale-up) */
