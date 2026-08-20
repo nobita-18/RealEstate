@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Home, User, LogOut, Menu, X, Bell, Heart } from 'lucide-react';
+import axios from 'axios';
 import { getAssetUrl } from '../api';
 import './Navbar.css';
 
@@ -12,6 +13,51 @@ const Navbar = ({ role = 'buyer' }) => {
   const token = localStorage.getItem('token') || localStorage.getItem('sellerToken') || localStorage.getItem('adminToken');
   const user = JSON.parse(localStorage.getItem('user')) || JSON.parse(localStorage.getItem('sellerUser')) || JSON.parse(localStorage.getItem('adminUser'));
   const isLoggedIn = !!token && !!user;
+
+  const [notifs, setNotifs] = useState([]);
+  const [showNotifications, setShowNotifications] = useState(false);
+
+  useEffect(() => {
+    if (isLoggedIn && user?.id) {
+      axios.get(`${window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com'}/api/users/${user.id}`)
+        .then(res => {
+          setNotifs(res.data.notifications || []);
+        })
+        .catch(err => console.error("Error loading notifications in navbar:", err));
+    }
+  }, [isLoggedIn]);
+
+  const handleMarkAllAsRead = async () => {
+    const updatedNotifs = notifs.map(n => ({ ...n, read: true }));
+    setNotifs(updatedNotifs);
+    const storedUser = JSON.parse(localStorage.getItem('user')) || JSON.parse(localStorage.getItem('sellerUser')) || JSON.parse(localStorage.getItem('adminUser'));
+    if (storedUser) {
+      storedUser.notifications = updatedNotifs;
+      const storageKey = localStorage.getItem('sellerUser') ? 'sellerUser' : localStorage.getItem('adminUser') ? 'adminUser' : 'user';
+      localStorage.setItem(storageKey, JSON.stringify(storedUser));
+    }
+    try {
+      await axios.put(`${window.API_BASE_URL || "https://realestatelisting-u2kp.onrender.com"}/api/users/${user.id}`, { notifications: updatedNotifs });
+    } catch(err) {
+      console.error("Failed to sync read notifications", err);
+    }
+  };
+
+  const handleMarkOneAsRead = async (notifId) => {
+    const updatedNotifs = notifs.map(n => n.id === notifId ? { ...n, read: true } : n);
+    setNotifs(updatedNotifs);
+    const storedUser = JSON.parse(localStorage.getItem('user')) || JSON.parse(localStorage.getItem('sellerUser')) || JSON.parse(localStorage.getItem('adminUser'));
+    if (storedUser) {
+      storedUser.notifications = updatedNotifs;
+      const storageKey = localStorage.getItem('sellerUser') ? 'sellerUser' : localStorage.getItem('adminUser') ? 'adminUser' : 'user';
+      localStorage.setItem(storageKey, JSON.stringify(storedUser));
+    }
+    try {
+      await axios.put(`${window.API_BASE_URL || "https://realestatelisting-u2kp.onrender.com"}/api/users/${user.id}`, { notifications: updatedNotifs });
+    } catch(err) {
+      console.error("Failed to sync read notification", err);
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -100,10 +146,66 @@ const Navbar = ({ role = 'buyer' }) => {
                 <Link to="/properties?favorites=true" className="estify-nav-action-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Heart size={20} color="#64748b" />
                 </Link>
-                <button className="estify-nav-action-icon" onClick={async () => await window.customAlert(`Recent alerts: ${(user.notifications || []).filter(n=>!n.read).length} unread alerts.`)}>
+                <button className="estify-nav-action-icon" onClick={() => setShowNotifications(!showNotifications)}>
                   <Bell size={20} color="#64748b" />
-                  {(user.notifications || []).filter(n=>!n.read).length > 0 && <span className="estify-nav-badge">{(user.notifications || []).filter(n=>!n.read).length}</span>}
+                  {notifs.filter(n=>!n.read).length > 0 && <span className="estify-nav-badge">{notifs.filter(n=>!n.read).length}</span>}
                 </button>
+
+                {showNotifications && (
+                  <div className="notifs-dropdown glass" style={{
+                    position: 'absolute',
+                    top: '50px',
+                    right: '0',
+                    width: '320px',
+                    maxHeight: '400px',
+                    overflowY: 'auto',
+                    background: '#fff',
+                    border: '1px solid #cbd5e1',
+                    borderRadius: '12px',
+                    boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)',
+                    zIndex: 1001,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    animation: 'slideDown 0.2s ease'
+                  }}>
+                    <div style={{ padding: '12px 15px', borderBottom: '1px solid #cbd5e1', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontWeight: '700', fontSize: '0.9rem', color: '#1e293b' }}>Notifications</span>
+                      {notifs.some(n=>!n.read) && (
+                        <button onClick={handleMarkAllAsRead} style={{ background: 'none', border: 'none', color: '#3b82f6', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer' }}>
+                          Mark all as read
+                        </button>
+                      )}
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      {notifs.length === 0 ? (
+                        <span style={{ padding: '20px', textAlign: 'center', fontSize: '0.85rem', color: '#64748b' }}>No notifications yet.</span>
+                      ) : (
+                        notifs.map(n => (
+                          <div 
+                            key={n.id} 
+                            onClick={() => handleMarkOneAsRead(n.id)}
+                            style={{ 
+                              padding: '12px 15px', 
+                              borderBottom: '1px solid #f1f5f9', 
+                              cursor: 'pointer',
+                              background: n.read ? '#fff' : '#f8fafc',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              gap: '4px',
+                              textAlign: 'left'
+                            }}
+                          >
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                              <span style={{ fontSize: '0.85rem', fontWeight: n.read ? '500' : '700', color: '#334155', lineHeight: '1.25' }}>{n.message}</span>
+                              {!n.read && <span style={{ width: '8px', height: '8px', background: '#3b82f6', borderRadius: '50%', flexShrink: 0, marginTop: '4px' }}></span>}
+                            </div>
+                            <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>{n.date ? new Date(n.date).toLocaleString() : 'Just now'}</span>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                )}
                 
                 {/* Profile click navigates directly to profile details page */}
                 <div className="estify-nav-user-wrapper" onClick={() => navigate('/profile')}>

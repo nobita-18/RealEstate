@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { User, Settings, Shield, Edit2, Check, LogOut, Heart, MapPin, Key, Bell, MessageSquare } from 'lucide-react';
+import { User, Settings, Shield, Edit2, Check, LogOut, Heart, MapPin, Key, Bell, MessageSquare, Calendar } from 'lucide-react';
 import PropertyCard from '../../components/PropertyCard';
 import { getAssetUrl } from '../../api';
 import './BuyerProfile.css';
@@ -14,7 +14,8 @@ const BuyerProfile = () => {
   const [message, setMessage] = useState('');
   const [properties, setProperties] = useState([]);
   const [myEnquiries, setMyEnquiries] = useState([]);
-  const [activeTab, setActiveTab] = useState('details'); // 'details', 'favorites', 'enquiries', 'settings'
+  const [myBookings, setMyBookings] = useState([]);
+  const [activeTab, setActiveTab] = useState('details'); // 'details', 'favorites', 'enquiries', 'bookings', 'settings'
   
   // Settings forms
   const [passwordData, setPasswordData] = useState({ oldPassword: '', newPassword: '', confirmPassword: '' });
@@ -32,6 +33,12 @@ const BuyerProfile = () => {
       const enqRes = await axios.get(`${window.API_BASE_URL || "https://realestatelisting-u2kp.onrender.com"}/api/enquiries/user/${storedUser.id}`);
       if (Array.isArray(enqRes.data)) {
         setMyEnquiries(enqRes.data);
+      }
+
+      // Fetch bookings
+      const bkRes = await axios.get(`${window.API_BASE_URL || "https://realestatelisting-u2kp.onrender.com"}/api/bookings/buyer/${storedUser.id}`);
+      if (Array.isArray(bkRes.data)) {
+        setMyBookings(bkRes.data.sort((a, b) => new Date(b.date) - new Date(a.date)));
       }
     } catch (err) {
       console.error("Failed to load profile data dependencies", err);
@@ -221,6 +228,9 @@ const BuyerProfile = () => {
         <button className={`profile-tab-btn ${activeTab === 'enquiries' ? 'active' : ''}`} onClick={() => setActiveTab('enquiries')}>
           <MessageSquare size={16} /> Enquiries Sent
         </button>
+        <button className={`profile-tab-btn ${activeTab === 'bookings' ? 'active' : ''}`} onClick={() => setActiveTab('bookings')}>
+          <Calendar size={16} /> Bookings & Visits
+        </button>
         <button className={`profile-tab-btn ${activeTab === 'settings' ? 'active' : ''}`} onClick={() => setActiveTab('settings')}>
           <Settings size={16} /> Account Settings
         </button>
@@ -356,6 +366,50 @@ const BuyerProfile = () => {
                       <p style={{ color: 'var(--text-light)', margin: 0, fontSize: '0.85rem' }}>Message: "{enq.message}"</p>
                     </div>
                     <span style={{ fontSize: '0.8rem', color: 'var(--primary-color)', fontWeight: 'bold' }}>{enq.date ? enq.date.split('T')[0] : 'N/A'}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Bookings & Visits TAB */}
+        {activeTab === 'bookings' && (
+          <div className="profile-section glass full-tab-width fade-in-tab">
+            <h2><Calendar size={20} /> Bookings & Visits</h2>
+            {myBookings.length === 0 ? (
+              <p style={{ color: 'var(--text-light)' }}>You have not scheduled any visits or bookings yet.</p>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                {myBookings.map(bk => (
+                  <div key={bk.id} style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', background: 'var(--secondary-color)', padding: '15px 20px', borderRadius: '12px', border: '1px solid var(--border-color)', gap: '15px' }}>
+                    <div>
+                      <h4 style={{ color: 'var(--text-main)', margin: '0 0 5px 0' }}>{bk.propertyTitle || `Property ID: HF${bk.propertyId}`}</h4>
+                      <p style={{ color: 'var(--text-light)', margin: '0 0 5px 0', fontSize: '0.85rem' }}>
+                        Proposed Offer: <strong>${(bk.expectedPrice || 0).toLocaleString()}</strong>
+                      </p>
+                      {bk.statusReason && (
+                        <p style={{ color: 'var(--primary-color)', margin: 0, fontSize: '0.85rem', fontStyle: 'italic' }}>
+                          Note: {bk.statusReason}
+                        </p>
+                      )}
+                    </div>
+                    <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '6px' }}>
+                      <span style={{ fontSize: '0.8rem', color: 'var(--primary-color)', fontWeight: 'bold' }}>
+                        🗓️ {bk.date ? new Date(bk.date).toLocaleString() : 'N/A'}
+                      </span>
+                      <span style={{ 
+                        padding: '4px 10px', 
+                        borderRadius: '20px', 
+                        fontSize: '0.75rem', 
+                        fontWeight: '700',
+                        textTransform: 'uppercase',
+                        background: bk.status === 'Approved' ? 'rgba(16, 185, 129, 0.15)' : bk.status === 'Rejected' ? 'rgba(239, 68, 68, 0.15)' : bk.status === 'completed' ? 'rgba(59, 130, 246, 0.15)' : 'rgba(245, 158, 11, 0.15)',
+                        color: bk.status === 'Approved' ? '#10b981' : bk.status === 'Rejected' ? '#ef4444' : bk.status === 'completed' ? '#3b82f6' : '#f59e0b'
+                      }}>
+                        {bk.status}
+                      </span>
+                    </div>
                   </div>
                 ))}
               </div>

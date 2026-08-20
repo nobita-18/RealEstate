@@ -429,3 +429,34 @@ body.welcome-finished .estify-navbar-light {
     display: none; /* Hide username on very small mobile screens for spacing */
   }
 }
+
+/* Notifications dropdown animations and styling */
+@keyframes dropdownSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.notifs-dropdown {
+  animation: dropdownSlideDown 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Custom scrollbar for notifications list */
+.notifs-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+.notifs-dropdown::-webkit-scrollbar-track {
+  background: transparent;
+}
+.notifs-dropdown::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+.notifs-dropdown::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

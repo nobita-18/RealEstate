@@ -123,6 +123,31 @@ const SellerDashboard = () => {
     }
   };
 
+  const handleUpdateBookingStatus = async (bookingId, nextStatus) => {
+    let reason = '';
+    if (nextStatus === 'Rejected') {
+      reason = await window.customPrompt("Enter reason for rejection (optional):", "");
+      if (reason === null) return; // Cancel clicked
+    } else if (nextStatus === 'Approved') {
+      reason = await window.customPrompt("Enter special instructions or note for buyer (optional):", "Visit approved. Looking forward to meeting you!");
+      if (reason === null) return;
+    } else if (nextStatus === 'completed') {
+      if (!await window.customConfirm("Mark this site visit/booking as COMPLETED and property as SOLD?")) return;
+    }
+
+    try {
+      await axios.put(`${window.API_BASE_URL || "https://realestatelisting-u2kp.onrender.com"}/api/bookings/${bookingId}/status`, {
+        status: nextStatus,
+        statusReason: reason
+      });
+      await window.customAlert(`Booking status updated to ${nextStatus}.`);
+      fetchData(); // Refresh dashboard state
+    } catch (err) {
+      console.error("Failed to update booking status", err);
+      await window.customAlert("Failed to update booking status.");
+    }
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('sellerToken');
     localStorage.removeItem('sellerUser');
@@ -721,15 +746,58 @@ const SellerDashboard = () => {
           ))
         ));
       case 'transactions':
-        return renderSimpleTable('Transaction Details', ['Property ID', 'Buyer ID', 'Amount', 'Status'], () => (
-          transactions.map(t => (
-            <tr key={t.id}>
-              <td>HF{t.propertyId}</td>
-              <td>{t.buyerId}</td>
-              <td>₹{t.billingAmount}</td>
-              <td><span className={`sd-status ${t.status === 'paid' ? 'completed' : 'pending'}`}>{t.status}</span></td>
-            </tr>
-          ))
+        return renderSimpleTable('Site Visit Bookings & Negotiations', ['Property', 'Buyer ID', 'Expected Price', 'Scheduled Date', 'Status', 'Actions'], () => (
+          transactions.length === 0 ? (
+            <tr><td colSpan="6" style={{textAlign: 'center', color: '#64748b'}}>No visit bookings recorded yet.</td></tr>
+          ) : (
+            transactions.map(t => (
+              <tr key={t.id}>
+                <td style={{ fontWeight: '600' }}>{t.propertyTitle} (ID: HF{t.propertyId})</td>
+                <td>{t.buyerId}</td>
+                <td>₹{(t.expectedPrice || t.billingAmount || 0).toLocaleString()}</td>
+                <td style={{ color: '#00d2ff' }}>{t.date ? new Date(t.date).toLocaleString() : 'N/A'}</td>
+                <td>
+                  <span className={`sd-status ${t.status === 'Approved' ? 'completed' : t.status === 'Rejected' ? 'rejected' : t.status === 'completed' ? 'approved' : 'pending'}`}>
+                    {t.status}
+                  </span>
+                </td>
+                <td>
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    {t.status === 'Pending' && (
+                      <>
+                        <button 
+                          onClick={() => handleUpdateBookingStatus(t.id, 'Approved')} 
+                          className="btn btn-sm" 
+                          style={{ background: '#10b981', color: '#fff', border: 'none', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 'bold' }}
+                        >
+                          Approve
+                        </button>
+                        <button 
+                          onClick={() => handleUpdateBookingStatus(t.id, 'Rejected')} 
+                          className="btn btn-sm" 
+                          style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 'bold' }}
+                        >
+                          Reject
+                        </button>
+                      </>
+                    )}
+                    {t.status === 'Approved' && (
+                      <button 
+                        onClick={() => handleUpdateBookingStatus(t.id, 'completed')} 
+                        className="btn btn-sm" 
+                        style={{ background: '#3b82f6', color: '#fff', border: 'none', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 'bold' }}
+                      >
+                        Complete Visit
+                      </button>
+                    )}
+                    {(t.status === 'Rejected' || t.status === 'completed') && (
+                      <span style={{ color: '#64748b', fontSize: '0.75rem', fontStyle: 'italic' }}>No actions</span>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            ))
+          )
         ));
       case 'profile':
         return <SellerProfile isDashboardView={true} initialProfile={sellerProfile} onProfileUpdate={fetchData} />;

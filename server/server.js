@@ -786,9 +786,26 @@ app.post('/api/enquiries', async (req, res) => {
   const props = await readDb('properties');
   const propIndex = props.findIndex(p => p.id == req.body.propertyId);
   if (propIndex !== -1) {
-    if (!props[propIndex].inquiries) props[propIndex].inquiries = [];
-    props[propIndex].inquiries.push(newEnquiry);
+    const prop = props[propIndex];
+    if (!prop.inquiries) prop.inquiries = [];
+    prop.inquiries.push(newEnquiry);
     await writeDb('properties', props);
+
+    // Create notification for seller
+    if (prop.ownerId) {
+      const users = await readDb('users');
+      const userIndex = users.findIndex(u => String(u.id) === String(prop.ownerId));
+      if (userIndex !== -1) {
+        users[userIndex].notifications = users[userIndex].notifications || [];
+        users[userIndex].notifications.push({
+          id: Date.now() + Math.random(),
+          message: `You received a new enquiry from "${newEnquiry.userName}" for your property "${prop.title || 'Untitled'}" (ID: HF${prop.id}).`,
+          date: new Date().toISOString(),
+          read: false
+        });
+        await writeDb('users', users);
+      }
+    }
   }
 
   res.status(201).json(newEnquiry);
@@ -891,7 +908,7 @@ app.put('/api/users/:id', async (req, res) => {
 // ------- BOOKING ROUTES -------
 app.post('/api/bookings', async (req, res) => {
   const bookings = await readDb('bookings');
-  const { buyerId, propertyId, expectedPrice, billingAmount, status } = req.body;
+  const { buyerId, propertyId, expectedPrice, billingAmount, status, date } = req.body;
   
   const props = await readDb('properties');
   const propIndex = props.findIndex(p => p.id == propertyId);
@@ -905,18 +922,86 @@ app.post('/api/bookings', async (req, res) => {
   
   const newBooking = {
     id: bookings.length + 1,
-    date: new Date().toISOString(),
-    buyerId: Number(buyerId),
+    date: date || new Date().toISOString(),
+    buyerId: buyerId, // Keep original format (e.g. "BUY0001")
     propertyId: Number(propertyId),
     propertyTitle,
-    expectedPrice: Number(expectedPrice),
-    billingAmount: Number(billingAmount),
-    status: status || 'Pending'
+    expectedPrice: Number(expectedPrice || 0),
+    billingAmount: Number(billingAmount || expectedPrice || 0),
+    status: status || 'Pending',
+    note: req.body.note || ''
   };
   
   bookings.push(newBooking);
   await writeDb('bookings', bookings);
+
+  // Notify seller of the site visit booking
+  if (propIndex !== -1 && props[propIndex].ownerId) {
+    const users = await readDb('users');
+    const userIndex = users.findIndex(u => String(u.id) === String(props[propIndex].ownerId));
+    if (userIndex !== -1) {
+      users[userIndex].notifications = users[userIndex].notifications || [];
+      users[userIndex].notifications.push({
+        id: Date.now() + Math.random(),
+        message: `New site visit booked for your property "${propertyTitle}" (ID: HF${propertyId}) on ${new Date(newBooking.date).toLocaleString()}.`,
+        date: new Date().toISOString(),
+        read: false
+      });
+      await writeDb('users', users);
+    }
+  }
+
   res.status(201).json(newBooking);
+});
+
+app.put('/api/bookings/:id/status', async (req, res) => {
+  const bookings = await readDb('bookings');
+  const bookingIndex = bookings.findIndex(b => b.id == req.params.id);
+  if (bookingIndex === -1) {
+    return res.status(404).json({ message: 'Booking not found' });
+  }
+
+  const { status, statusReason } = req.body;
+  bookings[bookingIndex].status = status;
+  if (statusReason !== undefined) {
+    bookings[bookingIndex].statusReason = statusReason;
+  }
+  await writeDb('bookings', bookings);
+
+  // If a booking is approved/rejected, update property status accordingly if needed
+  if (status === 'Approved' || status === 'completed') {
+    const props = await readDb('properties');
+    const propIndex = props.findIndex(p => p.id == bookings[bookingIndex].propertyId);
+    if (propIndex !== -1) {
+      props[propIndex].status = status === 'completed' ? 'sold' : 'under_negotiation';
+      await writeDb('properties', props);
+    }
+  } else if (status === 'Rejected') {
+    const props = await readDb('properties');
+    const propIndex = props.findIndex(p => p.id == bookings[bookingIndex].propertyId);
+    if (propIndex !== -1) {
+      props[propIndex].status = 'approved'; // Make property available again
+      await writeDb('properties', props);
+    }
+  }
+
+  // Notify buyer about booking status update
+  const buyerId = bookings[bookingIndex].buyerId;
+  const users = await readDb('users');
+  const userIndex = users.findIndex(u => String(u.id) === String(buyerId));
+  if (userIndex !== -1) {
+    users[userIndex].notifications = users[userIndex].notifications || [];
+    users[userIndex].notifications.push({
+      id: Date.now() + Math.random(),
+      message: `Your booking/visit status for property "${bookings[bookingIndex].propertyTitle}" has been updated to "${status}".`,
+      reason: statusReason || '',
+      date: new Date().toISOString(),
+      read: false
+    });
+    await writeDb('users', users);
+  }
+
+  res.json(bookings[bookingIndex]);
 });
 
 app.get('/api/bookings', async (req, res) => {

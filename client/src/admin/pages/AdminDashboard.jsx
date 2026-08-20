@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ShieldCheck, Activity, CheckCircle, XCircle, Trash2, Users, Eye, EyeOff, Info, UserCheck, UserX, X, BarChart } from 'lucide-react';
+import { ResponsiveContainer, BarChart as ReChartsBarChart, Bar, XAxis, YAxis, Tooltip, Cell } from 'recharts';
 import './AdminLogin.css'; 
 
 import { getSafeLocalStorage } from '../../api';
@@ -155,6 +156,30 @@ const AdminDashboard = () => {
     });
   };
 
+  const getPropertyTypeData = () => {
+    const types = {};
+    propertiesList.forEach(p => {
+      const type = p.propertyType || 'Unknown';
+      types[type] = (types[type] || 0) + 1;
+    });
+    return Object.keys(types).map(type => ({
+      name: type,
+      count: types[type]
+    }));
+  };
+
+  const getUserRoleData = () => {
+    const roles = { Buyer: 0, Seller: 0 };
+    usersList.forEach(u => {
+      if (u.role === 'buyer') roles.Buyer++;
+      else if (u.role === 'seller') roles.Seller++;
+    });
+    return [
+      { name: 'Buyers', count: roles.Buyer, color: '#00d2ff' },
+      { name: 'Sellers', count: roles.Seller, color: '#e74c3c' }
+    ];
+  };
+
   return (
     <div className="admin-login-wrapper" style={{ alignItems: 'flex-start', paddingTop: '50px', minHeight: '100vh', paddingBottom: '100px' }}>
       <div className="admin-secure-box" style={{ maxWidth: '1100px', width: '95%' }}>
@@ -200,6 +225,57 @@ const AdminDashboard = () => {
                <div style={{ color: '#fff', fontSize: '2.5rem', fontWeight: '900', fontFamily: 'monospace' }}>{pendingProps.length}</div>
             </div>
             <CheckCircle size={40} color="#f59e0b" opacity={0.3} />
+          </div>
+        </div>
+
+        {/* SYSTEM ANALYTICS & DIAGNOSTICS */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(450px, 1fr))', gap: '20px', marginTop: '20px' }}>
+          {/* Chart 1: Properties by Type */}
+          <div style={{ padding: '25px', border: '1px solid #333', background: 'rgba(0,0,0,0.5)' }}>
+            <h3 style={{ color: '#00ff80', fontFamily: 'monospace', fontSize: '1.1rem', margin: '0 0 20px 0', borderBottom: '1px solid #333', paddingBottom: '10px' }}>
+              📊 PROPERTIES BY TYPE
+            </h3>
+            <div style={{ width: '100%', height: '250px' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <ReChartsBarChart data={getPropertyTypeData()}>
+                  <XAxis dataKey="name" stroke="#888" fontSize={11} tickLine={false} />
+                  <YAxis stroke="#888" fontSize={11} tickLine={false} />
+                  <Tooltip 
+                    contentStyle={{ background: '#222', border: '1px solid #444', color: '#fff', fontSize: '0.85rem', fontFamily: 'monospace' }}
+                    itemStyle={{ color: '#00ff80' }}
+                  />
+                  <Bar dataKey="count" fill="#00ff80" radius={[4, 4, 0, 0]}>
+                    {getPropertyTypeData().map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={['#00ff80', '#00d2ff', '#ffdf80', '#ff3366', '#a855f7'][index % 5]} />
+                    ))}
+                  </Bar>
+                </ReChartsBarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Chart 2: User Node Distribution */}
+          <div style={{ padding: '25px', border: '1px solid #333', background: 'rgba(0,0,0,0.5)' }}>
+            <h3 style={{ color: '#00ff80', fontFamily: 'monospace', fontSize: '1.1rem', margin: '0 0 20px 0', borderBottom: '1px solid #333', paddingBottom: '10px' }}>
+              📊 USER NODE DISTRIBUTION
+            </h3>
+            <div style={{ width: '100%', height: '250px' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <ReChartsBarChart data={getUserRoleData()}>
+                  <XAxis dataKey="name" stroke="#888" fontSize={11} tickLine={false} />
+                  <YAxis stroke="#888" fontSize={11} tickLine={false} />
+                  <Tooltip 
+                    contentStyle={{ background: '#222', border: '1px solid #444', color: '#fff', fontSize: '0.85rem', fontFamily: 'monospace' }}
+                    itemStyle={{ color: '#00ff80' }}
+                  />
+                  <Bar dataKey="count" radius={[4, 4, 0, 0]}>
+                    {getUserRoleData().map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Bar>
+                </ReChartsBarChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
 

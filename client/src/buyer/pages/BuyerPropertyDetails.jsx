@@ -13,6 +13,13 @@ const BuyerPropertyDetails = () => {
   const [enquirySent, setEnquirySent] = useState(false);
   const [alreadyEnquired, setAlreadyEnquired] = useState(false);
   
+  const [sidebarTab, setSidebarTab] = useState('enquiry'); // 'enquiry' or 'booking'
+  const [alreadyBooked, setAlreadyBooked] = useState(false);
+  const [bookingStatus, setBookingStatus] = useState('');
+  const [bookingDate, setBookingDate] = useState('');
+  const [offerPrice, setOfferPrice] = useState('');
+  const [bookingSent, setBookingSent] = useState(false);
+
   const [reviews, setReviews] = useState([]);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
@@ -26,15 +33,29 @@ const BuyerPropertyDetails = () => {
       .then(res => {
         setProperty(res.data);
         setReviews(res.data.reviews || []);
+        setOfferPrice(res.data.price);
         setLoading(false);
         
         // Check if current user has already enquired
         const user = JSON.parse(localStorage.getItem('user'));
-        if (user && res.data.inquiries) {
-          const hasEnquired = res.data.inquiries.some(inq => String(inq.userId) === String(user.id));
-          if (hasEnquired) {
-            setAlreadyEnquired(true);
+        if (user) {
+          if (res.data.inquiries) {
+            const hasEnquired = res.data.inquiries.some(inq => String(inq.userId) === String(user.id));
+            if (hasEnquired) {
+              setAlreadyEnquired(true);
+            }
           }
+
+          // Check if current user has already booked
+          axios.get(`${window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com'}/api/bookings/buyer/${user.id}`)
+            .then(bkRes => {
+              const matchingBooking = bkRes.data.find(b => Number(b.propertyId) === Number(id));
+              if (matchingBooking) {
+                setAlreadyBooked(true);
+                setBookingStatus(matchingBooking.status);
+              }
+            })
+            .catch(err => console.error("Error fetching user bookings:", err));
         }
       })
       .catch(err => {
@@ -61,6 +82,35 @@ const BuyerPropertyDetails = () => {
       setEnquirySent(true);
     }).catch(async () => {
       await window.customAlert("Failed to send enquiry.");
+    });
+  };
+
+  const handleBooking = async (e) => {
+    e.preventDefault();
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user) {
+      await window.customAlert("Please log in to book a site visit!");
+      return;
+    }
+    if (!bookingDate) {
+      await window.customAlert("Please select a date and time for the visit.");
+      return;
+    }
+
+    axios.post((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/bookings', {
+      buyerId: user.id,
+      buyerName: user.name,
+      propertyId: property.id,
+      expectedPrice: offerPrice || property.price,
+      billingAmount: property.price,
+      date: new Date(bookingDate).toISOString(),
+      status: 'Pending'
+    }).then((res) => {
+      setBookingSent(true);
+      setBookingStatus('Pending');
+      setAlreadyBooked(true);
+    }).catch(async (err) => {
+      await window.customAlert("Failed to book site visit.");
     });
   };
 
@@ -300,14 +350,91 @@ const BuyerPropertyDetails = () => {
                 >
                   Edit Property
                 </a>
-              ) : (enquirySent || alreadyEnquired) ? (
-                <div className="enquiry-success" style={{background: '#d4edda', color: '#155724', padding: '15px', borderRadius: '10px', textAlign: 'center', fontWeight: 'bold'}}>
-                  ✓ {alreadyEnquired ? 'Enquiry already sent' : 'Enquiry Sent Successfully!'}
-                </div>
               ) : (
-                <button className="btn btn-primary w-100" onClick={handleEnquiry} style={{padding: '15px', fontSize: '1.1rem'}}>
-                  <Mail size={18} style={{marginRight: '8px', verticalAlign: 'middle'}}/> Contact Owner
-                </button>
+                <>
+                  <div style={{ display: 'flex', borderBottom: '1px solid #cbd5e1', marginBottom: '15px' }}>
+                    <button 
+                      onClick={() => setSidebarTab('enquiry')}
+                      style={{
+                        flex: 1,
+                        padding: '10px',
+                        background: 'none',
+                        border: 'none',
+                        borderBottom: sidebarTab === 'enquiry' ? '2.5px solid #3b82f6' : 'none',
+                        color: sidebarTab === 'enquiry' ? '#3b82f6' : '#64748b',
+                        fontWeight: 'bold',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Enquiry
+                    </button>
+                    <button 
+                      onClick={() => setSidebarTab('booking')}
+                      style={{
+                        flex: 1,
+                        padding: '10px',
+                        background: 'none',
+                        border: 'none',
+                        borderBottom: sidebarTab === 'booking' ? '2.5px solid #3b82f6' : 'none',
+                        color: sidebarTab === 'booking' ? '#3b82f6' : '#64748b',
+                        fontWeight: 'bold',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Book Visit
+                    </button>
+                  </div>
+
+                  {sidebarTab === 'enquiry' && (
+                    <div>
+                      {(enquirySent || alreadyEnquired) ? (
+                        <div className="enquiry-success" style={{background: '#d4edda', color: '#155724', padding: '15px', borderRadius: '10px', textAlign: 'center', fontWeight: 'bold'}}>
+                          ✓ {alreadyEnquired ? 'Enquiry already sent' : 'Enquiry Sent Successfully!'}
+                        </div>
+                      ) : (
+                        <button className="btn btn-primary w-100" onClick={handleEnquiry} style={{padding: '15px', fontSize: '1.1rem'}}>
+                          <Mail size={18} style={{marginRight: '8px', verticalAlign: 'middle'}}/> Contact Owner
+                        </button>
+                      )}
+                    </div>
+                  )}
+
+                  {sidebarTab === 'booking' && (
+                    <div>
+                      {(bookingSent || alreadyBooked) ? (
+                        <div className="booking-success" style={{background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe', padding: '15px', borderRadius: '10px', textAlign: 'center', fontWeight: 'bold'}}>
+                          🗓️ Visit Status: {bookingStatus || 'Pending'}
+                        </div>
+                      ) : (
+                        <form onSubmit={handleBooking} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                          <div>
+                            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '700', color: '#475569', marginBottom: '5px', textAlign: 'left' }}>Preferred Date & Time</label>
+                            <input 
+                              type="datetime-local" 
+                              value={bookingDate} 
+                              onChange={(e) => setBookingDate(e.target.value)}
+                              required
+                              style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '0.9rem' }}
+                            />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '700', color: '#475569', marginBottom: '5px', textAlign: 'left' }}>Propose Offer Price ($)</label>
+                            <input 
+                              type="number" 
+                              value={offerPrice} 
+                              onChange={(e) => setOfferPrice(e.target.value)}
+                              required
+                              style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '0.9rem' }}
+                            />
+                          </div>
+                          <button type="submit" className="btn btn-primary w-100" style={{padding: '12px', fontSize: '1rem', marginTop: '5px'}}>
+                            Schedule Site Visit
+                          </button>
+                        </form>
+                      )}
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>

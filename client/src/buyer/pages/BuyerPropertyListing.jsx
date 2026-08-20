@@ -32,7 +32,8 @@ const BuyerPropertyListing = () => {
     pgSharing: 'Any',
     pgGender: 'Any',
     pgFood: 'Any',
-    landType: 'Any'
+    landType: 'Any',
+    sortBy: 'default'
   });
   const [userFavorites, setUserFavorites] = useState(() => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -193,6 +194,15 @@ const BuyerPropertyListing = () => {
     displayProperties = dealsGrouped;
   }
 
+  // Sort displayProperties based on selection
+  if (filters.sortBy === 'priceAsc') {
+    displayProperties.sort((a, b) => (a.price || 0) - (b.price || 0));
+  } else if (filters.sortBy === 'priceDesc') {
+    displayProperties.sort((a, b) => (b.price || 0) - (a.price || 0));
+  } else if (filters.sortBy === 'newest') {
+    displayProperties.sort((a, b) => new Date(b.createdAt || b.date || 0) - new Date(a.createdAt || a.date || 0));
+  }
+
   const clearFilters = () => {
     setFilters({
       title: '',
@@ -208,7 +218,8 @@ const BuyerPropertyListing = () => {
       pgSharing: 'Any',
       pgGender: 'Any',
       pgFood: 'Any',
-      landType: 'Any'
+      landType: 'Any',
+      sortBy: 'default'
     });
   };
 
@@ -239,6 +250,33 @@ const BuyerPropertyListing = () => {
                 onChange={handleFilterChange}
               />
             </div>
+            
+            <div className="sort-selector" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '0.85rem', color: '#64748b', fontWeight: '700' }}>SORT:</span>
+              <select 
+                name="sortBy" 
+                value={filters.sortBy || 'default'} 
+                onChange={handleFilterChange}
+                style={{
+                  padding: '8px 12px',
+                  borderRadius: '20px',
+                  border: '1px solid #cbd5e1',
+                  background: '#fff',
+                  fontSize: '0.85rem',
+                  fontWeight: '700',
+                  color: '#475569',
+                  cursor: 'pointer',
+                  outline: 'none',
+                  transition: 'all 0.2s'
+                }}
+              >
+                <option value="default">Default</option>
+                <option value="priceAsc">Price: Low to High</option>
+                <option value="priceDesc">Price: High to Low</option>
+                <option value="newest">Newest First</option>
+              </select>
+            </div>
+
             <button 
               className={`btn ${showFilters ? 'btn-primary' : 'btn-outline'} filter-toggle-btn`}
               onClick={() => setShowFilters(!showFilters)}
