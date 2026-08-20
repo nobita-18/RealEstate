@@ -329,51 +329,9 @@
   gap: 1.25rem;
 }
 
-/* Input boxes styling */
-.input-with-icon-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-  border: 1.5px solid #cbd5e1;
-  border-radius: 12px;
-  background: #ffffff;
-  overflow: hidden;
-  transition: all 0.3s;
-}
-
-.input-with-icon-wrapper:focus-within {
-  border-color: #0f52ba;
-  box-shadow: 0 0 0 4px rgba(15, 82, 186, 0.1);
-}
-
-.input-icon {
-  position: absolute;
-  left: 14px;
-  color: #64748b;
-}
-
-.input-with-icon-wrapper input {
-  width: 100%;
-  border: none !important;
-  background: transparent !important;
-  padding: 14px 14px 14px 44px;
-  outline: none;
-  font-size: 0.9rem;
-  color: #0f172a;
-}
-
+/* Input boxes styling (inherited from index.css) */
 .input-with-icon-wrapper input::placeholder {
   color: #94a3b8;
-}
-
-.pwd-toggle-btn {
-  background: none;
-  border: none;
-  padding: 12px 14px;
-  cursor: pointer;
-  color: #64748b;
-  display: flex;
-  align-items: center;
 }
 
 /* Options row */

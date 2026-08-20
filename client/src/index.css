@@ -314,4 +314,56 @@ img {
   }
 }
 
+/* Global Input with Icon wrapper styles for Login/Register forms */
+.input-with-icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 12px;
+  background: #ffffff;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.input-with-icon-wrapper input {
+  width: 100%;
+  border: none !important;
+  background: transparent !important;
+  padding: 14px 14px 14px 44px !important;
+  outline: none;
+  font-size: 0.9rem;
+  color: #0f172a;
+}
+
+.input-icon {
+  position: absolute;
+  left: 14px;
+  color: #64748b;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.pwd-toggle-btn {
+  background: none;
+  border: none;
+  padding: 12px 14px;
+  cursor: pointer;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  z-index: 5;
+}
+
+/* Autofill overrides to prevent overlapping or style breakage */
+.input-with-icon-wrapper input:-webkit-autofill,
+.input-with-icon-wrapper input:-webkit-autofill:hover, 
+.input-with-icon-wrapper input:-webkit-autofill:focus, 
+.input-with-icon-wrapper input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  -webkit-text-fill-color: #0f172a !important;
+  padding-left: 44px !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 
