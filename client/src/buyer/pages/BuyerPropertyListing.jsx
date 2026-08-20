@@ -35,10 +35,143 @@ const BuyerPropertyListing = () => {
     landType: 'Any',
     sortBy: 'default'
   });
+  
+  const [searchMode, setSearchMode] = useState('standard'); // 'standard' or 'ai'
+  const [aiSearchPrompt, setAiSearchPrompt] = useState('');
+  const [parsedAiFilters, setParsedAiFilters] = useState(null);
+
   const [userFavorites, setUserFavorites] = useState(() => {
     const user = JSON.parse(localStorage.getItem('user'));
     return (user?.favorites || []).map(id => String(id));
   });
+
+  const parseAISearch = (prompt) => {
+    const text = prompt.toLowerCase();
+    const parsed = {
+      type: 'Any',
+      bhk: '',
+      maxPrice: '',
+      minArea: '',
+      location: '',
+      title: ''
+    };
+
+    // 1. Detect property type
+    if (text.includes('villa')) parsed.type = 'Villa';
+    else if (text.includes('pg') || text.includes('paying guest') || text.includes('hostel')) parsed.type = 'PG';
+    else if (text.includes('land') || text.includes('plot') || text.includes('ground')) parsed.type = 'Land';
+    else if (text.includes('penthouse')) parsed.type = 'Penthouse';
+    else if (text.includes('house') || text.includes('home')) parsed.type = 'House';
+
+    // 2. Detect BHK
+    const bhkRegex = /(\d+)\s*(?:bhk|bedroom|bed)/i;
+    const bhkMatch = text.match(bhkRegex);
+    if (bhkMatch) {
+      parsed.bhk = bhkMatch[1];
+    }
+
+    // 3. Detect price/budget
+    const priceRegex = /(?:under|below|budget|within|price|max|maximum)\s*(?:of)?\s*(?:rs\.?|inr|₹)?\s*([\d.]+)\s*(lakh|l|crore|cr|k|thousand)?/i;
+    const priceMatch = text.match(priceRegex);
+    if (priceMatch) {
+      let num = parseFloat(priceMatch[1]);
+      const unit = (priceMatch[2] || '').toLowerCase();
+      if (unit === 'lakh' || unit === 'l') {
+        num = num * 100000;
+      } else if (unit === 'crore' || unit === 'cr') {
+        num = num * 10000000;
+      } else if (unit === 'k' || unit === 'thousand') {
+        num = num * 1000;
+      }
+      parsed.maxPrice = num.toString();
+    }
+
+    // 4. Detect minimum area
+    const areaRegex = /(\d+)\s*(?:sqft|sq\.ft|square\s*feet|sq\s*feet|area)/i;
+    const areaMatch = text.match(areaRegex);
+    if (areaMatch) {
+      parsed.minArea = areaMatch[1];
+    }
+
+    // 5. Detect location
+    const uniqueCities = [...new Set(properties.map(p => (p.city || '').toLowerCase()).filter(Boolean))];
+    const foundCity = uniqueCities.find(city => text.includes(city));
+    if (foundCity) {
+      parsed.location = foundCity.charAt(0).toUpperCase() + foundCity.slice(1);
+    } else {
+      const locRegex = /(?:in|at)\s+([a-zA-Z\s]+)/i;
+      const locMatch = text.match(locRegex);
+      if (locMatch) {
+        const potentialLoc = locMatch[1].trim().split(' ')[0];
+        const stopWords = ['a', 'the', 'budget', 'under', 'below', 'cheap', 'best', 'lakh', 'crore', 'lakhs', 'crores', 'sqft', 'bhk'];
+        if (!stopWords.includes(potentialLoc.toLowerCase())) {
+          parsed.location = potentialLoc.charAt(0).toUpperCase() + potentialLoc.slice(1);
+        }
+      }
+    }
+
+    return parsed;
+  };
+
+  const getAIRecommendations = () => {
+    if (userFavorites.length === 0) {
+      return [...properties]
+        .map(p => {
+          const avgRating = p.reviews && p.reviews.length > 0 
+            ? p.reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / p.reviews.length 
+            : 0;
+          return { ...p, ratingScore: avgRating };
+        })
+        .sort((a, b) => b.ratingScore - a.ratingScore)
+        .slice(0, 4);
+    }
+
+    const favProps = properties.filter(p => userFavorites.includes(String(p.id)));
+    if (favProps.length === 0) return [];
+
+    const favoriteTypes = {};
+    const favoriteCities = {};
+    let totalPrice = 0;
+    
+    favProps.forEach(p => {
+      if (p.propertyType) favoriteTypes[p.propertyType] = (favoriteTypes[p.propertyType] || 0) + 1;
+      if (p.city) favoriteCities[p.city.toLowerCase()] = (favoriteCities[p.city.toLowerCase()] || 0) + 1;
+      totalPrice += p.price || 0;
+    });
+
+    const averagePrice = totalPrice / favProps.length;
+
+    const scored = properties
+      .filter(p => !userFavorites.includes(String(p.id)))
+      .map(p => {
+        let score = 0;
+        if (p.propertyType && favoriteTypes[p.propertyType]) {
+          score += favoriteTypes[p.propertyType] * 3;
+        }
+        if (p.city && favoriteCities[p.city.toLowerCase()]) {
+          score += favoriteCities[p.city.toLowerCase()] * 2;
+        }
+        if (p.price && averagePrice > 0) {
+          const priceDiffRatio = Math.abs(p.price - averagePrice) / averagePrice;
+          if (priceDiffRatio <= 0.25) {
+            score += 2;
+          } else if (priceDiffRatio <= 0.5) {
+            score += 1;
+          }
+        }
+        const avgRating = p.reviews && p.reviews.length > 0 
+          ? p.reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / p.reviews.length 
+          : 0;
+        score += avgRating * 0.5;
+
+        return { ...p, recScore: score };
+      });
+
+    return scored
+      .filter(p => p.recScore > 0)
+      .sort((a, b) => b.recScore - a.recScore)
+      .slice(0, 4);
+  };
 
   useEffect(() => {
     axios.get((window.API_BASE_URL || 'https://realestatelisting-u2kp.onrender.com') + '/api/properties')
@@ -223,6 +356,28 @@ const BuyerPropertyListing = () => {
     });
   };
 
+  const handleAISearchSubmit = (e) => {
+    e.preventDefault();
+    if (!aiSearchPrompt.trim()) return;
+    const parsed = parseAISearch(aiSearchPrompt);
+    setParsedAiFilters(parsed);
+    setFilters(prev => ({
+      ...prev,
+      type: parsed.type || 'Any',
+      bhk: parsed.bhk || '',
+      maxPrice: parsed.maxPrice || '',
+      minArea: parsed.minArea || '',
+      location: parsed.location || '',
+      title: parsed.title || ''
+    }));
+  };
+
+  const handleClearAISearch = () => {
+    setAiSearchPrompt('');
+    setParsedAiFilters(null);
+    clearFilters();
+  };
+
   const handleFavoriteToggle = (propertyId, isSaved) => {
     const user = JSON.parse(localStorage.getItem('user'));
     if (user) {
@@ -239,17 +394,104 @@ const BuyerPropertyListing = () => {
 
       {!filters.favorites && (
         <>
-          <div className="listing-controls glass animate-slide-down">
-            <div className="search-bar primary-search">
-              <Search size={20} className="text-muted" />
-              <input 
-                type="text" 
-                name="title"
-                placeholder="Search by property name..." 
-                value={filters.title}
-                onChange={handleFilterChange}
-              />
+          {/* AI Recommendations Carousel */}
+          {getAIRecommendations().length > 0 && (
+            <div className="ai-recommendations-section glass" style={{ marginBottom: '30px', padding: '24px', borderRadius: '15px', background: 'linear-gradient(135deg, rgba(37,99,235,0.05) 0%, rgba(0,210,255,0.05) 100%)', border: '1px solid rgba(37,99,235,0.15)', textAlign: 'left' }}>
+              <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1.2rem', color: '#1e293b', marginBottom: '15px', fontWeight: '700' }}>
+                🤖 AI RECOMMENDED FOR YOU
+              </h3>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
+                {getAIRecommendations().map(p => (
+                  <PropertyCard key={p.id} property={p} index={p.id} onFavoriteToggle={handleFavoriteToggle} />
+                ))}
+              </div>
             </div>
+          )}
+
+          {/* Search Mode Toggles */}
+          <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
+            <button 
+              onClick={() => setSearchMode('standard')}
+              style={{
+                padding: '8px 16px',
+                borderRadius: '20px',
+                border: 'none',
+                background: searchMode === 'standard' ? '#3b82f6' : '#f1f5f9',
+                color: searchMode === 'standard' ? '#fff' : '#64748b',
+                fontWeight: '700',
+                cursor: 'pointer',
+                fontSize: '0.85rem',
+                transition: 'all 0.2s'
+              }}
+            >
+              Standard Search
+            </button>
+            <button 
+              onClick={() => setSearchMode('ai')}
+              style={{
+                padding: '8px 16px',
+                borderRadius: '20px',
+                border: 'none',
+                background: searchMode === 'ai' ? '#3b82f6' : '#f1f5f9',
+                color: searchMode === 'ai' ? '#fff' : '#64748b',
+                fontWeight: '700',
+                cursor: 'pointer',
+                fontSize: '0.85rem',
+                transition: 'all 0.2s',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '5px'
+              }}
+            >
+              🤖 AI Assistant Search
+            </button>
+          </div>
+
+          <div className="listing-controls glass animate-slide-down" style={{ textAlign: 'left' }}>
+            {searchMode === 'standard' ? (
+              <div className="search-bar primary-search">
+                <Search size={20} className="text-muted" />
+                <input 
+                  type="text" 
+                  name="title"
+                  placeholder="Search by property name..." 
+                  value={filters.title}
+                  onChange={handleFilterChange}
+                />
+              </div>
+            ) : (
+              <form onSubmit={handleAISearchSubmit} style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div style={{ display: 'flex', gap: '10px', width: '100%' }}>
+                  <div className="search-bar primary-search" style={{ flex: 1 }}>
+                    <Search size={20} className="text-muted" />
+                    <input 
+                      type="text" 
+                      placeholder="Ask AI search (e.g. 'I want a 3 BHK Villa in Bangalore under 90 Lakhs')..." 
+                      value={aiSearchPrompt}
+                      onChange={e => setAiSearchPrompt(e.target.value)}
+                    />
+                  </div>
+                  <button type="submit" className="sd-btn-primary" style={{ background: '#3b82f6', color: '#fff', border: 'none', padding: '0 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
+                    Parse
+                  </button>
+                  {parsedAiFilters && (
+                    <button type="button" onClick={handleClearAISearch} className="sd-btn-primary" style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '0 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
+                      Clear
+                    </button>
+                  )}
+                </div>
+                {parsedAiFilters && (
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', padding: '10px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '0.85rem' }}>
+                    <span style={{ fontWeight: '700', color: '#475569' }}>AI Parsed Filters:</span>
+                    {parsedAiFilters.type !== 'Any' && <span style={{ background: '#eff6ff', color: '#1d4ed8', padding: '2px 8px', borderRadius: '12px', fontWeight: '600' }}>Type: {parsedAiFilters.type}</span>}
+                    {parsedAiFilters.bhk && <span style={{ background: '#eff6ff', color: '#1d4ed8', padding: '2px 8px', borderRadius: '12px', fontWeight: '600' }}>BHK: {parsedAiFilters.bhk}</span>}
+                    {parsedAiFilters.maxPrice && <span style={{ background: '#eff6ff', color: '#1d4ed8', padding: '2px 8px', borderRadius: '12px', fontWeight: '600' }}>Budget: ₹{Number(parsedAiFilters.maxPrice).toLocaleString()}</span>}
+                    {parsedAiFilters.minArea && <span style={{ background: '#eff6ff', color: '#1d4ed8', padding: '2px 8px', borderRadius: '12px', fontWeight: '600' }}>Area: {parsedAiFilters.minArea} sqft</span>}
+                    {parsedAiFilters.location && <span style={{ background: '#eff6ff', color: '#1d4ed8', padding: '2px 8px', borderRadius: '12px', fontWeight: '600' }}>Location: {parsedAiFilters.location}</span>}
+                  </div>
+                )}
+              </form>
+            )}
             
             <div className="sort-selector" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span style={{ fontSize: '0.85rem', color: '#64748b', fontWeight: '700' }}>SORT:</span>
