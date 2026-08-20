@@ -276,10 +276,8 @@ const BuyerLogin = () => {
               <div className="hero-overlay-shade"></div>
               
               {/* Logo Branding */}
-              <div className="hero-logo-container">
-                <div className="hero-house-icon">
-                  <Home size={16} color="white" fill="white" />
-                </div>
+              <div className="hero-logo-container" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <img src="/logo.jpg" alt="HomeFind Logo" style={{ width: '32px', height: '32px', borderRadius: '8px', objectFit: 'cover' }} />
                 <div className="logo-text-group">
                   <span className="logo-brand">HomeFind</span>
                   <span className="logo-tagline">Real Estate Platform</span>
@@ -343,9 +341,7 @@ const BuyerLogin = () => {
                 
                 {/* Mobile-only logo */}
                 <div className="hero-logo-container mobile-only-logo" style={{ marginBottom: '20px', justifyContent: 'center', alignItems: 'center' }}>
-                  <div className="hero-house-icon" style={{ background: '#2563eb', width: '32px', height: '32px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Home size={18} className="text-white" />
-                  </div>
+                  <img src="/logo.jpg" alt="HomeFind Logo" style={{ width: '32px', height: '32px', borderRadius: '8px', objectFit: 'cover' }} />
                   <div className="logo-text-group" style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', marginLeft: '10px' }}>
                     <span className="logo-brand" style={{ fontWeight: '800', fontSize: '1.25rem', color: '#0f172a' }}>HomeFind</span>
                     <span className="logo-tagline" style={{ fontSize: '0.65rem', textTransform: 'uppercase', color: '#64748b' }}>Real Estate Portal</span>
