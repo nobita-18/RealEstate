@@ -208,9 +208,7 @@ const BuyerHome = () => {
           <div className="welcome-bg-image"></div>
           <div className="welcome-content">
             <div className="welcome-logo-wrapper">
-              <div className="welcome-logo-icon">
-                <Home size={32} color="white" fill="white" />
-              </div>
+              <img src="/logo.jpg" alt="HomeFind Logo" style={{ width: '52px', height: '52px', borderRadius: '12px', objectFit: 'cover', boxShadow: '0 0 20px rgba(37, 99, 235, 0.5)' }} />
               <span className="welcome-logo-text">HomeFind</span>
             </div>
             <h2 className="welcome-message">Welcome to HomeFind</h2>
