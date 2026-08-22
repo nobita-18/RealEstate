@@ -514,46 +514,41 @@
 .profile-page .profile-section {
   opacity: 0;
   transform: translateY(20px);
+  animation: fadeInProfileElement 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.profile-page .profile-section:nth-child(1) {
-  animation: fadeInProfileElement 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.18s forwards;
-}
-
-.profile-page .profile-section:nth-child(2) {
-  animation: fadeInProfileElement 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.28s forwards;
-}
+.profile-page .profile-section:nth-child(1) { animation-delay: 0.1s; }
+.profile-page .profile-section:nth-child(2) { animation-delay: 0.18s; }
+.profile-page .profile-section:nth-child(3) { animation-delay: 0.26s; }
+.profile-page .profile-section:nth-child(n+4) { animation-delay: 0.34s; }
 
 /* Staggered input groups inside sections */
 .profile-page .profile-section .input-group,
-.profile-page .profile-section .edit-field {
+.profile-page .profile-section .edit-field,
+.profile-page .profile-section .seller-profile-field,
+.profile-page .profile-section form > div {
   opacity: 0;
   transform: translateY(10px);
+  animation: fadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.profile-page .profile-section:nth-child(1) .input-group:nth-child(1),
-.profile-page .profile-section:nth-child(1) .edit-field:nth-child(1) { animation: fadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.22s forwards; }
+.profile-page .profile-section .input-group:nth-child(1),
+.profile-page .profile-section .edit-field:nth-child(1) { animation-delay: 0.15s; }
 
-.profile-page .profile-section:nth-child(1) .input-group:nth-child(2),
-.profile-page .profile-section:nth-child(1) .edit-field:nth-child(2) { animation: fadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.26s forwards; }
+.profile-page .profile-section .input-group:nth-child(2),
+.profile-page .profile-section .edit-field:nth-child(2) { animation-delay: 0.20s; }
 
-.profile-page .profile-section:nth-child(1) .input-group:nth-child(3),
-.profile-page .profile-section:nth-child(1) .edit-field:nth-child(3) { animation: fadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.30s forwards; }
+.profile-page .profile-section .input-group:nth-child(3),
+.profile-page .profile-section .edit-field:nth-child(3) { animation-delay: 0.25s; }
 
-.profile-page .profile-section:nth-child(1) .input-group:nth-child(4),
-.profile-page .profile-section:nth-child(1) .edit-field:nth-child(4) { animation: fadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.34s forwards; }
+.profile-page .profile-section .input-group:nth-child(4),
+.profile-page .profile-section .edit-field:nth-child(4) { animation-delay: 0.30s; }
 
-.profile-page .profile-section:nth-child(2) .input-group:nth-child(1),
-.profile-page .profile-section:nth-child(2) .edit-field:nth-child(1) { animation: fadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.32s forwards; }
+.profile-page .profile-section .input-group:nth-child(5),
+.profile-page .profile-section .edit-field:nth-child(5) { animation-delay: 0.35s; }
 
-.profile-page .profile-section:nth-child(2) .input-group:nth-child(2),
-.profile-page .profile-section:nth-child(2) .edit-field:nth-child(2) { animation: fadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.36s forwards; }
-
-.profile-page .profile-section:nth-child(2) .input-group:nth-child(3),
-.profile-page .profile-section:nth-child(2) .edit-field:nth-child(3) { animation: fadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.40s forwards; }
-
-.profile-page .profile-section:nth-child(2) .input-group:nth-child(4),
-.profile-page .profile-section:nth-child(2) .edit-field:nth-child(4) { animation: fadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.44s forwards; }
+.profile-page .profile-section .input-group:nth-child(n+6),
+.profile-page .profile-section .edit-field:nth-child(n+6) { animation-delay: 0.40s; }
 
 @keyframes fadeInProfileElement {
   from {

@@ -280,35 +280,40 @@
 .seller-profile-section {
   opacity: 0;
   transform: translateY(15px);
+  animation: sellerFadeInProfileElement 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.seller-profile-section.info-personal { animation: sellerFadeInProfileElement 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards; }
-.seller-profile-section.info-business { animation: sellerFadeInProfileElement 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.18s forwards; }
-.seller-profile-section.info-address { animation: sellerFadeInProfileElement 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.26s forwards; }
-.seller-profile-section.info-verification { animation: sellerFadeInProfileElement 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.34s forwards; }
-.seller-profile-section.info-stats { animation: sellerFadeInProfileElement 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.42s forwards; }
+.seller-profile-section.info-personal { animation-delay: 0.1s; }
+.seller-profile-section.info-business { animation-delay: 0.18s; }
+.seller-profile-section.info-address { animation-delay: 0.26s; }
+.seller-profile-section.info-verification { animation-delay: 0.34s; }
+.seller-profile-section.info-stats { animation-delay: 0.42s; }
 
 /* Stagger fields inside sections */
 .seller-profile-section .seller-profile-field, 
 .seller-profile-section .seller-profile-stat-box {
   opacity: 0;
   transform: translateY(10px);
+  animation: sellerFadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.seller-profile-section.info-personal .seller-profile-field:nth-child(1) { animation: sellerFadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards; }
-.seller-profile-section.info-personal .seller-profile-field:nth-child(2) { animation: sellerFadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.20s forwards; }
-.seller-profile-section.info-personal .seller-profile-field:nth-child(3) { animation: sellerFadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.25s forwards; }
+.seller-profile-section .seller-profile-field:nth-child(1),
+.seller-profile-section .seller-profile-stat-box:nth-child(1) { animation-delay: 0.15s; }
 
-.seller-profile-section.info-business .seller-profile-field:nth-child(1) { animation: sellerFadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.22s forwards; }
-.seller-profile-section.info-business .seller-profile-field:nth-child(2) { animation: sellerFadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.27s forwards; }
+.seller-profile-section .seller-profile-field:nth-child(2),
+.seller-profile-section .seller-profile-stat-box:nth-child(2) { animation-delay: 0.20s; }
 
-.seller-profile-section.info-address .seller-profile-field:nth-child(1) { animation: sellerFadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.30s forwards; }
-.seller-profile-section.info-address .seller-profile-field:nth-child(2) { animation: sellerFadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.35s forwards; }
-.seller-profile-section.info-address .seller-profile-field:nth-child(3) { animation: sellerFadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.40s forwards; }
+.seller-profile-section .seller-profile-field:nth-child(3),
+.seller-profile-section .seller-profile-stat-box:nth-child(3) { animation-delay: 0.25s; }
 
-.seller-profile-section.info-verification .seller-profile-field:nth-child(1) { animation: sellerFadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.38s forwards; }
-.seller-profile-section.info-verification .seller-profile-field:nth-child(2) { animation: sellerFadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.43s forwards; }
-.seller-profile-section.info-verification .seller-profile-field:nth-child(3) { animation: sellerFadeInProfileElement 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.48s forwards; }
+.seller-profile-section .seller-profile-field:nth-child(4),
+.seller-profile-section .seller-profile-stat-box:nth-child(4) { animation-delay: 0.30s; }
+
+.seller-profile-section .seller-profile-field:nth-child(5),
+.seller-profile-section .seller-profile-stat-box:nth-child(5) { animation-delay: 0.35s; }
+
+.seller-profile-section .seller-profile-field:nth-child(n+6),
+.seller-profile-section .seller-profile-stat-box:nth-child(n+6) { animation-delay: 0.40s; }
 
 @keyframes sellerFadeInProfileElement {
   from {
