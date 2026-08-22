@@ -6,6 +6,45 @@ import { ResponsiveContainer, BarChart as ReChartsBarChart, Bar, XAxis, YAxis, T
 import './AdminLogin.css'; 
 import { getSafeLocalStorage } from '../../api'; 
 
+const CustomUserTooltip = ({ active, payload }) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    return (
+      <div style={{
+        background: '#111',
+        border: '1px solid #00ff80',
+        padding: '10px 14px',
+        borderRadius: '6px',
+        fontFamily: 'monospace',
+        color: '#fff',
+        fontSize: '0.85rem',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.6)'
+      }}>
+        <p style={{ margin: '0 0 6px 0', color: '#00ff80', fontWeight: 'bold', fontSize: '0.9rem', borderBottom: '1px solid #333', paddingBottom: '3px' }}>
+          {data.name.toUpperCase()} STATUS
+        </p>
+        <p style={{ margin: '4px 0', display: 'flex', justifyContent: 'space-between', gap: '15px' }}>
+          <span style={{ color: '#aaa' }}>Total Count:</span>
+          <strong style={{ color: '#fff' }}>{data.count}</strong>
+        </p>
+        <p style={{ margin: '4px 0', display: 'flex', justifyContent: 'space-between', gap: '15px' }}>
+          <span style={{ color: '#aaa' }}>Active:</span>
+          <strong style={{ color: '#00ff80' }}>{data.active}</strong>
+        </p>
+        <p style={{ margin: '4px 0', display: 'flex', justifyContent: 'space-between', gap: '15px' }}>
+          <span style={{ color: '#aaa' }}>Pending:</span>
+          <strong style={{ color: '#f59e0b' }}>{data.pending}</strong>
+        </p>
+        <p style={{ margin: '4px 0', display: 'flex', justifyContent: 'space-between', gap: '15px' }}>
+          <span style={{ color: '#aaa' }}>Deactivated:</span>
+          <strong style={{ color: '#ff3366' }}>{data.deactivated}</strong>
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
+
 const CustomTypeTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
@@ -237,15 +276,30 @@ const AdminDashboard = () => {
   };
 
   const getUserRoleData = () => {
-    const roles = { Buyer: 0, Seller: 0 };
+    const roles = {
+      'Buyer': { name: 'Buyer', count: 0, active: 0, pending: 0, deactivated: 0, color: '#00d2ff' },
+      'Seller': { name: 'Seller', count: 0, active: 0, pending: 0, deactivated: 0, color: '#00ff80' },
+      'Admin': { name: 'Admin', count: 0, active: 0, pending: 0, deactivated: 0, color: '#a855f7' }
+    };
     usersList.forEach(u => {
-      if (u.role === 'buyer') roles.Buyer++;
-      else if (u.role === 'seller') roles.Seller++;
+      let roleKey = null;
+      if (u.role === 'buyer') roleKey = 'Buyer';
+      else if (u.role === 'seller') roleKey = 'Seller';
+      else if (u.role === 'admin') roleKey = 'Admin';
+
+      if (roleKey) {
+        roles[roleKey].count++;
+        const status = (u.status || 'active').toLowerCase();
+        if (status === 'pending') {
+          roles[roleKey].pending++;
+        } else if (status === 'deactivated' || status === 'suspended' || status === 'inactive') {
+          roles[roleKey].deactivated++;
+        } else {
+          roles[roleKey].active++;
+        }
+      }
     });
-    return [
-      { name: 'Buyers', count: roles.Buyer, color: '#00d2ff' },
-      { name: 'Sellers', count: roles.Seller, color: '#e74c3c' }
-    ];
+    return Object.values(roles);
   };
 
   const filteredLogs = logs.filter(log => {
@@ -358,11 +412,8 @@ const AdminDashboard = () => {
                   <ReChartsBarChart data={getUserRoleData()}>
                     <XAxis dataKey="name" stroke="#888" fontSize={11} tickLine={false} />
                     <YAxis stroke="#888" fontSize={11} tickLine={false} />
-                    <Tooltip 
-                      contentStyle={{ background: '#222', border: '1px solid #444', color: '#fff', fontSize: '0.85rem', fontFamily: 'monospace' }}
-                      itemStyle={{ color: '#00ff80' }}
-                    />
-                    <Bar dataKey="count" radius={[4, 4, 0, 0]}>
+                    <Tooltip content={<CustomUserTooltip />} />
+                    <Bar dataKey="count" radius={[4, 4, 0, 0]} style={{ cursor: 'pointer' }}>
                       {getUserRoleData().map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
