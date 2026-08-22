@@ -51,7 +51,7 @@ const Footer = () => {
 
           {/* Copyright details */}
           <div className="footer-copyright-text">
-            © 2026 HomeFind, a LuxeBlue Company. All properties are subject to prior sale, change or withdrawal without notice. <Link to="/privacy">Privacy Policy</Link> | <Link to="/terms">Terms of Service</Link>
+            © 2026 HomeFind. All properties are subject to prior sale, change or withdrawal without notice. <Link to="/privacy">Privacy Policy</Link> | <Link to="/terms">Terms of Service</Link>
           </div>
 
           {/* Social Icons */}

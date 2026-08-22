@@ -1,4 +1,4 @@
-﻿import React, { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import './Splash.css';
 import '../components/CinematicPan.css';
 
@@ -15,7 +15,7 @@ function App() {
     <div className="splash-container">
       <div className="cinematic-pan-bg"></div>
       <div className="splash-overlay">
-        <h1 className="splash-logo">LuxeBlue</h1>
+        <h1 className="splash-logo">HomeFind</h1>
       </div>
     </div>
   );

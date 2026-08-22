@@ -577,7 +577,7 @@ const BuyerRegister = () => {
               <h1>
                 {!role ? 'CREATE ACCOUNT' : role === 'seller' ? 'SELLER REGISTRATION' : 'BUYER REGISTRATION'}
               </h1>
-              <p>Join LuxeBlue to discover and list premium properties.</p>
+              <p>Join HomeFind to discover and list premium properties.</p>
             </div>
 
             {error && (
