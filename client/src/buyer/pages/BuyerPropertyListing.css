@@ -101,8 +101,39 @@
 
 @media (max-width: 768px) {
   .listing-controls {
-    flex-direction: column;
-    align-items: stretch;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+    padding: 12px !important;
+  }
+
+  .listing-controls > div,
+  .listing-controls form > div {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    gap: 10px !important;
+  }
+
+  .listing-controls button {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  .primary-search {
+    width: 100% !important;
+  }
+
+  /* Stack advanced filters in 1 column */
+  .filter-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  /* Make filter pills wrap cleanly */
+  .advanced-filters div {
+    flex-wrap: wrap !important;
+    gap: 10px !important;
   }
 }
 
