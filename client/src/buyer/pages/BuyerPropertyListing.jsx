@@ -42,6 +42,13 @@ const BuyerPropertyListing = () => {
   const [userBookings, setUserBookings] = useState([]);
   const [userEnquiries, setUserEnquiries] = useState([]);
   const [isListening, setIsListening] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const [userFavorites, setUserFavorites] = useState(() => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -567,8 +574,8 @@ const BuyerPropertyListing = () => {
               }
             `}</style>
             {searchMode === 'standard' ? (
-              <div style={{ display: 'flex', gap: '10px', flex: 1, alignItems: 'center' }}>
-                <div className="search-bar primary-search">
+              <div style={isMobile ? { display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' } : { display: 'flex', gap: '10px', flex: 1, alignItems: 'center' }}>
+                <div className="search-bar primary-search" style={isMobile ? { width: '100%' } : {}}>
                   <Search size={20} className="text-muted" />
                   <input 
                     type="text" 
@@ -576,6 +583,7 @@ const BuyerPropertyListing = () => {
                     placeholder="Search by property name..." 
                     value={filters.title}
                     onChange={handleFilterChange}
+                    style={isMobile ? { width: '100%' } : {}}
                   />
                 </div>
                 <button 
@@ -585,60 +593,67 @@ const BuyerPropertyListing = () => {
                     background: isListening ? '#ef4444' : '#f1f5f9',
                     border: '1px solid #cbd5e1',
                     borderRadius: '8px',
-                    padding: '8px 15px',
+                    padding: '10px 15px',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
+                    justifyContent: 'center',
                     gap: '5px',
                     color: isListening ? '#fff' : '#475569',
                     fontWeight: 'bold',
                     fontSize: '0.85rem',
+                    width: isMobile ? '100%' : 'auto',
                     animation: isListening ? 'pulseListening 1.5s infinite' : 'none'
                   }}
                 >
                   🎙️ {isListening ? 'Listening...' : 'Voice Search'}
                 </button>
               </div>
-            ) : (
+             ) : (
               <form onSubmit={handleAISearchSubmit} style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                <div style={{ display: 'flex', gap: '10px', width: '100%', alignItems: 'center' }}>
-                  <div className="search-bar primary-search" style={{ flex: 1 }}>
+                <div style={isMobile ? { display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' } : { display: 'flex', gap: '10px', width: '100%', alignItems: 'center' }}>
+                  <div className="search-bar primary-search" style={isMobile ? { width: '100%' } : { flex: 1 }}>
                     <Search size={20} className="text-muted" />
                     <input 
                       type="text" 
                       placeholder="Ask AI search (e.g. 'I want a 3 BHK Villa in Bangalore under 90 Lakhs')..." 
                       value={aiSearchPrompt}
                       onChange={e => setAiSearchPrompt(e.target.value)}
+                      style={isMobile ? { width: '100%' } : {}}
                     />
                   </div>
-                  <button 
-                    onClick={handleVoiceSearch} 
-                    type="button"
-                    style={{
-                      background: isListening ? '#ef4444' : '#f1f5f9',
-                      border: '1px solid #cbd5e1',
-                      borderRadius: '8px',
-                      padding: '10px 15px',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '5px',
-                      color: isListening ? '#fff' : '#475569',
-                      fontWeight: 'bold',
-                      fontSize: '0.85rem',
-                      animation: isListening ? 'pulseListening 1.5s infinite' : 'none'
-                    }}
-                  >
-                    🎙️ {isListening ? 'Listening...' : 'Voice Search'}
-                  </button>
-                  <button type="submit" className="sd-btn-primary" style={{ background: '#3b82f6', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
-                    Parse
-                  </button>
-                  {parsedAiFilters && (
-                    <button type="button" onClick={handleClearAISearch} className="sd-btn-primary" style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
-                      Clear
+                  <div style={isMobile ? { display: 'flex', gap: '8px', width: '100%' } : { display: 'flex', gap: '10px', alignItems: 'center' }}>
+                    <button 
+                      onClick={handleVoiceSearch} 
+                      type="button"
+                      style={{
+                        background: isListening ? '#ef4444' : '#f1f5f9',
+                        border: '1px solid #cbd5e1',
+                        borderRadius: '8px',
+                        padding: '10px 15px',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '5px',
+                        color: isListening ? '#fff' : '#475569',
+                        fontWeight: 'bold',
+                        fontSize: '0.85rem',
+                        flex: isMobile ? 1 : 'none',
+                        animation: isListening ? 'pulseListening 1.5s infinite' : 'none'
+                      }}
+                    >
+                      🎙️ {isListening ? 'Listening...' : 'Voice Search'}
                     </button>
-                  )}
+                    <button type="submit" className="sd-btn-primary" style={{ background: '#3b82f6', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', flex: isMobile ? 1 : 'none' }}>
+                      Parse
+                    </button>
+                    {parsedAiFilters && (
+                      <button type="button" onClick={handleClearAISearch} className="sd-btn-primary" style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', flex: isMobile ? 1 : 'none' }}>
+                        Clear
+                      </button>
+                    )}
+                  </div>
                 </div>
                 {parsedAiFilters && (
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', padding: '10px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '0.85rem' }}>
@@ -719,7 +734,7 @@ const BuyerPropertyListing = () => {
               {/* Dynamic Filter Grid based on selected type */}
               {filters.type === 'PG' ? (
                 /* PG Specific Filters */
-                <div className="filter-grid">
+                <div className="filter-grid" style={isMobile ? { display: 'grid', gridTemplateColumns: '1fr', gap: '12px' } : {}}>
                   <div className="input-group">
                     <label><MapPin size={14} /> Location</label>
                     <input 
@@ -767,7 +782,7 @@ const BuyerPropertyListing = () => {
                 </div>
               ) : filters.type === 'Land' ? (
                 /* Land Specific Filters */
-                <div className="filter-grid">
+                <div className="filter-grid" style={isMobile ? { display: 'grid', gridTemplateColumns: '1fr', gap: '12px' } : {}}>
                   <div className="input-group">
                     <label><MapPin size={14} /> Location</label>
                     <input 
@@ -810,7 +825,7 @@ const BuyerPropertyListing = () => {
                 </div>
               ) : (
                 /* General / Default Filters (House, Villa, Penthouse, etc.) */
-                <div className="filter-grid">
+                <div className="filter-grid" style={isMobile ? { display: 'grid', gridTemplateColumns: '1fr', gap: '12px' } : {}}>
                   <div className="input-group">
                     <label><MapPin size={14} /> Location</label>
                     <input 

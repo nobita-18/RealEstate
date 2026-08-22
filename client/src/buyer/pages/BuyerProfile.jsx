@@ -16,6 +16,13 @@ const BuyerProfile = () => {
   const [myEnquiries, setMyEnquiries] = useState([]);
   const [myBookings, setMyBookings] = useState([]);
   const [activeTab, setActiveTab] = useState('details'); // 'details', 'favorites', 'enquiries', 'bookings', 'settings'
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   
   // Settings forms
   const [passwordData, setPasswordData] = useState({ oldPassword: '', newPassword: '', confirmPassword: '' });
@@ -259,10 +266,48 @@ const BuyerProfile = () => {
         }
       `}</style>
       {/* Top Header Card */}
-      <div className="profile-header glass">
-        <div className="profile-cover"></div>
-        <div className="profile-header-content">
-          <div className="profile-avatar-wrapper">
+      <div className="profile-header glass" style={isMobile ? {
+        display: 'flex',
+        flexDirection: 'column',
+        background: '#ffffff',
+        border: '1px solid #e2e8f0',
+        borderRadius: '12px',
+        marginBottom: '1.5rem',
+        overflow: 'visible',
+        padding: '0'
+      } : {}}>
+        <div className="profile-cover" style={isMobile ? {
+          height: '80px',
+          background: 'linear-gradient(135deg, #38bdf8, #0284c7)',
+          width: '100%',
+          margin: '0',
+          borderRadius: '12px 12px 0 0'
+        } : {}}></div>
+        <div className="profile-header-content" style={isMobile ? {
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          textAlign: 'center',
+          marginTop: '0',
+          padding: '16px',
+          position: 'relative',
+          zIndex: 10,
+          width: '100%',
+          boxSizing: 'border-box',
+          gap: '12px'
+        } : {}}>
+          <div className="profile-avatar-wrapper" style={isMobile ? {
+            width: '90px',
+            height: '90px',
+            border: '3px solid #ffffff',
+            background: '#f1f5f9',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+            marginTop: '-45px',
+            marginBottom: '4px',
+            borderRadius: '50%',
+            position: 'relative',
+            overflow: 'hidden'
+          } : {}}>
             {user.photo ? (
               <img 
                 src={getAssetUrl(user.photo)} 
@@ -284,23 +329,34 @@ const BuyerProfile = () => {
               </div>
             )}
           </div>
-          <div className="profile-titles">
-            <h1>{user.name}</h1>
-            <span className={`role-badge ${user.role || 'buyer'}`}>{user.role || 'Buyer'}</span>
+          <div className="profile-titles" style={isMobile ? { marginBottom: '12px', width: '100%' } : {}}>
+            <h1 style={isMobile ? { fontSize: '1.4rem', color: '#0f172a', marginBottom: '4px' } : {}}>{user.name}</h1>
+            <span className={`role-badge ${user.role || 'buyer'}`} style={isMobile ? { display: 'inline-block', padding: '4px 12px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: '700' } : {}}>{user.role || 'Buyer'}</span>
             <p style={{ margin: '5px 0 0 0', color: 'var(--text-light)', fontSize: '0.9rem' }}>Member Since: {user.memberSince || 'N/A'}</p>
           </div>
           
-          <div className="profile-actions">
+          <div className="profile-actions" style={isMobile ? { width: '100%', marginTop: '5px' } : {}}>
             {isEditing ? (
-              <button className="btn btn-primary" onClick={handleSave}>
+              <button className="btn btn-primary" onClick={handleSave} style={isMobile ? { width: '100%', justifyContent: 'center', borderRadius: '30px' } : {}}>
                 <Check size={16} /> Save Changes
               </button>
             ) : (
-              <div style={{ display: 'flex', gap: '1rem' }}>
-                <button className="btn btn-outline" onClick={() => setIsEditing(true)}>
+              <div style={isMobile ? {
+                display: 'flex',
+                flexDirection: 'column',
+                width: '100%',
+                gap: '8px'
+              } : { display: 'flex', gap: '1rem' }}>
+                <button className="btn btn-outline" onClick={() => setIsEditing(true)} style={isMobile ? { width: '100%', justifyContent: 'center', borderRadius: '30px' } : {}}>
                   <Edit2 size={16} /> Edit Profile
                 </button>
-                <button className="btn btn-outline" onClick={handleLogout} style={{ borderColor: '#ef4444', color: '#ef4444' }}>
+                <button className="btn btn-outline" onClick={handleLogout} style={isMobile ? {
+                  width: '100%',
+                  justifyContent: 'center',
+                  borderRadius: '30px',
+                  borderColor: '#ef4444',
+                  color: '#ef4444'
+                } : { borderColor: '#ef4444', color: '#ef4444' }}>
                   <LogOut size={16} /> Logout
                 </button>
               </div>
@@ -312,20 +368,32 @@ const BuyerProfile = () => {
       {message && <div className={`profile-message ${message.includes('Error') ? 'error' : 'success'}`}>{message}</div>}
 
       {/* Tabs navigation options */}
-      <div className="profile-tabs-wrapper glass">
-        <button className={`profile-tab-btn ${activeTab === 'details' ? 'active' : ''}`} onClick={() => setActiveTab('details')}>
+      <div className="profile-tabs-wrapper glass" style={isMobile ? {
+        display: 'flex',
+        flexDirection: 'row',
+        flexWrap: 'nowrap',
+        overflowX: 'auto',
+        WebkitOverflowScrolling: 'touch',
+        gap: '8px',
+        padding: '8px 12px',
+        borderRadius: '12px',
+        background: '#ffffff',
+        border: '1px solid #e2e8f0',
+        marginBottom: '1rem'
+      } : {}}>
+        <button className={`profile-tab-btn ${activeTab === 'details' ? 'active' : ''}`} onClick={() => setActiveTab('details')} style={isMobile ? { flexShrink: 0, fontSize: '0.8rem', padding: '8px 12px', borderRadius: '8px' } : {}}>
           <User size={16} /> Profile Details
         </button>
-        <button className={`profile-tab-btn ${activeTab === 'favorites' ? 'active' : ''}`} onClick={() => setActiveTab('favorites')}>
+        <button className={`profile-tab-btn ${activeTab === 'favorites' ? 'active' : ''}`} onClick={() => setActiveTab('favorites')} style={isMobile ? { flexShrink: 0, fontSize: '0.8rem', padding: '8px 12px', borderRadius: '8px' } : {}}>
           <Heart size={16} /> Favorite Properties
         </button>
-        <button className={`profile-tab-btn ${activeTab === 'enquiries' ? 'active' : ''}`} onClick={() => setActiveTab('enquiries')}>
+        <button className={`profile-tab-btn ${activeTab === 'enquiries' ? 'active' : ''}`} onClick={() => setActiveTab('enquiries')} style={isMobile ? { flexShrink: 0, fontSize: '0.8rem', padding: '8px 12px', borderRadius: '8px' } : {}}>
           <MessageSquare size={16} /> Enquiries Sent
         </button>
-        <button className={`profile-tab-btn ${activeTab === 'bookings' ? 'active' : ''}`} onClick={() => setActiveTab('bookings')}>
+        <button className={`profile-tab-btn ${activeTab === 'bookings' ? 'active' : ''}`} onClick={() => setActiveTab('bookings')} style={isMobile ? { flexShrink: 0, fontSize: '0.8rem', padding: '8px 12px', borderRadius: '8px' } : {}}>
           <Calendar size={16} /> Bookings & Visits
         </button>
-        <button className={`profile-tab-btn ${activeTab === 'settings' ? 'active' : ''}`} onClick={() => setActiveTab('settings')}>
+        <button className={`profile-tab-btn ${activeTab === 'settings' ? 'active' : ''}`} onClick={() => setActiveTab('settings')} style={isMobile ? { flexShrink: 0, fontSize: '0.8rem', padding: '8px 12px', borderRadius: '8px' } : {}}>
           <Settings size={16} /> Account Settings
         </button>
       </div>
