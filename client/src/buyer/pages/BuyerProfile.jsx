@@ -181,8 +181,11 @@ const BuyerProfile = () => {
     <div className="profile-page page-container fade-in">
       <style>{`
         @media (max-width: 768px) {
+          .profile-page {
+            padding-top: 90px !important;
+          }
           .profile-header {
-            overflow: visible !important;
+            overflow: hidden !important;
             display: flex !important;
             flex-direction: column !important;
             background: #ffffff !important;
@@ -191,17 +194,18 @@ const BuyerProfile = () => {
             padding: 0 !important;
           }
           .profile-cover {
-            height: 80px !important;
+            height: 90px !important;
             background: linear-gradient(135deg, #38bdf8, #0284c7) !important;
             width: 100% !important;
             margin: 0 !important;
+            border-radius: 16px 16px 0 0 !important;
           }
           .profile-header-content {
             flex-direction: column !important;
             align-items: center !important;
             text-align: center !important;
             margin-top: 0 !important;
-            padding: 16px !important;
+            padding: 20px 16px !important;
             position: relative !important;
             z-index: 10 !important;
             width: 100% !important;
@@ -213,9 +217,14 @@ const BuyerProfile = () => {
             height: 90px !important;
             border: 3px solid #ffffff !important;
             background: #f1f5f9 !important;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
-            margin-top: -45px !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+            margin-top: -55px !important;
             margin-bottom: 4px !important;
+            border-radius: 50% !important;
+            overflow: hidden !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
           }
           .profile-titles {
             margin-bottom: 12px !important;
