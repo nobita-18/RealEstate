@@ -357,11 +357,29 @@ const AdminDashboard = () => {
                   <span>📌 {selectedTypeData.name.toUpperCase()} STATUS BREAKDOWN</span>
                   <span style={{ color: '#aaa', cursor: 'pointer', fontSize: '0.8rem' }} onClick={() => setSelectedTypeData(null)}>CLOSE [X]</span>
                 </h4>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: '10px', fontSize: '0.85rem' }}>
-                  <div>Total Count: <strong style={{ color: '#fff', fontSize: '1rem' }}>{selectedTypeData.count}</strong></div>
-                  <div>Active: <strong style={{ color: '#00ff80', fontSize: '1rem' }}>{selectedTypeData.accepted}</strong></div>
-                  <div>Pending: <strong style={{ color: '#f59e0b', fontSize: '1rem' }}>{selectedTypeData.pending}</strong></div>
-                  <div>Rejected: <strong style={{ color: '#ff3366', fontSize: '1rem' }}>{selectedTypeData.rejected}</strong></div>
+                <div style={{
+                  display: 'flex',
+                  flexDirection: isMobile ? 'column' : 'row',
+                  gap: isMobile ? '12px' : '24px',
+                  fontSize: '0.9rem',
+                  marginTop: '10px'
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: isMobile ? '1px dashed #333' : 'none', paddingBottom: isMobile ? '4px' : '0', flex: 1 }}>
+                    <span style={{ color: '#aaa' }}>Total Count:</span>
+                    <strong style={{ color: '#fff', fontSize: '1rem', marginLeft: '6px' }}>{selectedTypeData.count}</strong>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: isMobile ? '1px dashed #333' : 'none', paddingBottom: isMobile ? '4px' : '0', flex: 1 }}>
+                    <span style={{ color: '#aaa' }}>Active (Approved):</span>
+                    <strong style={{ color: '#00ff80', fontSize: '1rem', marginLeft: '6px' }}>{selectedTypeData.accepted}</strong>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: isMobile ? '1px dashed #333' : 'none', paddingBottom: isMobile ? '4px' : '0', flex: 1 }}>
+                    <span style={{ color: '#aaa' }}>Pending Review:</span>
+                    <strong style={{ color: '#f59e0b', fontSize: '1rem', marginLeft: '6px' }}>{selectedTypeData.pending}</strong>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: isMobile ? '1px dashed #333' : 'none', paddingBottom: isMobile ? '4px' : '0', flex: 1 }}>
+                    <span style={{ color: '#aaa' }}>Rejected:</span>
+                    <strong style={{ color: '#ff3366', fontSize: '1rem', marginLeft: '6px' }}>{selectedTypeData.rejected}</strong>
+                  </div>
                 </div>
               </div>
             ) : (
