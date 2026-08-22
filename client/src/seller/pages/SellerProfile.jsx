@@ -1235,7 +1235,12 @@ const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfi
         <div className="seller-profile-header">
           <div className="seller-profile-header-user">
             <div className="seller-profile-header-avatar">
-               <img src={getAssetUrl(formData.photo) || '/images/default/default-avatar.jpg'} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+               <img 
+                 src={getAssetUrl(formData.photo) || '/images/default/default-avatar.jpg'} 
+                 alt="Avatar" 
+                 style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                 onError={(e) => { e.target.onerror = null; e.target.src = '/images/default/default-avatar.jpg'; }}
+               />
             </div>
             <div>
               <h1 style={{ color: 'var(--sd-text-main)', margin: '0 0 5px 0', fontSize: '1.8rem', fontWeight: 700 }}>{formData.name}</h1>
@@ -1404,7 +1409,12 @@ const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfi
         <div className="seller-profile-header gold">
           <div className="seller-profile-header-user">
             <div className="seller-profile-header-avatar gold-border">
-               <img src={getAssetUrl(formData.photo) || '/images/default/default-avatar.jpg'} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+               <img 
+                 src={getAssetUrl(formData.photo) || '/images/default/default-avatar.jpg'} 
+                 alt="Avatar" 
+                 style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                 onError={(e) => { e.target.onerror = null; e.target.src = '/images/default/default-avatar.jpg'; }}
+               />
             </div>
             <div>
               <h1 style={{ color: '#ffdf80', margin: '0 0 5px 0', fontSize: '1.8rem' }}>{formData.name}</h1>

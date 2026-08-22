@@ -231,7 +231,7 @@ const Navbar = ({ role = 'buyer' }) => {
                       className="estify-nav-avatar" 
                       onError={(e) => {
                         e.target.onerror = null; 
-                        e.target.src = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+                        e.target.src = "/images/default/default-avatar.jpg";
                       }} 
                     />
                   ) : (
