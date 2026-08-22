@@ -4,8 +4,46 @@ import axios from 'axios';
 import { ShieldCheck, Activity, CheckCircle, XCircle, Trash2, Users, Eye, EyeOff, Info, UserCheck, UserX, X, BarChart } from 'lucide-react';
 import { ResponsiveContainer, BarChart as ReChartsBarChart, Bar, XAxis, YAxis, Tooltip, Cell } from 'recharts';
 import './AdminLogin.css'; 
+import { getSafeLocalStorage } from '../../api'; 
 
-import { getSafeLocalStorage } from '../../api';
+const CustomTypeTooltip = ({ active, payload }) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    return (
+      <div style={{
+        background: '#111',
+        border: '1px solid #00ff80',
+        padding: '10px 14px',
+        borderRadius: '6px',
+        fontFamily: 'monospace',
+        color: '#fff',
+        fontSize: '0.85rem',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.6)'
+      }}>
+        <p style={{ margin: '0 0 6px 0', color: '#00ff80', fontWeight: 'bold', fontSize: '0.9rem', borderBottom: '1px solid #333', paddingBottom: '3px' }}>
+          {data.name.toUpperCase()}
+        </p>
+        <p style={{ margin: '4px 0', display: 'flex', justifyContent: 'space-between', gap: '15px' }}>
+          <span style={{ color: '#aaa' }}>Total Count:</span>
+          <strong style={{ color: '#fff' }}>{data.count}</strong>
+        </p>
+        <p style={{ margin: '4px 0', display: 'flex', justifyContent: 'space-between', gap: '15px' }}>
+          <span style={{ color: '#aaa' }}>Active (Approved):</span>
+          <strong style={{ color: '#00ff80' }}>{data.accepted}</strong>
+        </p>
+        <p style={{ margin: '4px 0', display: 'flex', justifyContent: 'space-between', gap: '15px' }}>
+          <span style={{ color: '#aaa' }}>Pending Review:</span>
+          <strong style={{ color: '#f59e0b' }}>{data.pending}</strong>
+        </p>
+        <p style={{ margin: '4px 0', display: 'flex', justifyContent: 'space-between', gap: '15px' }}>
+          <span style={{ color: '#aaa' }}>Rejected:</span>
+          <strong style={{ color: '#ff3366' }}>{data.rejected}</strong>
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -288,50 +326,14 @@ const AdminDashboard = () => {
               📊 PROPERTIES BY TYPE
             </h3>
             
-            {/* Interactive Type Pills */}
-            <div className="admin-buttons-scroll" style={{ display: 'flex', gap: '8px', flexWrap: 'nowrap', overflowX: 'auto', WebkitOverflowScrolling: 'touch', marginBottom: '15px', paddingBottom: '5px' }}>
-              {getPropertyTypeData().map(typeItem => (
-                <button
-                  key={typeItem.name}
-                  onClick={() => setSelectedTypeData(typeItem)}
-                  style={{
-                    background: selectedTypeData?.name === typeItem.name ? '#00ff80' : 'rgba(0,0,0,0.3)',
-                    color: selectedTypeData?.name === typeItem.name ? 'black' : '#ccc',
-                    border: '1px solid #333',
-                    padding: '6px 12px',
-                    borderRadius: '20px',
-                    cursor: 'pointer',
-                    fontSize: '0.8rem',
-                    fontFamily: 'monospace',
-                    fontWeight: 'bold',
-                    transition: 'all 0.2s',
-                    whiteSpace: 'nowrap'
-                  }}
-                >
-                  {typeItem.name.toUpperCase()} ({typeItem.count})
-                </button>
-              ))}
-            </div>
-
             <div className="admin-scrollable-chart" style={{ overflowX: 'auto', width: '100%', WebkitOverflowScrolling: 'touch', paddingBottom: '10px' }}>
               <div style={{ minWidth: isMobile ? '550px' : '100%', height: '250px' }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <ReChartsBarChart data={getPropertyTypeData()}>
                     <XAxis dataKey="name" stroke="#888" fontSize={11} tickLine={false} />
                     <YAxis stroke="#888" fontSize={11} tickLine={false} />
-                    <Tooltip 
-                      contentStyle={{ background: '#222', border: '1px solid #444', color: '#fff', fontSize: '0.85rem', fontFamily: 'monospace' }}
-                      itemStyle={{ color: '#00ff80' }}
-                    />
-                    <Bar 
-                      dataKey="count" 
-                      fill="#00ff80" 
-                      radius={[4, 4, 0, 0]}
-                      onClick={(data) => {
-                        if (data) setSelectedTypeData(data);
-                      }}
-                      style={{ cursor: 'pointer' }}
-                    >
+                    <Tooltip content={<CustomTypeTooltip />} />
+                    <Bar dataKey="count" fill="#00ff80" radius={[4, 4, 0, 0]} style={{ cursor: 'pointer' }}>
                       {getPropertyTypeData().map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={['#00ff80', '#00d2ff', '#ffdf80', '#ff3366', '#a855f7'][index % 5]} />
                       ))}
@@ -340,62 +342,6 @@ const AdminDashboard = () => {
                 </ResponsiveContainer>
               </div>
             </div>
-
-            {/* Selected Property Status Breakdown Detail */}
-            {selectedTypeData ? (
-              <div style={{
-                marginTop: '15px',
-                padding: '15px 20px',
-                background: 'rgba(0, 0, 0, 0.4)',
-                border: '1px solid #00ff80',
-                borderRadius: '8px',
-                fontFamily: 'monospace',
-                color: '#fff',
-                textAlign: 'left'
-              }}>
-                <h4 style={{ color: '#00ff80', margin: '0 0 10px 0', fontSize: '0.9rem', textTransform: 'uppercase', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span>📌 {selectedTypeData.name.toUpperCase()} STATUS BREAKDOWN</span>
-                  <span style={{ color: '#aaa', cursor: 'pointer', fontSize: '0.8rem' }} onClick={() => setSelectedTypeData(null)}>CLOSE [X]</span>
-                </h4>
-                <div style={{
-                  display: 'flex',
-                  flexDirection: isMobile ? 'column' : 'row',
-                  gap: isMobile ? '12px' : '24px',
-                  fontSize: '0.9rem',
-                  marginTop: '10px'
-                }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: isMobile ? '1px dashed #333' : 'none', paddingBottom: isMobile ? '4px' : '0', flex: 1 }}>
-                    <span style={{ color: '#aaa' }}>Total Count:</span>
-                    <strong style={{ color: '#fff', fontSize: '1rem', marginLeft: '6px' }}>{selectedTypeData.count}</strong>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: isMobile ? '1px dashed #333' : 'none', paddingBottom: isMobile ? '4px' : '0', flex: 1 }}>
-                    <span style={{ color: '#aaa' }}>Active (Approved):</span>
-                    <strong style={{ color: '#00ff80', fontSize: '1rem', marginLeft: '6px' }}>{selectedTypeData.accepted}</strong>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: isMobile ? '1px dashed #333' : 'none', paddingBottom: isMobile ? '4px' : '0', flex: 1 }}>
-                    <span style={{ color: '#aaa' }}>Pending Review:</span>
-                    <strong style={{ color: '#f59e0b', fontSize: '1rem', marginLeft: '6px' }}>{selectedTypeData.pending}</strong>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: isMobile ? '1px dashed #333' : 'none', paddingBottom: isMobile ? '4px' : '0', flex: 1 }}>
-                    <span style={{ color: '#aaa' }}>Rejected:</span>
-                    <strong style={{ color: '#ff3366', fontSize: '1rem', marginLeft: '6px' }}>{selectedTypeData.rejected}</strong>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div style={{
-                marginTop: '15px',
-                padding: '10px',
-                textAlign: 'center',
-                color: '#888',
-                fontSize: '0.8rem',
-                fontFamily: 'monospace',
-                border: '1px dashed #444',
-                borderRadius: '8px'
-              }}>
-                [ Click any type button or bar above to view status details ]
-              </div>
-            )}
           </div>
 
           {/* Chart 2: User Node Distribution */}
