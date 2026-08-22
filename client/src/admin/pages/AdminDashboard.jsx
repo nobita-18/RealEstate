@@ -263,56 +263,75 @@ const AdminDashboard = () => {
         </div>
 
         {/* SYSTEM ANALYTICS & DIAGNOSTICS */}
-        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(450px, 1fr))', gap: '20px', marginTop: '20px' }}>
+        <div className="admin-scrollable-chart" style={{
+          display: 'flex',
+          gap: '20px',
+          marginTop: '20px',
+          overflowX: 'auto',
+          WebkitOverflowScrolling: 'touch',
+          flexWrap: 'nowrap',
+          width: '100%',
+          paddingBottom: '15px'
+        }}>
           {/* Chart 1: Properties by Type */}
-          <div style={{ padding: '25px', border: '1px solid #333', background: 'rgba(0,0,0,0.5)', borderRadius: '12px' }}>
+          <div style={{
+            flex: isMobile ? '0 0 90%' : '1 1 50%',
+            padding: '25px',
+            border: '1px solid #333',
+            background: 'rgba(0,0,0,0.5)',
+            borderRadius: '12px',
+            boxSizing: 'border-box'
+          }}>
             <h3 style={{ color: '#00ff80', fontFamily: 'monospace', fontSize: '1.1rem', margin: '0 0 20px 0', borderBottom: '1px solid #333', paddingBottom: '10px' }}>
               📊 PROPERTIES BY TYPE
             </h3>
-            <div className="admin-scrollable-chart" style={{ overflowX: 'auto', width: '100%', WebkitOverflowScrolling: 'touch', paddingBottom: '10px' }}>
-              <div style={{ minWidth: isMobile ? '550px' : '100%', height: '250px' }}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <ReChartsBarChart data={getPropertyTypeData()}>
-                    <XAxis dataKey="name" stroke="#888" fontSize={11} tickLine={false} />
-                    <YAxis stroke="#888" fontSize={11} tickLine={false} />
-                    <Tooltip 
-                      contentStyle={{ background: '#222', border: '1px solid #444', color: '#fff', fontSize: '0.85rem', fontFamily: 'monospace' }}
-                      itemStyle={{ color: '#00ff80' }}
-                    />
-                    <Bar dataKey="count" fill="#00ff80" radius={[4, 4, 0, 0]}>
-                      {getPropertyTypeData().map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={['#00ff80', '#00d2ff', '#ffdf80', '#ff3366', '#a855f7'][index % 5]} />
-                      ))}
-                    </Bar>
-                  </ReChartsBarChart>
-                </ResponsiveContainer>
-              </div>
+            <div style={{ width: '100%', height: '250px' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <ReChartsBarChart data={getPropertyTypeData()}>
+                  <XAxis dataKey="name" stroke="#888" fontSize={11} tickLine={false} />
+                  <YAxis stroke="#888" fontSize={11} tickLine={false} />
+                  <Tooltip 
+                    contentStyle={{ background: '#222', border: '1px solid #444', color: '#fff', fontSize: '0.85rem', fontFamily: 'monospace' }}
+                    itemStyle={{ color: '#00ff80' }}
+                  />
+                  <Bar dataKey="count" fill="#00ff80" radius={[4, 4, 0, 0]}>
+                    {getPropertyTypeData().map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={['#00ff80', '#00d2ff', '#ffdf80', '#ff3366', '#a855f7'][index % 5]} />
+                    ))}
+                  </Bar>
+                </ReChartsBarChart>
+              </ResponsiveContainer>
             </div>
           </div>
 
           {/* Chart 2: User Node Distribution */}
-          <div style={{ padding: '25px', border: '1px solid #333', background: 'rgba(0,0,0,0.5)', borderRadius: '12px' }}>
+          <div style={{
+            flex: isMobile ? '0 0 90%' : '1 1 50%',
+            padding: '25px',
+            border: '1px solid #333',
+            background: 'rgba(0,0,0,0.5)',
+            borderRadius: '12px',
+            boxSizing: 'border-box'
+          }}>
             <h3 style={{ color: '#00ff80', fontFamily: 'monospace', fontSize: '1.1rem', margin: '0 0 20px 0', borderBottom: '1px solid #333', paddingBottom: '10px' }}>
               📊 USER NODE DISTRIBUTION
             </h3>
-            <div className="admin-scrollable-chart" style={{ overflowX: 'auto', width: '100%', WebkitOverflowScrolling: 'touch', paddingBottom: '10px' }}>
-              <div style={{ minWidth: isMobile ? '550px' : '100%', height: '250px' }}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <ReChartsBarChart data={getUserRoleData()}>
-                    <XAxis dataKey="name" stroke="#888" fontSize={11} tickLine={false} />
-                    <YAxis stroke="#888" fontSize={11} tickLine={false} />
-                    <Tooltip 
-                      contentStyle={{ background: '#222', border: '1px solid #444', color: '#fff', fontSize: '0.85rem', fontFamily: 'monospace' }}
-                      itemStyle={{ color: '#00ff80' }}
-                    />
-                    <Bar dataKey="count" radius={[4, 4, 0, 0]}>
-                      {getUserRoleData().map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Bar>
-                  </ReChartsBarChart>
-                </ResponsiveContainer>
-              </div>
+            <div style={{ width: '100%', height: '250px' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <ReChartsBarChart data={getUserRoleData()}>
+                  <XAxis dataKey="name" stroke="#888" fontSize={11} tickLine={false} />
+                  <YAxis stroke="#888" fontSize={11} tickLine={false} />
+                  <Tooltip 
+                    contentStyle={{ background: '#222', border: '1px solid #444', color: '#fff', fontSize: '0.85rem', fontFamily: 'monospace' }}
+                    itemStyle={{ color: '#00ff80' }}
+                  />
+                  <Bar dataKey="count" radius={[4, 4, 0, 0]}>
+                    {getUserRoleData().map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Bar>
+                </ReChartsBarChart>
+              </ResponsiveContainer>
             </div>
           </div>
         </div>
@@ -332,7 +351,7 @@ const AdminDashboard = () => {
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  padding: '20px 25px',
+                  padding: '25px 35px',
                   border: '1px solid #333',
                   background: 'rgba(0,0,0,0.3)',
                   borderRadius: '8px',
@@ -341,8 +360,8 @@ const AdminDashboard = () => {
                   textAlign: isMobile ? 'center' : 'left'
                 }}>
                   <div style={{ textAlign: isMobile ? 'center' : 'left', flex: 1 }}>
-                    <h4 style={{ color: 'white', margin: '0 0 8px 0', fontSize: '1.1rem' }}>{prop.title}</h4>
-                    <p style={{ color: '#aaa', margin: 0, fontSize: '0.9rem' }}>Seller ID: {prop.ownerId} | Location: {prop.location} | Price: ₹{prop.price.toLocaleString('en-IN')}</p>
+                    <h4 style={{ color: 'white', margin: '0 0 8px 0', fontSize: '1.25rem' }}>{prop.title}</h4>
+                    <p style={{ color: '#aaa', margin: 0, fontSize: '1rem' }}>Seller ID: {prop.ownerId} | Location: {prop.location} | Price: ₹{prop.price.toLocaleString('en-IN')}</p>
                   </div>
                   <div className="admin-buttons-scroll" style={{
                     display: 'flex',
