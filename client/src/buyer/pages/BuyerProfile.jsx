@@ -172,6 +172,92 @@ const BuyerProfile = () => {
 
   return (
     <div className="profile-page page-container fade-in">
+      <style>{`
+        @media (max-width: 768px) {
+          .profile-header {
+            overflow: visible !important;
+            display: flex !important;
+            flex-direction: column !important;
+            background: #ffffff !important;
+            border: 1px solid #e2e8f0 !important;
+            margin-bottom: 1.5rem !important;
+            padding: 0 !important;
+          }
+          .profile-cover {
+            height: 80px !important;
+            background: linear-gradient(135deg, #38bdf8, #0284c7) !important;
+            width: 100% !important;
+            margin: 0 !important;
+          }
+          .profile-header-content {
+            flex-direction: column !important;
+            align-items: center !important;
+            text-align: center !important;
+            margin-top: 0 !important;
+            padding: 16px !important;
+            position: relative !important;
+            z-index: 10 !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            gap: 12px !important;
+          }
+          .profile-avatar-wrapper {
+            width: 90px !important;
+            height: 90px !important;
+            border: 3px solid #ffffff !important;
+            background: #f1f5f9 !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+            margin-top: -45px !important;
+            margin-bottom: 4px !important;
+          }
+          .profile-titles {
+            margin-bottom: 12px !important;
+            width: 100% !important;
+          }
+          .profile-titles h1 {
+            font-size: 1.4rem !important;
+            color: #0f172a !important;
+            margin-bottom: 4px !important;
+          }
+          .profile-actions {
+            width: 100% !important;
+            margin-top: 5px !important;
+          }
+          .profile-actions > div {
+            flex-direction: column !important;
+            width: 100% !important;
+            gap: 8px !important;
+          }
+          .profile-actions .btn {
+            width: 100% !important;
+            justify-content: center !important;
+            border-radius: 30px !important;
+          }
+          .profile-section {
+            padding: 1.25rem !important;
+            border-width: 1px !important;
+          }
+          .profile-tabs-wrapper {
+            flex-wrap: nowrap !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+          }
+          .profile-tab-btn {
+            flex-shrink: 0 !important;
+          }
+          .profile-page .profile-section {
+            opacity: 1 !important;
+            transform: none !important;
+            animation: none !important;
+          }
+          .profile-page .profile-section .input-group,
+          .profile-page .profile-section .edit-field {
+            opacity: 1 !important;
+            transform: none !important;
+            animation: none !important;
+          }
+        }
+      `}</style>
       {/* Top Header Card */}
       <div className="profile-header glass">
         <div className="profile-cover"></div>

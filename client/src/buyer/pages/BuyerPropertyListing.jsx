@@ -480,6 +480,38 @@ const BuyerPropertyListing = () => {
 
   return (
     <div className="property-listing page-container fade-in">
+      <style>{`
+        @media (max-width: 768px) {
+          .listing-controls {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 12px !important;
+            padding: 12px !important;
+          }
+          .listing-controls > div,
+          .listing-controls form > div {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            width: 100% !important;
+            gap: 10px !important;
+          }
+          .listing-controls button {
+            width: 100% !important;
+            justify-content: center !important;
+          }
+          .primary-search {
+            width: 100% !important;
+          }
+          .filter-grid {
+            grid-template-columns: 1fr !important;
+            gap: 12px !important;
+          }
+          .advanced-filters div {
+            flex-wrap: wrap !important;
+            gap: 10px !important;
+          }
+        }
+      `}</style>
       <div className="listing-header">
         <h1>{filters.favorites ? 'Your Favorite Properties' : 'Properties for Sale'}</h1>
         <p>{filters.favorites ? 'Manage and view your favorited properties.' : 'Explore our premium collection of verified properties.'}</p>
