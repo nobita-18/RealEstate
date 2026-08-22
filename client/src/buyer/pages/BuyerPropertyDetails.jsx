@@ -186,11 +186,24 @@ const BuyerPropertyDetails = () => {
       <div className="details-grid">
         <div className="details-main">
           <div className="main-image-container" style={{ position: 'relative', width: '100%', height: '450px', background: '#0a0d14', borderRadius: '12px', overflow: 'hidden' }}>
-            <img 
-              src={property.images && property.images.length > 0 ? getAssetUrl(property.images[activeImageIdx]) : ''} 
-              alt={property.title} 
-              style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'all 0.3s ease' }}
-            />
+            {property.images && property.images.map((img, idx) => (
+              <img
+                key={idx}
+                src={getAssetUrl(img)}
+                alt={`${property.title} - ${idx}`}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  opacity: idx === activeImageIdx ? 1 : 0,
+                  transition: 'opacity 0.4s ease-in-out',
+                  zIndex: idx === activeImageIdx ? 1 : 0
+                }}
+              />
+            ))}
             {property.images && property.images.length > 1 && (
               <>
                 <button 

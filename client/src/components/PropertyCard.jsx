@@ -106,7 +106,7 @@ const PropertyCard = ({ property, index = 0, onFavoriteToggle }) => {
   return (
     <div className="estify-prop-card">
       <div className="estify-prop-img-wrapper">
-        <img src={imgUrl} alt={property.title} className="estify-prop-img" />
+        <img src={imgUrl} alt={property.title} className="estify-prop-img" loading="lazy" />
         <div className={`estify-prop-badge ${badgeType}`}>
           {badgeType.toUpperCase()}
         </div>
