@@ -602,6 +602,7 @@
     width: 100% !important;
   }
 
+  .profile-section div[style*="grid-template-columns"],
   .profile-section div[style*="gridTemplateColumns"] {
     grid-template-columns: 1fr !important;
     gap: 20px !important;
@@ -616,6 +617,20 @@
 
   .profile-grid {
     grid-template-columns: 1fr !important;
+  }
+
+  .profile-section {
+    padding: 1.25rem !important;
+    border-width: 1px !important;
+  }
+
+  .profile-header-content {
+    padding: 0 1rem 1.5rem !important;
+    gap: 1rem !important;
+  }
+
+  .profile-header {
+    margin-bottom: 1.5rem !important;
   }
 }
 
