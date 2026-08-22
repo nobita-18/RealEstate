@@ -16,7 +16,12 @@ const BuyerPropertyDetails = () => {
   const [sidebarTab, setSidebarTab] = useState('enquiry'); // 'enquiry' or 'booking'
   const [alreadyBooked, setAlreadyBooked] = useState(false);
   const [bookingStatus, setBookingStatus] = useState('');
-  const [bookingDate, setBookingDate] = useState('');
+  const [bookingDateOnly, setBookingDateOnly] = useState(() => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return tomorrow.toISOString().split('T')[0];
+  });
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState('10:00 AM');
   const [offerPrice, setOfferPrice] = useState('');
   const [bookingSent, setBookingSent] = useState(false);
   const [activeImageIdx, setActiveImageIdx] = useState(0);
@@ -98,6 +103,15 @@ const BuyerPropertyDetails = () => {
     });
   };
 
+  const combineDateAndTime = (dateStr, timeStr) => {
+    if (!dateStr || !timeStr) return '';
+    const [time, modifier] = timeStr.split(' ');
+    let [hours, minutes] = time.split(':');
+    if (hours === '12') hours = '00';
+    if (modifier === 'PM') hours = String(parseInt(hours, 10) + 12);
+    return `${dateStr}T${String(hours).padStart(2, '0')}:${minutes}:00`;
+  };
+
   const handleBooking = async (e) => {
     e.preventDefault();
     const user = JSON.parse(localStorage.getItem('user'));
@@ -105,8 +119,9 @@ const BuyerPropertyDetails = () => {
       await window.customAlert("Please log in to book a site visit!");
       return;
     }
-    if (!bookingDate) {
-      await window.customAlert("Please select a date and time for the visit.");
+    const combinedDate = combineDateAndTime(bookingDateOnly, selectedTimeSlot);
+    if (!combinedDate) {
+      await window.customAlert("Please select a date and time slot for the visit.");
       return;
     }
 
@@ -116,7 +131,7 @@ const BuyerPropertyDetails = () => {
       propertyId: property.id,
       expectedPrice: offerPrice || property.price,
       billingAmount: property.price,
-      date: new Date(bookingDate).toISOString(),
+      date: new Date(combinedDate).toISOString(),
       status: 'Pending'
     }).then((res) => {
       setBookingSent(true);
@@ -558,14 +573,41 @@ const BuyerPropertyDetails = () => {
                       ) : (
                         <form onSubmit={handleBooking} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                           <div>
-                            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '700', color: '#475569', marginBottom: '5px', textAlign: 'left' }}>Preferred Date & Time</label>
+                            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '700', color: '#475569', marginBottom: '5px', textAlign: 'left' }}>Preferred Date</label>
                             <input 
-                              type="datetime-local" 
-                              value={bookingDate} 
-                              onChange={(e) => setBookingDate(e.target.value)}
+                              type="date" 
+                              value={bookingDateOnly} 
+                              onChange={(e) => setBookingDateOnly(e.target.value)}
                               required
-                              style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '0.9rem' }}
+                              style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '0.9rem', marginBottom: '12px' }}
                             />
+                            
+                            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '700', color: '#475569', marginBottom: '5px', textAlign: 'left' }}>Available Time Slots</label>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '5px', marginBottom: '8px' }}>
+                              {["10:00 AM", "11:30 AM", "02:00 PM", "03:30 PM", "05:00 PM"].map((slot) => (
+                                <button
+                                  key={slot}
+                                  type="button"
+                                  onClick={() => setSelectedTimeSlot(slot)}
+                                  style={{
+                                    flex: '1 0 calc(33.33% - 8px)',
+                                    padding: '8px 10px',
+                                    borderRadius: '20px',
+                                    border: '1px solid',
+                                    borderColor: selectedTimeSlot === slot ? '#3b82f6' : '#cbd5e1',
+                                    background: selectedTimeSlot === slot ? '#eff6ff' : '#ffffff',
+                                    color: selectedTimeSlot === slot ? '#1d4ed8' : '#475569',
+                                    fontSize: '0.78rem',
+                                    fontWeight: '700',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s ease',
+                                    textAlign: 'center'
+                                  }}
+                                >
+                                  {slot}
+                                </button>
+                              ))}
+                            </div>
                           </div>
                           <div>
                             <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: '700', color: '#475569', marginBottom: '5px', textAlign: 'left' }}>Propose Offer Price ($)</label>
