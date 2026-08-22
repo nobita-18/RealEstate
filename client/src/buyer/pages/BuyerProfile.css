@@ -12,7 +12,7 @@
 
 .profile-cover {
   height: 150px;
-  background: linear-gradient(135deg, var(--primary-light), var(--primary-color));
+  background: linear-gradient(135deg, var(--primary-light, #38bdf8), var(--primary-color, #0284c7));
 }
 
 .profile-header-content {
@@ -619,18 +619,65 @@
     grid-template-columns: 1fr !important;
   }
 
-  .profile-section {
-    padding: 1.25rem !important;
-    border-width: 1px !important;
+  .profile-header {
+    overflow: visible !important;
+    display: flex !important;
+    flex-direction: column !important;
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  .profile-cover {
+    height: 100px !important;
+    background: linear-gradient(135deg, #38bdf8, #0284c7) !important;
+    width: 100% !important;
   }
 
   .profile-header-content {
-    padding: 0 1rem 1.5rem !important;
-    gap: 1rem !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    margin-top: -60px !important;
+    padding: 0 16px 20px 16px !important;
+    position: relative !important;
+    z-index: 10 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    gap: 12px !important;
   }
 
-  .profile-header {
-    margin-bottom: 1.5rem !important;
+  .profile-avatar-wrapper {
+    width: 100px !important;
+    height: 100px !important;
+    border: 3px solid #ffffff !important;
+    background: #f1f5f9 !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+    margin-bottom: 4px !important;
+  }
+
+  .profile-titles {
+    margin-bottom: 12px !important;
+  }
+
+  .profile-titles h1 {
+    font-size: 1.5rem !important;
+    color: #0f172a !important;
+    margin-bottom: 4px !important;
+  }
+
+  .profile-actions {
+    width: 100% !important;
+    margin-top: 5px !important;
+  }
+
+  .profile-actions .btn {
+    width: 100% !important;
+  }
+
+  .profile-section {
+    padding: 1.25rem !important;
+    border-width: 1px !important;
   }
 }
 

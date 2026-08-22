@@ -178,7 +178,15 @@ const BuyerProfile = () => {
         <div className="profile-header-content">
           <div className="profile-avatar-wrapper">
             {user.photo ? (
-              <img src={getAssetUrl(user.photo)} alt="Profile" className="profile-avatar" />
+              <img 
+                src={getAssetUrl(user.photo)} 
+                alt="Profile" 
+                className="profile-avatar" 
+                onError={(e) => {
+                  e.target.onerror = null; 
+                  e.target.src = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+                }} 
+              />
             ) : (
               <div className="profile-avatar-placeholder">
                 <User size={64} />

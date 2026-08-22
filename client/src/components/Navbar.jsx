@@ -225,7 +225,15 @@ const Navbar = ({ role = 'buyer' }) => {
                 {/* Profile click navigates directly to profile details page */}
                 <div className="estify-nav-user-wrapper" onClick={() => navigate('/profile')}>
                   {user.photo ? (
-                    <img src={getAssetUrl(user.photo)} alt="Avatar" className="estify-nav-avatar" />
+                    <img 
+                      src={getAssetUrl(user.photo)} 
+                      alt="Avatar" 
+                      className="estify-nav-avatar" 
+                      onError={(e) => {
+                        e.target.onerror = null; 
+                        e.target.src = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+                      }} 
+                    />
                   ) : (
                     <div className="estify-nav-avatar" style={{ background: '#cbd5e1', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
                       <User size={16} />
