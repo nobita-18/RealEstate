@@ -670,9 +670,16 @@
     margin-top: 5px !important;
   }
 
+  .profile-actions > div {
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 8px !important;
+  }
+
   .profile-actions .btn {
     width: 100% !important;
     justify-content: center !important;
+    border-radius: 30px !important;
   }
 
   .profile-section {
