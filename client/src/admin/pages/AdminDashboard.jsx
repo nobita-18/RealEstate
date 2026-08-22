@@ -205,29 +205,32 @@ const AdminDashboard = () => {
   };
 
   const getPropertyTypeData = () => {
-    const types = {};
+    const types = {
+      'House': { name: 'House', count: 0, accepted: 0, pending: 0, rejected: 0 },
+      'Apartment': { name: 'Apartment', count: 0, accepted: 0, pending: 0, rejected: 0 },
+      'Villa': { name: 'Villa', count: 0, accepted: 0, pending: 0, rejected: 0 },
+      'Land': { name: 'Land', count: 0, accepted: 0, pending: 0, rejected: 0 },
+      'PG': { name: 'PG', count: 0, accepted: 0, pending: 0, rejected: 0 },
+      'Penthouse': { name: 'Penthouse', count: 0, accepted: 0, pending: 0, rejected: 0 }
+    };
     propertiesList.forEach(p => {
-      const type = p.propertyType || 'Unknown';
-      if (!types[type]) {
-        types[type] = {
-          name: type,
-          count: 0,
-          accepted: 0,
-          pending: 0,
-          rejected: 0
-        };
+      const type = p.propertyType;
+      let matchedKey = null;
+      if (type) {
+        matchedKey = Object.keys(types).find(k => k.toLowerCase() === type.toLowerCase());
       }
-      types[type].count++;
-      
-      const isPending = p.status === 'pending' || p.hasPendingChanges === true || p.status === 'pending_delete';
-      const isRejected = p.status === 'rejected';
-      
-      if (isPending) {
-        types[type].pending++;
-      } else if (isRejected) {
-        types[type].rejected++;
-      } else {
-        types[type].accepted++; // Active/Approved
+      if (matchedKey) {
+        types[matchedKey].count++;
+        const isPending = p.status === 'pending' || p.hasPendingChanges === true || p.status === 'pending_delete';
+        const isRejected = p.status === 'rejected';
+        
+        if (isPending) {
+          types[matchedKey].pending++;
+        } else if (isRejected) {
+          types[matchedKey].rejected++;
+        } else {
+          types[matchedKey].accepted++; // Active/Approved
+        }
       }
     });
     return Object.values(types);
