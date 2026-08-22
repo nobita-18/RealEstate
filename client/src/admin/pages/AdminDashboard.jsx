@@ -326,8 +326,8 @@ const AdminDashboard = () => {
               📊 PROPERTIES BY TYPE
             </h3>
             
-            <div className="admin-scrollable-chart" style={{ overflowX: 'auto', width: '100%', WebkitOverflowScrolling: 'touch', paddingBottom: '10px' }}>
-              <div style={{ minWidth: isMobile ? '550px' : '100%', height: '250px' }}>
+            <div className="admin-scrollable-chart" style={{ overflowX: 'scroll', width: '100%', WebkitOverflowScrolling: 'touch', paddingBottom: '12px' }}>
+              <div style={{ minWidth: '600px', height: '250px' }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <ReChartsBarChart data={getPropertyTypeData()}>
                     <XAxis dataKey="name" stroke="#888" fontSize={11} tickLine={false} />
@@ -349,8 +349,8 @@ const AdminDashboard = () => {
             <h3 style={{ color: '#00ff80', fontFamily: 'monospace', fontSize: '1.1rem', margin: '0 0 20px 0', borderBottom: '1px solid #333', paddingBottom: '10px' }}>
               📊 USER NODE DISTRIBUTION
             </h3>
-            <div className="admin-scrollable-chart" style={{ overflowX: 'auto', width: '100%', WebkitOverflowScrolling: 'touch', paddingBottom: '10px' }}>
-              <div style={{ minWidth: isMobile ? '550px' : '100%', height: '250px' }}>
+            <div className="admin-scrollable-chart" style={{ overflowX: 'scroll', width: '100%', WebkitOverflowScrolling: 'touch', paddingBottom: '12px' }}>
+              <div style={{ minWidth: '600px', height: '250px' }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <ReChartsBarChart data={getUserRoleData()}>
                     <XAxis dataKey="name" stroke="#888" fontSize={11} tickLine={false} />
