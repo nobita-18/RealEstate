@@ -199,6 +199,24 @@ const AdminDashboard = () => {
   return (
     <div className="admin-login-wrapper" style={{ alignItems: 'flex-start', paddingTop: '50px', minHeight: '100vh', paddingBottom: '100px' }}>
       <div className="admin-secure-box" style={{ maxWidth: '1100px', width: '95%' }}>
+        <style>{`
+          .admin-scrollable-chart::-webkit-scrollbar {
+            height: 8px !important;
+            display: block !important;
+          }
+          .admin-scrollable-chart::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border-radius: 6px !important;
+          }
+          .admin-scrollable-chart::-webkit-scrollbar-thumb {
+            background: #00ff80 !important;
+            border-radius: 6px !important;
+            cursor: pointer !important;
+          }
+          .admin-buttons-scroll::-webkit-scrollbar {
+            display: none !important;
+          }
+        `}</style>
         
         {/* Dashboard Header */}
         <div className="admin-header-flex">
@@ -251,7 +269,7 @@ const AdminDashboard = () => {
             <h3 style={{ color: '#00ff80', fontFamily: 'monospace', fontSize: '1.1rem', margin: '0 0 20px 0', borderBottom: '1px solid #333', paddingBottom: '10px' }}>
               📊 PROPERTIES BY TYPE
             </h3>
-            <div style={{ overflowX: 'auto', width: '100%', WebkitOverflowScrolling: 'touch' }}>
+            <div className="admin-scrollable-chart" style={{ overflowX: 'auto', width: '100%', WebkitOverflowScrolling: 'touch', paddingBottom: '10px' }}>
               <div style={{ minWidth: isMobile ? '550px' : '100%', height: '250px' }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <ReChartsBarChart data={getPropertyTypeData()}>
@@ -277,7 +295,7 @@ const AdminDashboard = () => {
             <h3 style={{ color: '#00ff80', fontFamily: 'monospace', fontSize: '1.1rem', margin: '0 0 20px 0', borderBottom: '1px solid #333', paddingBottom: '10px' }}>
               📊 USER NODE DISTRIBUTION
             </h3>
-            <div style={{ overflowX: 'auto', width: '100%', WebkitOverflowScrolling: 'touch' }}>
+            <div className="admin-scrollable-chart" style={{ overflowX: 'auto', width: '100%', WebkitOverflowScrolling: 'touch', paddingBottom: '10px' }}>
               <div style={{ minWidth: isMobile ? '550px' : '100%', height: '250px' }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <ReChartsBarChart data={getUserRoleData()}>
@@ -326,13 +344,16 @@ const AdminDashboard = () => {
                     <h4 style={{ color: 'white', margin: '0 0 8px 0', fontSize: '1.1rem' }}>{prop.title}</h4>
                     <p style={{ color: '#aaa', margin: 0, fontSize: '0.9rem' }}>Seller ID: {prop.ownerId} | Location: {prop.location} | Price: ₹{prop.price.toLocaleString('en-IN')}</p>
                   </div>
-                  <div style={{
+                  <div className="admin-buttons-scroll" style={{
                     display: 'flex',
                     gap: '10px',
                     alignItems: 'center',
-                    justifyContent: isMobile ? 'center' : 'flex-end',
-                    flexWrap: 'wrap',
-                    width: isMobile ? '100%' : 'auto'
+                    justifyContent: isMobile ? 'flex-start' : 'flex-end',
+                    flexWrap: 'nowrap',
+                    overflowX: 'auto',
+                    WebkitOverflowScrolling: 'touch',
+                    width: isMobile ? '100%' : 'auto',
+                    paddingBottom: isMobile ? '5px' : '0'
                   }}>
                     <button onClick={() => setSelectedAdminProperty(prop)} style={{ background: '#00d2ff', color: 'black', border: 'none', padding: '10px 18px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 'bold', borderRadius: '4px' }}>
                       <Eye size={16} /> View
