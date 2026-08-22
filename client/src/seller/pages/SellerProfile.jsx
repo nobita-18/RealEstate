@@ -1339,7 +1339,7 @@ const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfi
             <h3 style={{ color: 'var(--sd-text-main)', margin: '0 0 20px 0', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.2rem', fontWeight: 600 }}>
               <Settings size={20} color="var(--sd-primary)"/> Settings
             </h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
+            <div className="seller-settings-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
               
               {/* Change Password */}
               <form onSubmit={handlePasswordChange} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -1516,7 +1516,7 @@ const SellerProfile = ({ isDashboardView = false, initialProfile = null, onProfi
             <h3 style={{ color: '#ffdf80', margin: '0 0 20px 0', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.2rem' }}>
               <Settings size={20} color="#c4a761"/> Settings
             </h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
+            <div className="seller-settings-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
               
               {/* Change Password */}
               <form onSubmit={handlePasswordChange} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>

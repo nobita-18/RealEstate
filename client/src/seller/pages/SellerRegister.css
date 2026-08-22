@@ -432,5 +432,10 @@
   .sd-panel {
     padding: 15px !important;
   }
+
+  .seller-settings-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
 }
 
