@@ -18,10 +18,17 @@ const AdminDashboard = () => {
   const [logs, setLogs] = useState([]);
   const [logSearchText, setLogSearchText] = useState('');
   const [logTypeFilter, setLogTypeFilter] = useState('ALL');
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   
   // Modals
   const [activeModalUser, setActiveModalUser] = useState(null);
   const [activeModalProps, setActiveModalProps] = useState(null);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     fetchProperties();
@@ -196,8 +203,8 @@ const AdminDashboard = () => {
         {/* Dashboard Header */}
         <div className="admin-header-flex">
           <div style={{ textAlign: 'left' }}>
-            <h2>SYSTEM_CORE_ONLINE</h2>
-            <p>Welcome, {adminUser?.name || 'Administrator'} | Secure Panel Protocol</p>
+            <h2 style={{ fontSize: isMobile ? '1.1rem' : '1.8rem', letterSpacing: isMobile ? '1px' : '2px', wordBreak: 'break-all', fontFamily: 'monospace', color: '#00ff80', margin: '0 0 5px 0' }}>SYSTEM_CORE_ONLINE</h2>
+            <p style={{ margin: 0, fontSize: isMobile ? '0.75rem' : '0.9rem', color: '#888' }}>Welcome, {adminUser?.name || 'Administrator'} | Secure Panel Protocol</p>
           </div>
           <button onClick={handleLogout} className="btn-cyber-scan" style={{ width: 'auto', padding: '10px 20px', margin: 0 }}>
             <span>LOGOUT</span>
@@ -238,52 +245,56 @@ const AdminDashboard = () => {
         </div>
 
         {/* SYSTEM ANALYTICS & DIAGNOSTICS */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(450px, 1fr))', gap: '20px', marginTop: '20px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(450px, 1fr))', gap: '20px', marginTop: '20px' }}>
           {/* Chart 1: Properties by Type */}
-          <div style={{ padding: '25px', border: '1px solid #333', background: 'rgba(0,0,0,0.5)' }}>
+          <div style={{ padding: '25px', border: '1px solid #333', background: 'rgba(0,0,0,0.5)', borderRadius: '12px' }}>
             <h3 style={{ color: '#00ff80', fontFamily: 'monospace', fontSize: '1.1rem', margin: '0 0 20px 0', borderBottom: '1px solid #333', paddingBottom: '10px' }}>
               📊 PROPERTIES BY TYPE
             </h3>
-            <div style={{ width: '100%', height: '250px' }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <ReChartsBarChart data={getPropertyTypeData()}>
-                  <XAxis dataKey="name" stroke="#888" fontSize={11} tickLine={false} />
-                  <YAxis stroke="#888" fontSize={11} tickLine={false} />
-                  <Tooltip 
-                    contentStyle={{ background: '#222', border: '1px solid #444', color: '#fff', fontSize: '0.85rem', fontFamily: 'monospace' }}
-                    itemStyle={{ color: '#00ff80' }}
-                  />
-                  <Bar dataKey="count" fill="#00ff80" radius={[4, 4, 0, 0]}>
-                    {getPropertyTypeData().map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={['#00ff80', '#00d2ff', '#ffdf80', '#ff3366', '#a855f7'][index % 5]} />
-                    ))}
-                  </Bar>
-                </ReChartsBarChart>
-              </ResponsiveContainer>
+            <div style={{ overflowX: 'auto', width: '100%', WebkitOverflowScrolling: 'touch' }}>
+              <div style={{ minWidth: isMobile ? '550px' : '100%', height: '250px' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <ReChartsBarChart data={getPropertyTypeData()}>
+                    <XAxis dataKey="name" stroke="#888" fontSize={11} tickLine={false} />
+                    <YAxis stroke="#888" fontSize={11} tickLine={false} />
+                    <Tooltip 
+                      contentStyle={{ background: '#222', border: '1px solid #444', color: '#fff', fontSize: '0.85rem', fontFamily: 'monospace' }}
+                      itemStyle={{ color: '#00ff80' }}
+                    />
+                    <Bar dataKey="count" fill="#00ff80" radius={[4, 4, 0, 0]}>
+                      {getPropertyTypeData().map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={['#00ff80', '#00d2ff', '#ffdf80', '#ff3366', '#a855f7'][index % 5]} />
+                      ))}
+                    </Bar>
+                  </ReChartsBarChart>
+                </ResponsiveContainer>
+              </div>
             </div>
           </div>
 
           {/* Chart 2: User Node Distribution */}
-          <div style={{ padding: '25px', border: '1px solid #333', background: 'rgba(0,0,0,0.5)' }}>
+          <div style={{ padding: '25px', border: '1px solid #333', background: 'rgba(0,0,0,0.5)', borderRadius: '12px' }}>
             <h3 style={{ color: '#00ff80', fontFamily: 'monospace', fontSize: '1.1rem', margin: '0 0 20px 0', borderBottom: '1px solid #333', paddingBottom: '10px' }}>
               📊 USER NODE DISTRIBUTION
             </h3>
-            <div style={{ width: '100%', height: '250px' }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <ReChartsBarChart data={getUserRoleData()}>
-                  <XAxis dataKey="name" stroke="#888" fontSize={11} tickLine={false} />
-                  <YAxis stroke="#888" fontSize={11} tickLine={false} />
-                  <Tooltip 
-                    contentStyle={{ background: '#222', border: '1px solid #444', color: '#fff', fontSize: '0.85rem', fontFamily: 'monospace' }}
-                    itemStyle={{ color: '#00ff80' }}
-                  />
-                  <Bar dataKey="count" radius={[4, 4, 0, 0]}>
-                    {getUserRoleData().map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Bar>
-                </ReChartsBarChart>
-              </ResponsiveContainer>
+            <div style={{ overflowX: 'auto', width: '100%', WebkitOverflowScrolling: 'touch' }}>
+              <div style={{ minWidth: isMobile ? '550px' : '100%', height: '250px' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <ReChartsBarChart data={getUserRoleData()}>
+                    <XAxis dataKey="name" stroke="#888" fontSize={11} tickLine={false} />
+                    <YAxis stroke="#888" fontSize={11} tickLine={false} />
+                    <Tooltip 
+                      contentStyle={{ background: '#222', border: '1px solid #444', color: '#fff', fontSize: '0.85rem', fontFamily: 'monospace' }}
+                      itemStyle={{ color: '#00ff80' }}
+                    />
+                    <Bar dataKey="count" radius={[4, 4, 0, 0]}>
+                      {getUserRoleData().map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Bar>
+                  </ReChartsBarChart>
+                </ResponsiveContainer>
+              </div>
             </div>
           </div>
         </div>
@@ -299,19 +310,37 @@ const AdminDashboard = () => {
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '20px' }}>
               {pendingProps.map(prop => (
-                <div key={prop.id} className="admin-moderation-item">
-                  <div style={{ textAlign: 'left' }}>
-                    <h4 style={{ color: 'white', margin: '0 0 5px 0' }}>{prop.title}</h4>
+                <div key={prop.id} style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: '20px 25px',
+                  border: '1px solid #333',
+                  background: 'rgba(0,0,0,0.3)',
+                  borderRadius: '8px',
+                  gap: '15px',
+                  flexDirection: isMobile ? 'column' : 'row',
+                  textAlign: isMobile ? 'center' : 'left'
+                }}>
+                  <div style={{ textAlign: isMobile ? 'center' : 'left', flex: 1 }}>
+                    <h4 style={{ color: 'white', margin: '0 0 8px 0', fontSize: '1.1rem' }}>{prop.title}</h4>
                     <p style={{ color: '#aaa', margin: 0, fontSize: '0.9rem' }}>Seller ID: {prop.ownerId} | Location: {prop.location} | Price: ₹{prop.price.toLocaleString('en-IN')}</p>
                   </div>
-                  <div className="admin-moderation-actions">
-                    <button onClick={() => setSelectedAdminProperty(prop)} style={{ background: '#00d2ff', color: 'black', border: 'none', padding: '8px 15px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 'bold' }}>
+                  <div style={{
+                    display: 'flex',
+                    gap: '10px',
+                    alignItems: 'center',
+                    justifyContent: isMobile ? 'center' : 'flex-end',
+                    flexWrap: 'wrap',
+                    width: isMobile ? '100%' : 'auto'
+                  }}>
+                    <button onClick={() => setSelectedAdminProperty(prop)} style={{ background: '#00d2ff', color: 'black', border: 'none', padding: '10px 18px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 'bold', borderRadius: '4px' }}>
                       <Eye size={16} /> View
                     </button>
-                    <button onClick={() => handleStatus(prop.id, 'approved')} style={{ background: '#00ff80', color: 'black', border: 'none', padding: '8px 15px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 'bold' }}>
+                    <button onClick={() => handleStatus(prop.id, 'approved')} style={{ background: '#00ff80', color: 'black', border: 'none', padding: '10px 18px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 'bold', borderRadius: '4px' }}>
                       <CheckCircle size={16} /> Accept
                     </button>
-                    <button onClick={() => handleStatus(prop.id, 'rejected')} style={{ background: '#333', color: 'white', border: '1px solid #ff3366', padding: '8px 15px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                    <button onClick={() => handleStatus(prop.id, 'rejected')} style={{ background: '#333', color: 'white', border: '1px solid #ff3366', padding: '10px 18px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', borderRadius: '4px' }}>
                       <XCircle size={16} color="#ff3366" /> Reject
                     </button>
                     <button onClick={() => handleDeleteProperty(prop.id)} style={{ background: 'transparent', color: '#ff3366', border: 'none', padding: '8px', cursor: 'pointer' }}>
@@ -330,25 +359,25 @@ const AdminDashboard = () => {
             <Users size={20} /> REGISTERED USERS DIRECTORY 
           </h3>
           <div style={{ marginTop: '20px', background: '#111', border: '1px solid #333', overflowX: 'auto' }}>
-             <table style={{ width: '100%', borderCollapse: 'collapse', color: '#fff', fontFamily: 'monospace', textAlign: 'left' }}>
+             <table style={{ width: '100%', borderCollapse: 'collapse', color: '#fff', fontFamily: 'monospace', textAlign: 'left', fontSize: '0.95rem' }}>
                <thead>
                  <tr style={{ background: '#222', borderBottom: '2px solid #00d2ff' }}>
-                   <th style={{ padding: '15px' }}>USER ID</th>
-                   <th style={{ padding: '15px' }}>NAME</th>
-                   <th style={{ padding: '15px' }}>ROLE</th>
-                   <th style={{ padding: '15px' }}>EMAIL</th>
-                   <th style={{ padding: '15px' }}>MOBILE</th>
-                   <th style={{ padding: '15px' }}>STATUS</th>
-                   <th style={{ padding: '15px' }}>MEMBER SINCE</th>
-                   <th style={{ padding: '15px', textAlign: 'right' }}>ACTIONS</th>
+                   <th style={{ padding: '18px' }}>USER ID</th>
+                   <th style={{ padding: '18px' }}>NAME</th>
+                   <th style={{ padding: '18px' }}>ROLE</th>
+                   <th style={{ padding: '18px' }}>EMAIL</th>
+                   <th style={{ padding: '18px' }}>MOBILE</th>
+                   <th style={{ padding: '18px' }}>STATUS</th>
+                   <th style={{ padding: '18px' }}>MEMBER SINCE</th>
+                   <th style={{ padding: '18px', textAlign: 'right' }}>ACTIONS</th>
                  </tr>
                </thead>
                <tbody>
                  {usersList.map((usr, idx) => (
                    <tr key={usr.id || idx} style={{ borderBottom: '1px solid #333' }}>
-                     <td style={{ padding: '15px', color: '#00d2ff', fontWeight: 'bold' }}>{usr.id}</td>
-                     <td style={{ padding: '15px', fontWeight: 'bold' }}>{usr.name || 'System User'}</td>
-                     <td style={{ padding: '15px' }}>
+                     <td style={{ padding: '18px', color: '#00d2ff', fontWeight: 'bold' }}>{usr.id}</td>
+                     <td style={{ padding: '18px', fontWeight: 'bold' }}>{usr.name || 'System User'}</td>
+                     <td style={{ padding: '18px' }}>
                        {usr.role === 'admin' ? (
                          <span style={{ background: 'rgba(0,255,128,0.1)', color: '#00ff80', padding: '4px 8px', borderRadius: '4px', fontSize: '0.75rem' }}>ADMIN</span>
                        ) : usr.role === 'seller' ? (
@@ -357,9 +386,9 @@ const AdminDashboard = () => {
                          <span style={{ background: 'rgba(0,210,255,0.1)', color: '#00d2ff', padding: '4px 8px', borderRadius: '4px', fontSize: '0.75rem' }}>BUYER</span>
                        )}
                      </td>
-                     <td style={{ padding: '15px', color: '#aaa' }}>{usr.email}</td>
-                     <td style={{ padding: '15px', color: '#aaa' }}>{usr.mobile || 'N/A'}</td>
-                     <td style={{ padding: '15px' }}>
+                     <td style={{ padding: '18px', color: '#aaa' }}>{usr.email}</td>
+                     <td style={{ padding: '18px', color: '#aaa' }}>{usr.mobile || 'N/A'}</td>
+                     <td style={{ padding: '18px' }}>
                        <span style={{ 
                          padding: '3px 8px', 
                          borderRadius: '4px', 
@@ -371,8 +400,8 @@ const AdminDashboard = () => {
                          {(usr.status || 'active').toUpperCase()}
                        </span>
                      </td>
-                     <td style={{ padding: '15px', color: '#aaa' }}>{usr.memberSince || 'N/A'}</td>
-                     <td style={{ padding: '15px', textAlign: 'right' }}>
+                     <td style={{ padding: '18px', color: '#aaa' }}>{usr.memberSince || 'N/A'}</td>
+                     <td style={{ padding: '18px', textAlign: 'right' }}>
                        <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', alignItems: 'center', minWidth: '120px' }}>
                          {/* VIEW USER DETAIL */}
                          <button onClick={() => openUserView(usr)} style={{ background: 'transparent', border: 'none', color: '#00d2ff', cursor: 'pointer' }} title="View User Details">

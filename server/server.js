@@ -81,15 +81,22 @@ const writeDb = async (key, data) => {
     if (isMongoDBActive()) {
       const Model = getModel(key);
       if (Model) {
-        await Model.deleteMany({});
         if (data && data.length > 0) {
-          await Model.insertMany(data);
+          for (const item of data) {
+            if (item.id !== undefined) {
+              await Model.updateOne({ id: item.id }, item, { upsert: true });
+            }
+          }
+          const ids = data.map(d => d.id).filter(id => id !== undefined);
+          await Model.deleteMany({ id: { $nin: ids } });
+        } else {
+          await Model.deleteMany({});
         }
         return;
       }
     }
   } catch (err) {
-    console.error('MongoDB write error, falling back to JSON:', err.message);
+    console.error(`MongoDB write error for ${key}:`, err.message);
   }
   fs.writeFileSync(dbFiles[key], JSON.stringify(data, null, 2));
 };

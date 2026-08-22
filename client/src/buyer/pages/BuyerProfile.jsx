@@ -266,48 +266,52 @@ const BuyerProfile = () => {
         }
       `}</style>
       {/* Top Header Card */}
-      <div className="profile-header glass" style={isMobile ? {
+      <div className="profile-header glass" style={{
         display: 'flex',
         flexDirection: 'column',
         background: '#ffffff',
         border: '1px solid #e2e8f0',
-        borderRadius: '12px',
-        marginBottom: '1.5rem',
+        borderRadius: '16px',
+        marginBottom: '2rem',
         overflow: 'visible',
-        padding: '0'
-      } : {}}>
-        <div className="profile-cover" style={isMobile ? {
-          height: '80px',
+        padding: '0',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.05)'
+      }}>
+        <div className="profile-cover" style={{
+          height: '140px',
           background: 'linear-gradient(135deg, #38bdf8, #0284c7)',
           width: '100%',
           margin: '0',
-          borderRadius: '12px 12px 0 0'
-        } : {}}></div>
-        <div className="profile-header-content" style={isMobile ? {
+          borderRadius: '16px 16px 0 0'
+        }}></div>
+        <div className="profile-header-content" style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           textAlign: 'center',
           marginTop: '0',
-          padding: '16px',
+          padding: '24px',
           position: 'relative',
           zIndex: 10,
           width: '100%',
           boxSizing: 'border-box',
-          gap: '12px'
-        } : {}}>
-          <div className="profile-avatar-wrapper" style={isMobile ? {
-            width: '90px',
-            height: '90px',
-            border: '3px solid #ffffff',
+          gap: '15px'
+        }}>
+          <div className="profile-avatar-wrapper" style={{
+            width: '110px',
+            height: '110px',
+            border: '4px solid #ffffff',
             background: '#f1f5f9',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-            marginTop: '-45px',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.15)',
+            marginTop: '-75px',
             marginBottom: '4px',
             borderRadius: '50%',
             position: 'relative',
-            overflow: 'hidden'
-          } : {}}>
+            overflow: 'hidden',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
             {user.photo ? (
               <img 
                 src={getAssetUrl(user.photo)} 
@@ -317,46 +321,53 @@ const BuyerProfile = () => {
                   e.target.onerror = null; 
                   e.target.src = "/images/default/default-avatar.jpg";
                 }} 
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               />
             ) : (
-              <div className="profile-avatar-placeholder">
-                <User size={64} />
+              <div className="profile-avatar-placeholder" style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f1f5f9', color: '#0284c7' }}>
+                <User size={60} />
               </div>
             )}
             {isEditing && (
-              <div className="avatar-edit-overlay">
-                <Settings size={20} />
+              <div className="avatar-edit-overlay" style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '40%', background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
+                <Settings size={18} />
               </div>
             )}
           </div>
-          <div className="profile-titles" style={isMobile ? { marginBottom: '12px', width: '100%' } : {}}>
-            <h1 style={isMobile ? { fontSize: '1.4rem', color: '#0f172a', marginBottom: '4px' } : {}}>{user.name}</h1>
-            <span className={`role-badge ${user.role || 'buyer'}`} style={isMobile ? { display: 'inline-block', padding: '4px 12px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: '700' } : {}}>{user.role || 'Buyer'}</span>
-            <p style={{ margin: '5px 0 0 0', color: 'var(--text-light)', fontSize: '0.9rem' }}>Member Since: {user.memberSince || 'N/A'}</p>
+          <div className="profile-titles" style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <h1 style={{ fontSize: '1.8rem', color: '#0f172a', fontWeight: '800', margin: '0 0 6px 0' }}>{user.name}</h1>
+            <span className={`role-badge ${user.role || 'buyer'}`} style={{ display: 'inline-block', padding: '6px 16px', borderRadius: '30px', fontSize: '0.85rem', fontWeight: '700', background: '#d1fae5', color: '#047857', textTransform: 'uppercase' }}>{user.role || 'Buyer'}</span>
+            <p style={{ margin: '8px 0 0 0', color: '#64748b', fontSize: '0.85rem' }}>Member Since: {user.memberSince || 'N/A'}</p>
           </div>
           
-          <div className="profile-actions" style={isMobile ? { width: '100%', marginTop: '5px' } : {}}>
+          <div className="profile-actions" style={{ width: '100%', maxWidth: '350px', marginTop: '5px' }}>
             {isEditing ? (
-              <button className="btn btn-primary" onClick={handleSave} style={isMobile ? { width: '100%', justifyContent: 'center', borderRadius: '30px' } : {}}>
+              <button className="btn btn-primary" onClick={handleSave} style={{ width: '100%', justifyContent: 'center', borderRadius: '30px', padding: '12px', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '600' }}>
                 <Check size={16} /> Save Changes
               </button>
             ) : (
-              <div style={isMobile ? {
+              <div style={{
                 display: 'flex',
                 flexDirection: 'column',
                 width: '100%',
-                gap: '8px'
-              } : { display: 'flex', gap: '1rem' }}>
-                <button className="btn btn-outline" onClick={() => setIsEditing(true)} style={isMobile ? { width: '100%', justifyContent: 'center', borderRadius: '30px' } : {}}>
+                gap: '10px'
+              }}>
+                <button className="btn btn-outline" onClick={() => setIsEditing(true)} style={{ width: '100%', justifyContent: 'center', borderRadius: '30px', padding: '12px', display: 'flex', alignItems: 'center', gap: '8px', borderColor: '#0284c7', color: '#0284c7', fontWeight: '600', background: 'transparent' }}>
                   <Edit2 size={16} /> Edit Profile
                 </button>
-                <button className="btn btn-outline" onClick={handleLogout} style={isMobile ? {
+                <button className="btn btn-outline" onClick={handleLogout} style={{
                   width: '100%',
                   justifyContent: 'center',
                   borderRadius: '30px',
+                  padding: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
                   borderColor: '#ef4444',
-                  color: '#ef4444'
-                } : { borderColor: '#ef4444', color: '#ef4444' }}>
+                  color: '#ef4444',
+                  fontWeight: '600',
+                  background: 'transparent'
+                }}>
                   <LogOut size={16} /> Logout
                 </button>
               </div>
