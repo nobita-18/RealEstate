@@ -28,12 +28,8 @@ const CustomUserTooltip = ({ active, payload }) => {
           <strong style={{ color: '#fff' }}>{data.count}</strong>
         </p>
         <p style={{ margin: '4px 0', display: 'flex', justifyContent: 'space-between', gap: '15px' }}>
-          <span style={{ color: '#aaa' }}>Active:</span>
+          <span style={{ color: '#aaa' }}>Activated:</span>
           <strong style={{ color: '#00ff80' }}>{data.active}</strong>
-        </p>
-        <p style={{ margin: '4px 0', display: 'flex', justifyContent: 'space-between', gap: '15px' }}>
-          <span style={{ color: '#aaa' }}>Pending:</span>
-          <strong style={{ color: '#f59e0b' }}>{data.pending}</strong>
         </p>
         <p style={{ margin: '4px 0', display: 'flex', justifyContent: 'space-between', gap: '15px' }}>
           <span style={{ color: '#aaa' }}>Deactivated:</span>
@@ -314,16 +310,17 @@ const AdminDashboard = () => {
       <div className="admin-secure-box" style={{ maxWidth: '1100px', width: '95%' }}>
         <style>{`
           .admin-scrollable-chart::-webkit-scrollbar {
-            height: 8px !important;
+            height: 12px !important;
             display: block !important;
           }
           .admin-scrollable-chart::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05) !important;
+            background: rgba(255, 255, 255, 0.15) !important;
             border-radius: 6px !important;
           }
           .admin-scrollable-chart::-webkit-scrollbar-thumb {
             background: #00ff80 !important;
             border-radius: 6px !important;
+            border: 2px solid #111 !important;
             cursor: pointer !important;
           }
           .admin-buttons-scroll::-webkit-scrollbar {
