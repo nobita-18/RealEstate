@@ -239,7 +239,7 @@ const Navbar = ({ role = 'buyer' }) => {
                       <User size={16} />
                     </div>
                   )}
-                  <span className="estify-nav-username">Hi, {user.name.split(' ')[0]}</span>
+                  <span className="estify-nav-username">Hi, {(user.name || user.email || 'User').split(' ')[0]}</span>
                 </div>
               </div>
             ) : (

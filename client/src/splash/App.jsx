@@ -1,21 +1,47 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Splash.css';
-import '../components/CinematicPan.css';
 
 function App() {
+  const [progress, setProgress] = useState(0);
+
   useEffect(() => {
-    // Navigate to buyer after 3 seconds
-    const timer = setTimeout(() => {
-      window.location.href = '/buyer/';
-    }, 3000);
-    return () => clearTimeout(timer);
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          return 100;
+        }
+        return prev + 5;
+      });
+    }, 120);
+
+    return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    if (progress === 100) {
+      const timer = setTimeout(() => {
+        window.location.href = '/buyer/';
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [progress]);
 
   return (
     <div className="splash-container">
-      <div className="cinematic-pan-bg"></div>
+      <div className="splash-grid-bg"></div>
       <div className="splash-overlay">
-        <h1 className="splash-logo">HomeFind</h1>
+        <div className="splash-card">
+          <h1 className="splash-logo">HomeFind</h1>
+          <p className="splash-tagline">Elegance in Every Home</p>
+          <div className="progress-bar-container">
+            <div 
+              className="progress-bar-fill" 
+              style={{ width: `${progress}%` }}
+            ></div>
+          </div>
+          <span className="progress-text">{progress}%</span>
+        </div>
       </div>
     </div>
   );

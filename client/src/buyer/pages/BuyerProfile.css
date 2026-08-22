@@ -95,8 +95,8 @@
 }
 
 .role-badge.buyer {
-  background: var(--secondary-color);
-  color: var(--primary-color);
+  background: #d1fae5;
+  color: #047857;
 }
 
 .profile-actions {

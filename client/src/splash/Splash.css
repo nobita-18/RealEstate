@@ -3,60 +3,97 @@
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background-color: #000;
+  background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
 }
 
-.splash-video {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100vw;
-  height: 100vh;
-  object-fit: cover;
-  transform: translate(-50%, -50%);
-  opacity: 0.6;
-}
-
-.splash-overlay {
+/* Polygonal/Grid Lines Background Effect */
+.splash-grid-bg {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  opacity: 0.15;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-position: center;
+}
+
+.splash-overlay {
+  position: relative;
+  z-index: 10;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: rgba(0, 0, 0, 0.4);
+  text-align: center;
+  padding: 20px;
+}
+
+.splash-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeInSplashCard 0.8s ease-out forwards;
+}
+
+@keyframes fadeInSplashCard {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .splash-logo {
-  font-size: 6rem;
-  color: #00d2ff;
-  font-weight: 900;
-  letter-spacing: 4px;
-  text-shadow: 0 0 20px rgba(0, 210, 255, 0.8), 0 0 40px rgba(0, 210, 255, 0.4);
-  animation: logoExplode 3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  font-size: 4rem;
+  color: #ffffff;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin: 0;
+  text-shadow: 0 4px 20px rgba(255, 255, 255, 0.15);
 }
 
-@keyframes logoExplode {
-  0% {
-    transform: scale(0);
-    opacity: 0;
-    filter: blur(20px);
-  }
-  40% {
-    transform: scale(1.2);
-    opacity: 1;
-    filter: blur(0);
-  }
-  80% {
-    transform: scale(1);
-    opacity: 1;
-    filter: blur(0);
-  }
-  100% {
-    transform: scale(50);
-    opacity: 0;
-    filter: blur(10px);
-  }
+.splash-tagline {
+  font-size: 1.1rem;
+  color: #94a3b8;
+  margin-top: 8px;
+  margin-bottom: 35px;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+
+/* Progress Bar Container */
+.progress-bar-container {
+  width: 260px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Active Fill */
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #38bdf8, #0284c7);
+  border-radius: 10px;
+  transition: width 0.1s linear;
+}
+
+.progress-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #64748b;
+  letter-spacing: 1px;
 }
