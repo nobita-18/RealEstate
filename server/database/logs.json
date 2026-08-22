@@ -64,5 +64,27 @@
       "role": "seller"
     },
     "timestamp": "2026-07-01T03:12:23.869Z"
+  },
+  {
+    "id": 1787391248538.9456,
+    "type": "REGISTRATION",
+    "message": "New buyer user BUY0004 (Test Buyer Node) registered.",
+    "details": {
+      "userId": "BUY0004",
+      "name": "Test Buyer Node",
+      "role": "buyer"
+    },
+    "timestamp": "2026-08-22T09:34:08.538Z"
+  },
+  {
+    "id": 1787391248691.576,
+    "type": "LOGIN",
+    "message": "User BUY0004 (Test Buyer Node) logged in.",
+    "details": {
+      "userId": "BUY0004",
+      "name": "Test Buyer Node",
+      "role": "buyer"
+    },
+    "timestamp": "2026-08-22T09:34:08.691Z"
   }
 ]

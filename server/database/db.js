@@ -61,59 +61,84 @@ const migrateJSONToMongoDB = async () => {
   try {
     // 1. Migrate Users
     if (fs.existsSync(jsonFiles.users)) {
-      const data = JSON.parse(fs.readFileSync(jsonFiles.users, 'utf8'));
-      if (data.length > 0) {
-        const uniqueData = Array.from(new Map(data.map(item => [item.id, item])).values());
-        await User.deleteMany({});
-        await User.insertMany(uniqueData);
-        console.log(`Synchronized ${uniqueData.length} users to MongoDB.`);
+      const count = await User.countDocuments();
+      if (count === 0) {
+        const data = JSON.parse(fs.readFileSync(jsonFiles.users, 'utf8'));
+        if (data.length > 0) {
+          const uniqueData = Array.from(new Map(data.map(item => [item.id, item])).values());
+          await User.deleteMany({});
+          await User.insertMany(uniqueData);
+          console.log(`Initialized MongoDB with ${uniqueData.length} default users.`);
+        }
+      } else {
+        console.log('MongoDB already has users. Skipping user initialization.');
       }
     }
 
     // 2. Migrate Properties
     if (fs.existsSync(jsonFiles.properties)) {
-      const data = JSON.parse(fs.readFileSync(jsonFiles.properties, 'utf8'));
-      if (data.length > 0) {
-        const uniqueData = Array.from(new Map(data.map(item => [item.id, item])).values());
-        await Property.deleteMany({});
-        await Property.insertMany(uniqueData);
-        console.log(`Synchronized ${uniqueData.length} properties to MongoDB.`);
+      const count = await Property.countDocuments();
+      if (count === 0) {
+        const data = JSON.parse(fs.readFileSync(jsonFiles.properties, 'utf8'));
+        if (data.length > 0) {
+          const uniqueData = Array.from(new Map(data.map(item => [item.id, item])).values());
+          await Property.deleteMany({});
+          await Property.insertMany(uniqueData);
+          console.log(`Initialized MongoDB with ${uniqueData.length} default properties.`);
+        }
+      } else {
+        console.log('MongoDB already has properties. Skipping properties initialization.');
       }
     }
 
     // 3. Migrate Enquiries
     if (fs.existsSync(jsonFiles.enquiries)) {
-      const data = JSON.parse(fs.readFileSync(jsonFiles.enquiries, 'utf8'));
-      if (data.length > 0) {
-        const uniqueData = Array.from(new Map(data.map(item => [item.id, item])).values());
-        await Enquiry.deleteMany({});
-        await Enquiry.insertMany(uniqueData);
-        console.log(`Synchronized ${uniqueData.length} enquiries to MongoDB.`);
+      const count = await Enquiry.countDocuments();
+      if (count === 0) {
+        const data = JSON.parse(fs.readFileSync(jsonFiles.enquiries, 'utf8'));
+        if (data.length > 0) {
+          const uniqueData = Array.from(new Map(data.map(item => [item.id, item])).values());
+          await Enquiry.deleteMany({});
+          await Enquiry.insertMany(uniqueData);
+          console.log(`Initialized MongoDB with ${uniqueData.length} default enquiries.`);
+        }
+      } else {
+        console.log('MongoDB already has enquiries. Skipping enquiries initialization.');
       }
     }
 
     // 4. Migrate Bookings
     if (fs.existsSync(jsonFiles.bookings)) {
-      const data = JSON.parse(fs.readFileSync(jsonFiles.bookings, 'utf8'));
-      if (data.length > 0) {
-        const uniqueData = Array.from(new Map(data.map(item => [item.id, item])).values());
-        await Booking.deleteMany({});
-        await Booking.insertMany(uniqueData);
-        console.log(`Synchronized ${uniqueData.length} bookings to MongoDB.`);
+      const count = await Booking.countDocuments();
+      if (count === 0) {
+        const data = JSON.parse(fs.readFileSync(jsonFiles.bookings, 'utf8'));
+        if (data.length > 0) {
+          const uniqueData = Array.from(new Map(data.map(item => [item.id, item])).values());
+          await Booking.deleteMany({});
+          await Booking.insertMany(uniqueData);
+          console.log(`Initialized MongoDB with ${uniqueData.length} default bookings.`);
+        }
+      } else {
+        console.log('MongoDB already has bookings. Skipping bookings initialization.');
       }
     }
 
     // 5. Migrate Logs
     if (fs.existsSync(jsonFiles.logs)) {
-      const data = JSON.parse(fs.readFileSync(jsonFiles.logs, 'utf8'));
-      if (data.length > 0) {
-        await Log.deleteMany({});
-        await Log.insertMany(data);
-        console.log(`Synchronized ${data.length} logs to MongoDB.`);
+      const count = await Log.countDocuments();
+      if (count === 0) {
+        const data = JSON.parse(fs.readFileSync(jsonFiles.logs, 'utf8'));
+        if (data.length > 0) {
+          await Log.deleteMany({});
+          await Log.insertMany(data);
+          console.log(`Initialized MongoDB with ${data.length} default logs.`);
+        }
+      } else {
+        console.log('MongoDB already has logs. Skipping logs initialization.');
       }
     }
 
-    console.log('Database force synchronization completed.');
+    console.log('Database initialization completed.');
   } catch (err) {
     console.error('Error during data synchronization:', err);
   }
