@@ -19,6 +19,7 @@ const AdminDashboard = () => {
   const [logSearchText, setLogSearchText] = useState('');
   const [logTypeFilter, setLogTypeFilter] = useState('ALL');
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [selectedTypeData, setSelectedTypeData] = useState(null);
   
   // Modals
   const [activeModalUser, setActiveModalUser] = useState(null);
@@ -169,12 +170,29 @@ const AdminDashboard = () => {
     const types = {};
     propertiesList.forEach(p => {
       const type = p.propertyType || 'Unknown';
-      types[type] = (types[type] || 0) + 1;
+      if (!types[type]) {
+        types[type] = {
+          name: type,
+          count: 0,
+          accepted: 0,
+          pending: 0,
+          rejected: 0
+        };
+      }
+      types[type].count++;
+      
+      const isPending = p.status === 'pending' || p.hasPendingChanges === true || p.status === 'pending_delete';
+      const isRejected = p.status === 'rejected';
+      
+      if (isPending) {
+        types[type].pending++;
+      } else if (isRejected) {
+        types[type].rejected++;
+      } else {
+        types[type].accepted++; // Active/Approved
+      }
     });
-    return Object.keys(types).map(type => ({
-      name: type,
-      count: types[type]
-    }));
+    return Object.values(types);
   };
 
   const getUserRoleData = () => {
@@ -263,75 +281,128 @@ const AdminDashboard = () => {
         </div>
 
         {/* SYSTEM ANALYTICS & DIAGNOSTICS */}
-        <div className="admin-scrollable-chart" style={{
-          display: 'flex',
-          gap: '20px',
-          marginTop: '20px',
-          overflowX: 'auto',
-          WebkitOverflowScrolling: 'touch',
-          flexWrap: 'nowrap',
-          width: '100%',
-          paddingBottom: '15px'
-        }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(450px, 1fr))', gap: '20px', marginTop: '20px' }}>
           {/* Chart 1: Properties by Type */}
-          <div style={{
-            flex: isMobile ? '0 0 90%' : '1 1 50%',
-            padding: '25px',
-            border: '1px solid #333',
-            background: 'rgba(0,0,0,0.5)',
-            borderRadius: '12px',
-            boxSizing: 'border-box'
-          }}>
+          <div style={{ padding: '25px', border: '1px solid #333', background: 'rgba(0,0,0,0.5)', borderRadius: '12px' }}>
             <h3 style={{ color: '#00ff80', fontFamily: 'monospace', fontSize: '1.1rem', margin: '0 0 20px 0', borderBottom: '1px solid #333', paddingBottom: '10px' }}>
               📊 PROPERTIES BY TYPE
             </h3>
-            <div style={{ width: '100%', height: '250px' }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <ReChartsBarChart data={getPropertyTypeData()}>
-                  <XAxis dataKey="name" stroke="#888" fontSize={11} tickLine={false} />
-                  <YAxis stroke="#888" fontSize={11} tickLine={false} />
-                  <Tooltip 
-                    contentStyle={{ background: '#222', border: '1px solid #444', color: '#fff', fontSize: '0.85rem', fontFamily: 'monospace' }}
-                    itemStyle={{ color: '#00ff80' }}
-                  />
-                  <Bar dataKey="count" fill="#00ff80" radius={[4, 4, 0, 0]}>
-                    {getPropertyTypeData().map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={['#00ff80', '#00d2ff', '#ffdf80', '#ff3366', '#a855f7'][index % 5]} />
-                    ))}
-                  </Bar>
-                </ReChartsBarChart>
-              </ResponsiveContainer>
+            
+            {/* Interactive Type Pills */}
+            <div className="admin-buttons-scroll" style={{ display: 'flex', gap: '8px', flexWrap: 'nowrap', overflowX: 'auto', WebkitOverflowScrolling: 'touch', marginBottom: '15px', paddingBottom: '5px' }}>
+              {getPropertyTypeData().map(typeItem => (
+                <button
+                  key={typeItem.name}
+                  onClick={() => setSelectedTypeData(typeItem)}
+                  style={{
+                    background: selectedTypeData?.name === typeItem.name ? '#00ff80' : 'rgba(0,0,0,0.3)',
+                    color: selectedTypeData?.name === typeItem.name ? 'black' : '#ccc',
+                    border: '1px solid #333',
+                    padding: '6px 12px',
+                    borderRadius: '20px',
+                    cursor: 'pointer',
+                    fontSize: '0.8rem',
+                    fontFamily: 'monospace',
+                    fontWeight: 'bold',
+                    transition: 'all 0.2s',
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  {typeItem.name.toUpperCase()} ({typeItem.count})
+                </button>
+              ))}
             </div>
+
+            <div className="admin-scrollable-chart" style={{ overflowX: 'auto', width: '100%', WebkitOverflowScrolling: 'touch', paddingBottom: '10px' }}>
+              <div style={{ minWidth: isMobile ? '550px' : '100%', height: '250px' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <ReChartsBarChart data={getPropertyTypeData()}>
+                    <XAxis dataKey="name" stroke="#888" fontSize={11} tickLine={false} />
+                    <YAxis stroke="#888" fontSize={11} tickLine={false} />
+                    <Tooltip 
+                      contentStyle={{ background: '#222', border: '1px solid #444', color: '#fff', fontSize: '0.85rem', fontFamily: 'monospace' }}
+                      itemStyle={{ color: '#00ff80' }}
+                    />
+                    <Bar 
+                      dataKey="count" 
+                      fill="#00ff80" 
+                      radius={[4, 4, 0, 0]}
+                      onClick={(data) => {
+                        if (data) setSelectedTypeData(data);
+                      }}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      {getPropertyTypeData().map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={['#00ff80', '#00d2ff', '#ffdf80', '#ff3366', '#a855f7'][index % 5]} />
+                      ))}
+                    </Bar>
+                  </ReChartsBarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* Selected Property Status Breakdown Detail */}
+            {selectedTypeData ? (
+              <div style={{
+                marginTop: '15px',
+                padding: '15px 20px',
+                background: 'rgba(0, 0, 0, 0.4)',
+                border: '1px solid #00ff80',
+                borderRadius: '8px',
+                fontFamily: 'monospace',
+                color: '#fff',
+                textAlign: 'left'
+              }}>
+                <h4 style={{ color: '#00ff80', margin: '0 0 10px 0', fontSize: '0.9rem', textTransform: 'uppercase', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span>📌 {selectedTypeData.name.toUpperCase()} STATUS BREAKDOWN</span>
+                  <span style={{ color: '#aaa', cursor: 'pointer', fontSize: '0.8rem' }} onClick={() => setSelectedTypeData(null)}>CLOSE [X]</span>
+                </h4>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: '10px', fontSize: '0.85rem' }}>
+                  <div>Total Count: <strong style={{ color: '#fff', fontSize: '1rem' }}>{selectedTypeData.count}</strong></div>
+                  <div>Active: <strong style={{ color: '#00ff80', fontSize: '1rem' }}>{selectedTypeData.accepted}</strong></div>
+                  <div>Pending: <strong style={{ color: '#f59e0b', fontSize: '1rem' }}>{selectedTypeData.pending}</strong></div>
+                  <div>Rejected: <strong style={{ color: '#ff3366', fontSize: '1rem' }}>{selectedTypeData.rejected}</strong></div>
+                </div>
+              </div>
+            ) : (
+              <div style={{
+                marginTop: '15px',
+                padding: '10px',
+                textAlign: 'center',
+                color: '#888',
+                fontSize: '0.8rem',
+                fontFamily: 'monospace',
+                border: '1px dashed #444',
+                borderRadius: '8px'
+              }}>
+                [ Click any type button or bar above to view status details ]
+              </div>
+            )}
           </div>
 
           {/* Chart 2: User Node Distribution */}
-          <div style={{
-            flex: isMobile ? '0 0 90%' : '1 1 50%',
-            padding: '25px',
-            border: '1px solid #333',
-            background: 'rgba(0,0,0,0.5)',
-            borderRadius: '12px',
-            boxSizing: 'border-box'
-          }}>
+          <div style={{ padding: '25px', border: '1px solid #333', background: 'rgba(0,0,0,0.5)', borderRadius: '12px' }}>
             <h3 style={{ color: '#00ff80', fontFamily: 'monospace', fontSize: '1.1rem', margin: '0 0 20px 0', borderBottom: '1px solid #333', paddingBottom: '10px' }}>
               📊 USER NODE DISTRIBUTION
             </h3>
-            <div style={{ width: '100%', height: '250px' }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <ReChartsBarChart data={getUserRoleData()}>
-                  <XAxis dataKey="name" stroke="#888" fontSize={11} tickLine={false} />
-                  <YAxis stroke="#888" fontSize={11} tickLine={false} />
-                  <Tooltip 
-                    contentStyle={{ background: '#222', border: '1px solid #444', color: '#fff', fontSize: '0.85rem', fontFamily: 'monospace' }}
-                    itemStyle={{ color: '#00ff80' }}
-                  />
-                  <Bar dataKey="count" radius={[4, 4, 0, 0]}>
-                    {getUserRoleData().map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Bar>
-                </ReChartsBarChart>
-              </ResponsiveContainer>
+            <div className="admin-scrollable-chart" style={{ overflowX: 'auto', width: '100%', WebkitOverflowScrolling: 'touch', paddingBottom: '10px' }}>
+              <div style={{ minWidth: isMobile ? '550px' : '100%', height: '250px' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <ReChartsBarChart data={getUserRoleData()}>
+                    <XAxis dataKey="name" stroke="#888" fontSize={11} tickLine={false} />
+                    <YAxis stroke="#888" fontSize={11} tickLine={false} />
+                    <Tooltip 
+                      contentStyle={{ background: '#222', border: '1px solid #444', color: '#fff', fontSize: '0.85rem', fontFamily: 'monospace' }}
+                      itemStyle={{ color: '#00ff80' }}
+                    />
+                    <Bar dataKey="count" radius={[4, 4, 0, 0]}>
+                      {getUserRoleData().map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Bar>
+                  </ReChartsBarChart>
+                </ResponsiveContainer>
+              </div>
             </div>
           </div>
         </div>
