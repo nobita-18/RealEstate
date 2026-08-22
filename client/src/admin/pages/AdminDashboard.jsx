@@ -662,16 +662,16 @@ const AdminDashboard = () => {
       {/* VIEW USER DETAILS MODAL */}
       {activeModalUser && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.8)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ background: '#151922', border: '2px solid #00d2ff', borderRadius: '20px', width: '90%', maxWidth: '550px', padding: '30px', color: '#fff', position: 'relative', textAlign: 'left', fontFamily: 'monospace' }}>
+          <div style={{ background: '#151922', border: '2px solid #00d2ff', borderRadius: '20px', width: '90%', maxWidth: '550px', padding: isMobile ? '20px 15px' : '30px', color: '#fff', position: 'relative', textAlign: 'left', fontFamily: 'monospace', maxHeight: '90vh', display: 'flex', flexDirection: 'column' }}>
             <button onClick={() => setActiveModalUser(null)} style={{ position: 'absolute', top: '20px', right: '20px', background: 'none', border: 'none', color: '#aaa', cursor: 'pointer' }}>
               <X size={24} />
             </button>
             
-            <h3 style={{ color: '#00d2ff', fontSize: '1.4rem', borderBottom: '1px solid #333', paddingBottom: '10px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <h3 style={{ color: '#00d2ff', fontSize: '1.4rem', borderBottom: '1px solid #333', paddingBottom: '10px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
               <Info size={20}/> USER ARCHIVE: {activeModalUser.id}
             </h3>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', maxHeight: '450px', overflowY: 'auto', paddingRight: '5px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', maxHeight: 'calc(90vh - 120px)', overflowY: 'auto', paddingRight: '5px', flex: 1 }}>
               <div>
                 <span style={{ color: '#888', display: 'block', fontSize: '0.8rem' }}>FULL NAME</span>
                 <span style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>{activeModalUser.name}</span>
@@ -766,16 +766,16 @@ const AdminDashboard = () => {
       {/* VIEW SELLER PROPERTIES MODAL */}
       {activeModalProps && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.8)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ background: '#151922', border: '2px solid #ffdf80', borderRadius: '20px', width: '90%', maxWidth: '750px', padding: '30px', color: '#fff', position: 'relative', textAlign: 'left', fontFamily: 'monospace' }}>
+          <div style={{ background: '#151922', border: '2px solid #ffdf80', borderRadius: '20px', width: '90%', maxWidth: '750px', padding: isMobile ? '20px 15px' : '30px', color: '#fff', position: 'relative', textAlign: 'left', fontFamily: 'monospace', maxHeight: '90vh', display: 'flex', flexDirection: 'column' }}>
             <button onClick={() => setActiveModalProps(null)} style={{ position: 'absolute', top: '20px', right: '20px', background: 'none', border: 'none', color: '#aaa', cursor: 'pointer' }}>
               <X size={24} />
             </button>
             
-            <h3 style={{ color: '#ffdf80', fontSize: '1.4rem', borderBottom: '1px solid #333', paddingBottom: '10px', marginBottom: '20px' }}>
+            <h3 style={{ color: '#ffdf80', fontSize: '1.4rem', borderBottom: '1px solid #333', paddingBottom: '10px', marginBottom: '20px', flexShrink: 0 }}>
               PROPERTIES LISTING FOR: {activeModalProps.seller.name} ({activeModalProps.seller.id})
             </h3>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', maxHeight: '450px', overflowY: 'auto', paddingRight: '5px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', maxHeight: 'calc(90vh - 120px)', overflowY: 'auto', paddingRight: '5px', flex: 1 }}>
               {activeModalProps.props.length === 0 ? (
                 <p style={{ color: '#aaa', textAlign: 'center', padding: '30px' }}>[ No properties submitted by this seller ]</p>
               ) : (
@@ -807,16 +807,16 @@ const AdminDashboard = () => {
       {/* REVIEW PROPERTY MODAL */}
       {selectedAdminProperty && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.85)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ background: '#151922', border: '2px solid #00ff80', borderRadius: '20px', width: '90%', maxWidth: '750px', padding: '30px', color: '#fff', position: 'relative', textAlign: 'left', fontFamily: 'monospace' }}>
+          <div style={{ background: '#151922', border: '2px solid #00ff80', borderRadius: '20px', width: '90%', maxWidth: '750px', padding: isMobile ? '20px 15px' : '30px', color: '#fff', position: 'relative', textAlign: 'left', fontFamily: 'monospace', maxHeight: '90vh', display: 'flex', flexDirection: 'column' }}>
             <button onClick={() => setSelectedAdminProperty(null)} style={{ position: 'absolute', top: '20px', right: '20px', background: 'none', border: 'none', color: '#aaa', cursor: 'pointer' }}>
               <X size={24} />
             </button>
             
-            <h3 style={{ color: '#00ff80', fontSize: '1.4rem', borderBottom: '1px solid #333', paddingBottom: '10px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <h3 style={{ color: '#00ff80', fontSize: '1.4rem', borderBottom: '1px solid #333', paddingBottom: '10px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
               <ShieldCheck size={22}/> PROPERTY MODERATION PANEL
             </h3>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', maxHeight: '500px', overflowY: 'auto', paddingRight: '5px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', maxHeight: 'calc(90vh - 150px)', overflowY: 'auto', paddingRight: '5px', flex: 1 }}>
               
               {selectedAdminProperty.status === 'pending_delete' && (
                 <div style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1px solid #ff3366', padding: '15px', borderRadius: '8px', color: '#f87171' }}>
